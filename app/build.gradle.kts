@@ -74,7 +74,7 @@ dependencies {
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
 
-    //Third Party
+    // Third Party
     implementation(libs.lottie.compose)
 
     // Debug
@@ -83,7 +83,6 @@ dependencies {
     // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.test)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
 
     // Logging
     implementation(libs.timber)
