@@ -28,6 +28,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties.getProperty("base.url"))
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = properties.getProperty("kakao.native.app.key").trim('"')
     }
 
     buildTypes {
