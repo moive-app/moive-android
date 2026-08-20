@@ -86,4 +86,7 @@ dependencies {
 
     // Logging
     implementation(libs.timber)
+
+    // Kakao
+    implementation(libs.kakao.user)
 }
