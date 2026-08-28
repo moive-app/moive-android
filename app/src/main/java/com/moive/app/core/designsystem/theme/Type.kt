@@ -85,86 +85,86 @@ val defaultMoiveTypography = MoiveTypography(
         xlB = moiveTextStyle(
             fontFamily = PretendardFont.Bold,
             fontSize = 24.sp,
-            lineHeight = (133.3).em,
+            lineHeight = (1.333).em,
         ),
         lgB = moiveTextStyle(
             fontFamily = PretendardFont.Bold,
             fontSize = 20.sp,
-            lineHeight = 140.em,
+            lineHeight = 1.4.em,
         ),
         mdSb = moiveTextStyle(
             fontFamily = PretendardFont.SemiBold,
             fontSize = 18.sp,
-            lineHeight = (144.4).em,
+            lineHeight = (1.444).em,
         ),
         smSb = moiveTextStyle(
             fontFamily = PretendardFont.SemiBold,
             fontSize = 16.sp,
-            lineHeight = (137.5).em,
+            lineHeight = (1.375).em,
         ),
         xsSb = moiveTextStyle(
             fontFamily = PretendardFont.SemiBold,
             fontSize = 14.sp,
-            lineHeight = (142.9).em,
+            lineHeight = (1.429).em,
         ),
     ),
     body = TypographyTokens.Body(
         mdNormalR = moiveTextStyle(
             fontFamily = PretendardFont.Regular,
             fontSize = 16.sp,
-            lineHeight = 150.em,
+            lineHeight = 1.5.em,
         ),
         mdReadingR = moiveTextStyle(
             fontFamily = PretendardFont.Regular,
             fontSize = 16.sp,
-            lineHeight = 175.em,
+            lineHeight = 1.75.em,
         ),
         smNormalR = moiveTextStyle(
             fontFamily = PretendardFont.Regular,
             fontSize = 14.sp,
-            lineHeight = (142.9).em,
+            lineHeight = (1.429).em,
         ),
         smReadingR = moiveTextStyle(
             fontFamily = PretendardFont.Regular,
             fontSize = 14.sp,
-            lineHeight = (171.4).em,
+            lineHeight = (1.714).em,
         ),
     ),
     label = TypographyTokens.Label(
         lgSb = moiveTextStyle(
             fontFamily = PretendardFont.SemiBold,
             fontSize = 18.sp,
-            lineHeight = (144.4).em,
+            lineHeight = (1.444).em,
         ),
         mdSb = moiveTextStyle(
             fontFamily = PretendardFont.SemiBold,
             fontSize = 16.sp,
-            lineHeight = 150.em,
+            lineHeight = 1.5.em,
         ),
         mdM = moiveTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 16.sp,
-            lineHeight = 150.em,
+            lineHeight = 1.5.em,
         ),
         mdR = moiveTextStyle(
             fontFamily = PretendardFont.Regular,
             fontSize = 16.sp,
-            lineHeight = 150.em,
+            lineHeight = 1.5.em,
         ),
         smM = moiveTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 14.sp,
-            lineHeight = (142.9).em,
+            lineHeight = (1.429).em,
         ),
         xsM = moiveTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 12.sp,
-            lineHeight = 150.em,
+            lineHeight = 1.5.em,
         ),
         xsR = moiveTextStyle(
             fontFamily = PretendardFont.Regular,
             fontSize = 12.sp,
-            lineHeight = 150.em,
+            lineHeight = 1.5.em,
         ),
     ),
 )
