@@ -19,6 +19,6 @@ class MoiveApplication : Application() {
     }
 
     private fun initKakaoSdk() {
-        KakaoSdk.init(this, "{KAKAO_NATIVE_APP_KEY}")
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 }
