@@ -20,6 +20,7 @@ fun MainNavHost(
     ) {
 
         loginGraph(
+            navController = navController,
             innerPadding = innerPadding,
         )
 
