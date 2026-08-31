@@ -14,7 +14,7 @@ data class KakaoLoginResponse(
     @SerialName("email")
     val email: String,
     @SerialName("token")
-    val token: AuthToken,
+    val token: AuthToken?,
 )
 
 @Serializable
