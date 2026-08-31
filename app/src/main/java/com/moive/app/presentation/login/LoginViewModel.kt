@@ -3,9 +3,12 @@ package com.moive.app.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moive.app.data.auth.repository.AuthRepository
+import com.moive.app.presentation.login.LoginContract.SideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +20,9 @@ class LoginViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(LoginContract.State())
     val uiState = _uiState.asStateFlow()
+
+    private val _sideEffect = Channel<SideEffect>(Channel.BUFFERED)
+    val sideEffect = _sideEffect.receiveAsFlow()
 
     private var kakaoAccessToken: String? = null
 

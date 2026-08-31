@@ -11,6 +11,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -19,14 +20,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.extensions.noRippleClickable
 import com.moive.app.presentation.login.KakaoLoginManager.KakaoLoginResult
+import com.moive.app.presentation.login.LoginContract.SideEffect.NavigateToMyPage
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginRoute(
+    navigateToMyPage: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
@@ -35,6 +41,17 @@ fun LoginRoute(
     val kakaoLoginManager = KakaoLoginManager()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val lifeCycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(lifeCycleOwner) {
+        lifeCycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.sideEffect.collect { sideEffect ->
+                when (sideEffect) {
+                    NavigateToMyPage -> navigateToMyPage()
+                }
+            }
+        }
+    }
 
     LoginScreen(
         uiState = uiState,

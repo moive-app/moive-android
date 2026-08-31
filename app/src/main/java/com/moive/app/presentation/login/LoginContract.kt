@@ -12,4 +12,8 @@ interface LoginContract {
     ) {
         val isBtnEnabled: Boolean = isServiceAgreed && isPrivacyAgreed
     }
+
+    sealed class SideEffect {
+        data object NavigateToMyPage : SideEffect()
+    }
 }
