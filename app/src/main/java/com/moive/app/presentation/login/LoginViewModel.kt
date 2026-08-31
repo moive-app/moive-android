@@ -35,7 +35,7 @@ class LoginViewModel @Inject constructor(
                     kakaoAccessToken = null
                     _sideEffect.send(SideEffect.NavigateToMyPage)
                 } else {
-                    _uiState.update { it.copy(isRegistered = true) }
+                    _uiState.update { it.copy(needRegister = true) }
                 }
             }
             .onFailure {

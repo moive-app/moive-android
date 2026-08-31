@@ -85,7 +85,7 @@ private fun LoginScreen(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        if (!uiState.isRegistered) {
+        if (!uiState.needRegister) {
             Text(
                 text = "Login Screen",
                 modifier = Modifier.noRippleClickable(onClick = onKakaoClick)
