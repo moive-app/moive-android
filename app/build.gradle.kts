@@ -58,7 +58,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     // Compose
-    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
 
     // KotlinX
@@ -84,6 +83,7 @@ dependencies {
 
     // Test
     testImplementation(libs.junit)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.test)
 
     // Logging
