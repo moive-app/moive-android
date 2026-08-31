@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.moive.app.presentation.home.navigation.Home
 import com.moive.app.presentation.home.navigation.navigateToHome
+import com.moive.app.presentation.login.navigation.Login
 import com.moive.app.presentation.main.component.MainTab
 import com.moive.app.presentation.mypage.navigation.navigateToMyPage
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +24,7 @@ class MainAppState(
     val navController: NavHostController,
     coroutineScope: CoroutineScope,
 ) {
-    val startDestination = Home
+    val startDestination = Login
 
     private val currentDestination = navController.currentBackStackEntryFlow
         .map { it.destination }
