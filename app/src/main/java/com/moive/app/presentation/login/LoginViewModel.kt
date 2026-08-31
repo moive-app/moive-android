@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,7 +21,6 @@ class LoginViewModel @Inject constructor(
     fun postKakaoLogin(token: String) = viewModelScope.launch {
         authRepository.postKakaoLogin(token)
             .onSuccess {
-                Timber.tag("KakaoLogin").i("카카오톡 로그인 성공 $token")
                 _uiState.update {
                     it.copy(isLoginComplete = true)
                 }
