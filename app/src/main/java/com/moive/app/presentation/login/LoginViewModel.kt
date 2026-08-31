@@ -30,6 +30,18 @@ class LoginViewModel @Inject constructor(
             }
     }
 
+    fun onServiceCheck(agreed: Boolean) {
+        _uiState.update { it.copy(isServiceAgreed = agreed) }
+    }
+
+    fun onPrivacyCheck(agreed: Boolean) {
+        _uiState.update { it.copy(isPrivacyAgreed = agreed) }
+    }
+
+    fun onMarketingCheck(agreed: Boolean) {
+        _uiState.update { it.copy(isMarketingAgreed = agreed) }
+    }
+
     fun postSignUp() {
         //Todo: /auth/signup 회원가입 호출
         // 약관동의 항목 동의 여부, 액세스 토큰 반환
