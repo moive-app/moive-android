@@ -8,7 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.moive.app.core.navigation.Route
-import com.moive.app.presentation.home.HomeRoute
+import com.moive.app.presentation.login.LoginRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToLogin(
@@ -19,7 +19,7 @@ fun NavGraphBuilder.loginGraph(
     innerPadding: PaddingValues,
 ) {
     composable<Login> {
-        HomeRoute(
+        LoginRoute(
             modifier = Modifier.padding(innerPadding),
         )
     }
