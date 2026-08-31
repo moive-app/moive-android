@@ -18,7 +18,11 @@ class LoginViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LoginContract.State())
     val uiState = _uiState.asStateFlow()
 
+    private var kakaoAccessToken: String? = null
+
     fun postKakaoLogin(token: String) = viewModelScope.launch {
+        kakaoAccessToken = token
+
         authRepository.postKakaoLogin(token)
             .onSuccess {
                 _uiState.update {
@@ -42,10 +46,23 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(isMarketingAgreed = agreed) }
     }
 
-    fun postSignUp() {
-        //Todo: /auth/signup 회원가입 호출
-        // 약관동의 항목 동의 여부, 액세스 토큰 반환
-        // 성공) 우선 mypage로 이동
+    fun postSignUp() = viewModelScope.launch {
+        val token = kakaoAccessToken ?: return@launch
+        val currentState = _uiState.value
+
+        authRepository.postSignUp(
+            accessToken = token,
+            isServiceAgreed = currentState.isServiceAgreed,
+            isPrivacyAgreed = currentState.isPrivacyAgreed,
+            isMarketingAgreed = currentState.isMarketingAgreed,
+        )
+            .onSuccess {
+                kakaoAccessToken = null
+                _sideEffect.send(SideEffect.NavigateToMyPage)
+            }
+            .onFailure {
+                // Todo: 토스트 메세지
+            }
     }
 
     fun showToast(
