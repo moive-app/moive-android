@@ -1,4 +1,4 @@
-package com.moive.app.data.login.remote.dto
+package com.moive.app.data.auth.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
