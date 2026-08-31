@@ -5,7 +5,7 @@ import androidx.compose.runtime.Immutable
 interface LoginContract {
     @Immutable
     data class State(
-        val isLoginComplete: Boolean = false,
+        val isRegistered: Boolean = false,
         val isServiceAgreed: Boolean = false,
         val isPrivacyAgreed: Boolean = false,
         val isMarketingAgreed: Boolean = false,

@@ -30,9 +30,12 @@ class LoginViewModel @Inject constructor(
         kakaoAccessToken = token
 
         authRepository.postKakaoLogin(token)
-            .onSuccess {
-                _uiState.update {
-                    it.copy(isLoginComplete = true)
+            .onSuccess { result ->
+                if (result.registered) {
+                    kakaoAccessToken = null
+                    _sideEffect.send(SideEffect.NavigateToMyPage)
+                } else {
+                    _uiState.update { it.copy(isRegistered = true) }
                 }
             }
             .onFailure {
