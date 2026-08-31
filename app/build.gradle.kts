@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     // Compose
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
 
     // KotlinX
