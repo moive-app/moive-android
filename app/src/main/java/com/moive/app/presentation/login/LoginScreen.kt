@@ -20,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.extensions.noRippleClickable
 import com.moive.app.presentation.login.KakaoLoginManager.KakaoLoginResult
