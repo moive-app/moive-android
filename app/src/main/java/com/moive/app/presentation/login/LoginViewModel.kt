@@ -1,22 +1,27 @@
 package com.moive.app.presentation.login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.moive.app.data.auth.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-
+    private val authRepository: AuthRepository,
 ): ViewModel() {
 
-    fun postKakaoLogin(
-        token: String,
-    ) {
-        Timber.tag("KakaoLogin").i("카카오톡 로그인 성공 $token")
-        //Todo: /auth/kakao 카카오 로그인 호출.
-        // 성공) loginScreen -> 약관 동의 바텀시트 up
-        // 실패) loginScreen -> 토스트 메세지
+    fun postKakaoLogin(token: String) = viewModelScope.launch {
+        authRepository.postKakaoLogin(token)
+            .onSuccess {
+                Timber.tag("KakaoLogin").i("카카오톡 로그인 성공 $token")
+                // 성공) loginScreen -> 약관 동의 바텀시트 up
+            }
+            .onFailure {
+                // 실패) loginScreen -> 토스트 메세지
+            }
     }
 
     fun postSignUp() {
