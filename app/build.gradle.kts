@@ -28,6 +28,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties.getProperty("base.url"))
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", properties.getProperty("kakao.native.app.key"))
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = properties.getProperty("kakao.native.app.key").trim('"')
     }
 
     buildTypes {
@@ -74,7 +76,7 @@ dependencies {
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
 
-    //Third Party
+    // Third Party
     implementation(libs.lottie.compose)
 
     // Debug
@@ -82,9 +84,12 @@ dependencies {
 
     // Test
     testImplementation(libs.junit)
-    androidTestImplementation(libs.bundles.test)
     androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.bundles.test)
 
     // Logging
     implementation(libs.timber)
+
+    // Kakao
+    implementation(libs.kakao.user)
 }
