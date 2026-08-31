@@ -52,23 +52,31 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(isMarketingAgreed = agreed) }
     }
 
-    fun postSignUp() = viewModelScope.launch {
-        val token = kakaoAccessToken ?: return@launch
-        val currentState = _uiState.value
+    fun postSignUp() {
+        if (_uiState.value.isSignUpSubmitting) return
+        val token = kakaoAccessToken ?: return
 
-        authRepository.postSignUp(
-            accessToken = token,
-            isServiceAgreed = currentState.isServiceAgreed,
-            isPrivacyAgreed = currentState.isPrivacyAgreed,
-            isMarketingAgreed = currentState.isMarketingAgreed,
-        )
-            .onSuccess {
-                kakaoAccessToken = null
-                _sideEffect.send(SideEffect.NavigateToMyPage)
-            }
-            .onFailure {
-                // Todo: 토스트 메세지
-            }
+        _uiState.update { it.copy(isSignUpSubmitting = true) }
+
+        viewModelScope.launch {
+            val currentState = _uiState.value
+
+            authRepository.postSignUp(
+                accessToken = token,
+                isServiceAgreed = currentState.isServiceAgreed,
+                isPrivacyAgreed = currentState.isPrivacyAgreed,
+                isMarketingAgreed = currentState.isMarketingAgreed,
+            )
+                .onSuccess {
+                    kakaoAccessToken = null
+                    _sideEffect.send(SideEffect.NavigateToMyPage)
+                }
+                .onFailure {
+                    // Todo: 토스트 메세지
+                }
+
+            _uiState.update { it.copy(isSignUpSubmitting = false) }
+        }
     }
 
     fun showToast(

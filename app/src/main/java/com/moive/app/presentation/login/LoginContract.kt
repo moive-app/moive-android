@@ -9,8 +9,9 @@ interface LoginContract {
         val isServiceAgreed: Boolean = false,
         val isPrivacyAgreed: Boolean = false,
         val isMarketingAgreed: Boolean = false,
+        val isSignUpSubmitting: Boolean = false,
     ) {
-        val isBtnEnabled: Boolean = isServiceAgreed && isPrivacyAgreed
+        val isBtnEnabled: Boolean = isServiceAgreed && isPrivacyAgreed && !isSignUpSubmitting
     }
 
     sealed class SideEffect {
