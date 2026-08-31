@@ -14,8 +14,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.extensions.noRippleClickable
+import com.moive.app.presentation.login.KakaoLoginManager.KakaoLoginResult
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun LoginRoute(
@@ -32,14 +32,10 @@ fun LoginRoute(
         uiState = uiState,
         onKakaoClick = {
             scope.launch {
-                kakaoLoginManager.loginKakao(context)
-                    .onSuccess { token ->
-                        viewModel.postKakaoLogin(token)
-                    }
-                    .onFailure { error ->
-                        val errorMessage = error.message ?: ""
-                        viewModel.showToast(errorMessage)
-                    }
+                when (val result = kakaoLoginManager.loginKakao(context)) {
+                    is KakaoLoginResult.Success -> viewModel.postKakaoLogin(result.token)
+                    is KakaoLoginResult.Failure -> viewModel.showToast(result.error)
+                }
             }
         },
         onCompleteClick = {},
