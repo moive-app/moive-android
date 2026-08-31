@@ -5,6 +5,7 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.moive.app.core.utils.suspendRunCatching
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
 import kotlin.coroutines.resume
@@ -26,6 +27,8 @@ class KakaoLoginManager {
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
             try {
                 loginWithKakaoTalk(context)
+            } catch (cancellation: CancellationException) {
+                throw cancellation
             } catch (error: Exception) {
                 if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                     throw error
