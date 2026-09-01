@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import com.moive.app.presentation.home.navigation.homeGraph
 import com.moive.app.presentation.login.navigation.loginGraph
+import com.moive.app.presentation.meeting.navigation.meetingGraph
 import com.moive.app.presentation.mypage.navigation.myPageGraph
 import com.moive.app.presentation.splash.navigation.splashGraph
 
@@ -34,6 +35,10 @@ fun MainNavHost(
 
         myPageGraph(
             navController = navController,
+            innerPadding = innerPadding,
+        )
+
+        meetingGraph(
             innerPadding = innerPadding,
         )
 
