@@ -27,6 +27,7 @@ import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
 import com.moive.app.core.designsystem.component.toast.MoiveToast
 import com.moive.app.presentation.main.component.MainBottomBar
 import com.moive.app.presentation.main.component.MainTab
+import com.moive.app.presentation.meeting.navigation.navigateToMeeting
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -76,6 +77,7 @@ fun MainScreen(
                         isVisible = isBottomBarVisible,
                         tabs = MainTab.entries.toPersistentList(),
                         currentTab = currentTab,
+                        onMeetingBtnClick = appState.navController::navigateToMeeting,
                         onTabSelected = appState::navigate,
                         modifier = Modifier
                             .onGloballyPositioned { coordinates ->
