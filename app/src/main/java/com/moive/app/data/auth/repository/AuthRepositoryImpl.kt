@@ -3,6 +3,7 @@ package com.moive.app.data.auth.repository
 import com.moive.app.core.utils.suspendRunCatching
 import com.moive.app.data.auth.mapper.toModel
 import com.moive.app.data.auth.model.KakaoLoginModel
+import com.moive.app.data.auth.model.ReissueModel
 import com.moive.app.data.auth.remote.datasource.AuthRemoteDataSource
 import com.moive.app.data.common.dto.checkData
 import com.moive.app.data.common.dto.checkSuccess
@@ -51,5 +52,18 @@ class AuthRepositoryImpl @Inject constructor(
 
             authRemoteDataSource.postLogout(refreshToken).checkSuccess()
             localTokenDatasource.clearTokens()
+        }
+
+    override suspend fun postReissue(): Result<ReissueModel> =
+        suspendRunCatching {
+            val refreshToken = localTokenDatasource.getRefreshToken()
+                ?: throw IllegalStateException("Refresh token not found.")
+
+            val data = authRemoteDataSource.postReissue(refreshToken).checkData()
+
+            localTokenDatasource.setAccessToken(data.accessToken)
+            localTokenDatasource.setRefreshToken(data.refreshToken)
+
+            data.toModel()
         }
 }

@@ -5,6 +5,8 @@ import com.moive.app.data.auth.remote.dto.AgreementType
 import com.moive.app.data.auth.remote.dto.KakaoLoginRequest
 import com.moive.app.data.auth.remote.dto.KakaoLoginResponse
 import com.moive.app.data.auth.remote.dto.LogoutRequest
+import com.moive.app.data.auth.remote.dto.ReissueRequest
+import com.moive.app.data.auth.remote.dto.ReissueResponse
 import com.moive.app.data.auth.remote.dto.SignUpRequest
 import com.moive.app.data.auth.remote.dto.SignUpResponse
 import com.moive.app.data.auth.remote.service.AuthService
@@ -35,6 +37,9 @@ class AuthRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun postLogout(refreshToken: String): BaseResponse<Unit> =
         authService.postLogout(LogoutRequest(refreshToken))
+
+    override suspend fun postReissue(refreshToken: String): BaseResponse<ReissueResponse> =
+        authService.postReissue(ReissueRequest(refreshToken))
 
     companion object {
         private const val AGREEMENT_VERSION = "1.0"

@@ -4,6 +4,8 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.moive.app.BuildConfig
 import com.moive.app.core.extensions.isJsonArray
 import com.moive.app.core.extensions.isJsonObject
+import com.moive.app.core.network.AuthInterceptor
+import com.moive.app.core.network.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -63,7 +65,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(
+    @NoAuth
+    fun provideNoAuthOkHttpClient(
         loggingInterceptor: Interceptor,
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
@@ -71,8 +74,34 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(
-        client: OkHttpClient,
+    @Auth
+    fun provideAuthOkHttpClient(
+        loggingInterceptor: Interceptor,
+        authInterceptor: AuthInterceptor,
+        authenticator: TokenAuthenticator,
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(authInterceptor)
+        .addInterceptor(loggingInterceptor)
+        .authenticator(authenticator)
+        .build()
+
+    @Provides
+    @Singleton
+    @NoAuth
+    fun provideNoAuthRetrofit(
+        @NoAuth client: OkHttpClient,
+        factory: Converter.Factory,
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(BuildConfig.BASE_URL)
+        .client(client)
+        .addConverterFactory(factory)
+        .build()
+
+    @Provides
+    @Singleton
+    @Auth
+    fun provideAuthRetrofit(
+        @Auth client: OkHttpClient,
         factory: Converter.Factory,
     ): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
