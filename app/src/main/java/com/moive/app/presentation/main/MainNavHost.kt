@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import com.moive.app.presentation.home.navigation.homeGraph
 import com.moive.app.presentation.login.navigation.loginGraph
 import com.moive.app.presentation.mypage.navigation.myPageGraph
+import com.moive.app.presentation.splash.navigation.splashGraph
 
 @Composable
 fun MainNavHost(
@@ -18,6 +19,9 @@ fun MainNavHost(
         navController = navController,
         startDestination = appState.startDestination,
     ) {
+        splashGraph(
+            navController = navController,
+        )
 
         loginGraph(
             navController = navController,
