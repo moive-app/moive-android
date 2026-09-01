@@ -1,9 +1,11 @@
 package com.moive.app.presentation.main
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -16,6 +18,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
@@ -40,7 +44,8 @@ fun MainScreen(
     val coroutineScope = rememberCoroutineScope()
 
     var job by remember { mutableStateOf<Job?>(null) }
-    var toastDisplayBottomInset by remember { mutableStateOf(0.dp) }
+    var bottomBarHeight by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
 
     val onShowToast: (String) -> Unit = { message ->
         job?.cancel()
@@ -71,7 +76,13 @@ fun MainScreen(
                         tabs = MainTab.entries.toPersistentList(),
                         currentTab = currentTab,
                         onTabSelected = appState::navigate,
-                        modifier = Modifier.navigationBarsPadding()
+                        modifier = Modifier.onGloballyPositioned { coordinates ->
+                            if (isBottomBarVisible) {
+                                bottomBarHeight = with(density) {
+                                    coordinates.size.height.dp
+                                }
+                            }
+                        },
                     )
                 },
             ) { innerPadding ->
@@ -86,20 +97,15 @@ fun MainScreen(
                 hostState = snackbarHostState,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .navigationBarsPadding(),
+                    .padding(
+                        bottom = bottomBarHeight + 12.dp
+                    )
+                    .windowInsetsPadding(WindowInsets.ime),
             ) { data ->
 
                 MoiveToast(
                     text = data.visuals.message,
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp, vertical = 20.dp)
-                        .padding(
-                            bottom = if (toastDisplayBottomInset > 20.dp) {
-                                toastDisplayBottomInset
-                            } else {
-                                0.dp
-                            },
-                        ),
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
             }
         }
