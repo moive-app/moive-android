@@ -1,7 +1,7 @@
 package com.moive.app.presentation.main.component
 
 import androidx.annotation.DrawableRes
-import com.moive.app.R.drawable.ic_launcher_background
+import com.moive.app.R
 import com.moive.app.core.navigation.MainTabRoute
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.home.navigation.Home
@@ -13,13 +13,13 @@ enum class MainTab(
     val route: MainTabRoute,
 ) {
     HOME(
-        iconRes = ic_launcher_background,
+        iconRes = R.drawable.ic_home,
         titleRes = "home",
         route = Home,
     ),
 
     MYPAGE(
-        iconRes = ic_launcher_background,
+        iconRes = R.drawable.ic_profile,
         titleRes = "mypage",
         route = MyPage,
     );
