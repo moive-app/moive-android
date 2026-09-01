@@ -2,7 +2,6 @@ package com.moive.app.data.common.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.net.HttpURLConnection.HTTP_OK
 
 private const val HTTP_OK = 200
 

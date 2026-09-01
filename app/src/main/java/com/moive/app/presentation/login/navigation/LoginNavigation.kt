@@ -7,8 +7,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.login.LoginRoute
+import com.moive.app.presentation.mypage.navigation.navigateToMyPage
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToLogin(
@@ -16,10 +18,18 @@ fun NavController.navigateToLogin(
 ) = navigate(Login, navOptions)
 
 fun NavGraphBuilder.loginGraph(
+    navController: NavController,
     innerPadding: PaddingValues,
 ) {
     composable<Login> {
         LoginRoute(
+            navigateToMyPage = {
+                navController.navigateToMyPage(
+                    navOptions {
+                        popUpTo<Login> { inclusive = true }
+                    }
+                )
+            },
             modifier = Modifier.padding(innerPadding),
         )
     }

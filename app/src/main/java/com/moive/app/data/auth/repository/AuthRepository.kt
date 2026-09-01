@@ -4,4 +4,11 @@ import com.moive.app.data.auth.model.KakaoLoginModel
 
 interface AuthRepository {
     suspend fun postKakaoLogin(accessToken: String): Result<KakaoLoginModel>
+
+    suspend fun postSignUp(
+        accessToken: String,
+        isServiceAgreed: Boolean,
+        isPrivacyAgreed: Boolean,
+        isMarketingAgreed: Boolean,
+    ): Result<Unit>
 }
