@@ -8,11 +8,10 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.moive.app.presentation.home.navigation.Home
 import com.moive.app.presentation.home.navigation.navigateToHome
-import com.moive.app.presentation.login.navigation.Login
 import com.moive.app.presentation.main.component.MainTab
 import com.moive.app.presentation.mypage.navigation.navigateToMyPage
+import com.moive.app.presentation.splash.navigation.Splash
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +23,7 @@ class MainAppState(
     val navController: NavHostController,
     coroutineScope: CoroutineScope,
 ) {
-    val startDestination = Login
+    val startDestination = Splash
 
     private val currentDestination = navController.currentBackStackEntryFlow
         .map { it.destination }
