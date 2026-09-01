@@ -5,6 +5,7 @@ import com.moive.app.data.auth.mapper.toModel
 import com.moive.app.data.auth.model.KakaoLoginModel
 import com.moive.app.data.auth.remote.datasource.AuthRemoteDataSource
 import com.moive.app.data.common.dto.checkData
+import com.moive.app.data.common.dto.checkSuccess
 import com.moive.app.data.local.token.LocalTokenDataSource
 import javax.inject.Inject
 
@@ -48,7 +49,7 @@ class AuthRepositoryImpl @Inject constructor(
             val refreshToken = localTokenDatasource.getRefreshToken()
                 ?: throw IllegalStateException("Refresh token not found.")
 
-            authRemoteDataSource.postLogout(refreshToken)
+            authRemoteDataSource.postLogout(refreshToken).checkSuccess()
             localTokenDatasource.clearTokens()
         }
 }
