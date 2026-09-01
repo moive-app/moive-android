@@ -9,6 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.home.HomeRoute
+import com.moive.app.presentation.meeting.MeetingRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToMeeting(
@@ -19,7 +20,7 @@ fun NavGraphBuilder.meetingGraph(
     innerPadding: PaddingValues,
 ) {
     composable<Meeting> {
-        HomeRoute(
+        MeetingRoute(
             modifier = Modifier.padding(innerPadding),
         )
     }
