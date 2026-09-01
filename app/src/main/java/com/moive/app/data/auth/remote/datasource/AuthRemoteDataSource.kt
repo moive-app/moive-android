@@ -1,6 +1,7 @@
 package com.moive.app.data.auth.remote.datasource
 
 import com.moive.app.data.auth.remote.dto.KakaoLoginResponse
+import com.moive.app.data.auth.remote.dto.ReissueResponse
 import com.moive.app.data.auth.remote.dto.SignUpResponse
 import com.moive.app.data.common.dto.BaseResponse
 
@@ -15,4 +16,6 @@ interface AuthRemoteDataSource {
     ): BaseResponse<SignUpResponse>
 
     suspend fun postLogout(refreshToken: String): BaseResponse<Unit>
+
+    suspend fun postReissue(refreshToken: String): BaseResponse<ReissueResponse>
 }
