@@ -1,16 +1,14 @@
 package com.moive.app.core.network.token
 
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 class AuthManagerImpl @Inject constructor() : AuthManager {
-    private val _authEvent = MutableSharedFlow<Unit>(
-        extraBufferCapacity = 1
-    )
-    override val authEvent = _authEvent.asSharedFlow()
+    private val _authEvent = Channel<Unit>(Channel.BUFFERED)
+    override val authEvent = _authEvent.receiveAsFlow()
 
     override fun emitAuthEvent() {
-        _authEvent.tryEmit(Unit)
+        _authEvent.trySend(Unit)
     }
 }
