@@ -29,6 +29,7 @@ fun MainNavHost(
         )
 
         myPageGraph(
+            navController = navController,
             innerPadding = innerPadding,
         )
 
