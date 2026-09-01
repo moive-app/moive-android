@@ -22,7 +22,8 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.noRippleClickable
 
 @Composable
-fun MoiveTapChip(
+fun MoiveChip(
+    type: ChipType,
     text: String,
     isSelected: Boolean,
     onTabClick: () -> Unit,
@@ -39,7 +40,7 @@ fun MoiveTapChip(
                 color = if (isSelected) colors.gray800 else colors.gray01,
                 shape = RoundedCornerShape(radius.circular)
             )
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = type.horizontalPadding, vertical = type.verticalPadding)
             .noRippleClickable(onClick = onTabClick),
     ) {
         Text(
@@ -52,9 +53,9 @@ fun MoiveTapChip(
 
 @Preview(showBackground = true)
 @Composable
-private fun MoiveTapChipPreview() {
+private fun MoiveChipTabPreview() {
     MoiveTheme {
-        val tabs = listOf("tab1", "tab2")
+        val tabs = listOf("tab1", "tab2", "tab3")
         var selectedTab by remember { mutableStateOf(tabs.first()) }
 
         Row(
@@ -62,10 +63,40 @@ private fun MoiveTapChipPreview() {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             tabs.forEach { tab ->
-                MoiveTapChip(
+                MoiveChip(
+                    type = ChipType.TAB,
                     text = tab,
                     isSelected = tab == selectedTab,
                     onTabClick = { selectedTab = tab },
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MoiveChipSelectPreview() {
+    MoiveTheme {
+        val selects = listOf("chip1", "chip2", "chip3")
+        var selectedItems by remember { mutableStateOf(setOf<String>()) }
+
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            selects.forEach { item ->
+                MoiveChip(
+                    type = ChipType.SELECT,
+                    text = item,
+                    isSelected = item in selectedItems,
+                    onTabClick = {
+                        selectedItems = if (item in selectedItems) {
+                            selectedItems - item
+                        } else {
+                            selectedItems + item
+                        }
+                    },
                 )
             }
         }
