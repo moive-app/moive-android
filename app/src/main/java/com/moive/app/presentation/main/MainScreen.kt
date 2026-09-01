@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
@@ -76,7 +77,8 @@ fun MainScreen(
                         tabs = MainTab.entries.toPersistentList(),
                         currentTab = currentTab,
                         onTabSelected = appState::navigate,
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
+                        modifier = Modifier
+                            .onGloballyPositioned { coordinates ->
                             if (isBottomBarVisible) {
                                 bottomBarHeight = with(density) {
                                     coordinates.size.height.dp
@@ -100,7 +102,7 @@ fun MainScreen(
                     .padding(
                         bottom = bottomBarHeight + 12.dp
                     )
-                    .windowInsetsPadding(WindowInsets.ime),
+                    .navigationBarsPadding(),
             ) { data ->
 
                 MoiveToast(
