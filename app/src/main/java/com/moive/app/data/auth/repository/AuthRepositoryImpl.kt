@@ -42,4 +42,13 @@ class AuthRepositoryImpl @Inject constructor(
             localTokenDatasource.setAccessToken(token.accessToken)
             localTokenDatasource.setRefreshToken(token.refreshToken)
         }
+
+    override suspend fun postLogout(): Result<Unit> =
+        suspendRunCatching {
+            val refreshToken = localTokenDatasource.getRefreshToken()
+                ?: throw IllegalStateException("Refresh token not found.")
+
+            authRemoteDataSource.postLogout(refreshToken)
+            localTokenDatasource.clearTokens()
+        }
 }
