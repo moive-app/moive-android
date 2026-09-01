@@ -1,5 +1,6 @@
 package com.moive.app.data.auth.di
 
+import com.moive.app.core.network.di.NoAuth
 import com.moive.app.data.auth.remote.service.AuthService
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,6 @@ object AuthServiceModule {
     @Provides
     @Singleton
     fun provideAuthService(
-        retrofit: Retrofit
+        @NoAuth retrofit: Retrofit
     ): AuthService = retrofit.create()
 }
