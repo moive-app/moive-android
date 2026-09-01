@@ -59,6 +59,10 @@ val Destructive = Color(0xFFFF4242)
 // Accent
 val Yellow = Color(0xFFFFD728)
 
+// Shadow
+val Shadow8 = Color(0x1416181A)
+val Shadow20 = Color(0x3316181A)
+
 @Immutable
 data class MoiveColors(
     // Primary
@@ -106,6 +110,10 @@ data class MoiveColors(
 
     // Accent
     val yellow: Color,
+
+    // Shadow
+    val shadow_8: Color,
+    val shadow_20: Color,
 )
 
 val defaultMoiveColors = MoiveColors(
@@ -154,6 +162,10 @@ val defaultMoiveColors = MoiveColors(
 
     // Accent
     yellow = Yellow,
+
+    // Shadow
+    shadow_8 = Shadow8,
+    shadow_20 = Shadow20,
 )
 
 @Preview
@@ -198,6 +210,8 @@ private fun MoiveColorsPreview() {
                 MoiveTheme.colors.cautionary,
                 MoiveTheme.colors.destructive,
                 MoiveTheme.colors.yellow,
+                MoiveTheme.colors.shadow_8,
+                MoiveTheme.colors.shadow_20,
             ).chunked(10).forEach { rowColors ->
                 Row(modifier = Modifier.padding(vertical = 4.dp)) {
                     rowColors.forEach { color ->
