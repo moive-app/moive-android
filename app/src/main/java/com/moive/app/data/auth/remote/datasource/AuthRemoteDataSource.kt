@@ -13,4 +13,6 @@ interface AuthRemoteDataSource {
         isPrivacyAgreed: Boolean,
         isMarketingAgreed: Boolean,
     ): BaseResponse<SignUpResponse>
+
+    suspend fun postLogout(refreshToken: String): BaseResponse<Unit>
 }
