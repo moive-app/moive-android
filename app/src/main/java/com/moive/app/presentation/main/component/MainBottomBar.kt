@@ -55,7 +55,7 @@ fun MainBottomBar(
         exit = fadeOut() + slideOut { IntOffset(0, it.height) },
     ) {
         Box(
-            modifier = modifier,
+            modifier = modifier.navigationBarsPadding(),
             contentAlignment = Alignment.Center,
         ){
             Row(
@@ -76,8 +76,7 @@ fun MainBottomBar(
                             topEnd = radius.xxl,
                         )
                     )
-                    .padding(horizontal = 46.dp, vertical = 18.dp)
-                    .navigationBarsPadding(),
+                    .padding(horizontal = 46.dp, vertical = 18.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
