@@ -11,6 +11,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 class TokenAuthenticator @Inject constructor(
@@ -45,6 +46,7 @@ class TokenAuthenticator @Inject constructor(
 
         if (refreshToken == null) {
             handleReissueFailure()
+            return null
         } else {
             authRepository.postReissue()
                 .onSuccess {
@@ -53,7 +55,9 @@ class TokenAuthenticator @Inject constructor(
                 }
                 .onFailure { error ->
                     Timber.tag(AUTHORIZATION).e("토큰 재발급 실패 : ${error.message}")
-                    handleReissueFailure()
+                    if (error !is IOException) {
+                        handleReissueFailure()
+                    }
                     return null
                 }
         }
