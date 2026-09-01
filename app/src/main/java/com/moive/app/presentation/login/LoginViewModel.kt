@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginContract.State())
     val uiState = _uiState.asStateFlow()
@@ -39,7 +39,7 @@ class LoginViewModel @Inject constructor(
                 }
             }
             .onFailure {
-                // 실패) loginScreen -> 토스트 메세지
+                showToast(LOGIN_FAILURE_MESSAGE)
             }
     }
 
@@ -75,7 +75,7 @@ class LoginViewModel @Inject constructor(
                     _sideEffect.send(SideEffect.NavigateToMyPage)
                 }
                 .onFailure {
-                    // Todo: 토스트 메세지
+                    showToast(SIGN_UP_FAILURE_MESSAGE)
                 }
 
             _uiState.update { it.copy(isSignUpSubmitting = false) }
@@ -84,7 +84,12 @@ class LoginViewModel @Inject constructor(
 
     fun showToast(
         text: String,
-    ) {
-        // Todo: Toast 띄우기
+    ) = viewModelScope.launch {
+        _sideEffect.send(SideEffect.OnShowToast(text))
+    }
+
+    companion object {
+        private const val LOGIN_FAILURE_MESSAGE = "일시적인 오류가 발생했어요. 다시 시도해주세요."
+        private const val SIGN_UP_FAILURE_MESSAGE = "로그인을 완료하지 못했어요. 다시 시도해주세요."
     }
 }

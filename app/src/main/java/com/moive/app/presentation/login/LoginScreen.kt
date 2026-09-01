@@ -24,10 +24,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.extensions.noRippleClickable
 import com.moive.app.presentation.login.KakaoLoginManager.KakaoLoginResult
 import com.moive.app.presentation.login.LoginContract.SideEffect.NavigateToMyPage
+import com.moive.app.presentation.login.LoginContract.SideEffect.OnShowToast
 import kotlinx.coroutines.launch
 
 @Composable
@@ -42,12 +44,14 @@ fun LoginRoute(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val lifeCycleOwner = LocalLifecycleOwner.current
+    val showToast = LocalToastTrigger.current
 
     LaunchedEffect(lifeCycleOwner) {
         lifeCycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.sideEffect.collect { sideEffect ->
                 when (sideEffect) {
                     NavigateToMyPage -> navigateToMyPage()
+                    is OnShowToast -> showToast.invoke(sideEffect.msg)
                 }
             }
         }
