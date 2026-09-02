@@ -37,6 +37,24 @@ val Blue700 = Color(0xFF203FAA)
 val Blue800 = Color(0xFF1A3389)
 val Blue900 = Color(0xFF14286C)
 
+// Pink
+val Pink50 = Color(0xFFFAECF3)
+val Pink100 = Color(0xFFE9B2CD)
+val Pink200 = Color(0xFFE093B8)
+val Pink300 = Color(0xFFD3649A)
+val Pink400 = Color(0xFFCA4485)
+val Pink500 = Color(0xFF8D305D)
+val Pink600 = Color(0xFF7B2951)
+
+// Teal
+val Teal50 = Color(0xFFE0F5FA)
+val Teal100 = Color(0xFF9DD4D5)
+val Teal200 = Color(0xFF74C3C4)
+val Teal300 = Color(0xFF38A9AA)
+val Teal400 = Color(0xFF0F9799)
+val Teal500 = Color(0xFF0B6A6B)
+val Teal600 = Color(0xFF095C5D)
+
 // Gray
 val Gray01 = Color(0xFFFFFFFF)
 val Gray10 = Color(0xFFFBFBFB)
@@ -89,6 +107,24 @@ data class MoiveColors(
     val blue800: Color,
     val blue900: Color,
 
+    // Pink
+    val pink50: Color,
+    val pink100: Color,
+    val pink200: Color,
+    val pink300: Color,
+    val pink400: Color,
+    val pink500: Color,
+    val pink600: Color,
+
+    // Teal
+    val teal50: Color,
+    val teal100: Color,
+    val teal200: Color,
+    val teal300: Color,
+    val teal400: Color,
+    val teal500: Color,
+    val teal600: Color,
+
     // Gray
     val gray01: Color,
     val gray10: Color,
@@ -140,6 +176,24 @@ val defaultMoiveColors = MoiveColors(
     blue700 = Blue700,
     blue800 = Blue800,
     blue900 = Blue900,
+
+    // Pink
+    pink50 = Pink50,
+    pink100 = Pink100,
+    pink200 = Pink200,
+    pink300 = Pink300,
+    pink400 = Pink400,
+    pink500 = Pink500,
+    pink600 = Pink600,
+
+    // Teal
+    teal50 = Teal50,
+    teal100 = Teal100,
+    teal200 = Teal200,
+    teal300 = Teal300,
+    teal400 = Teal400,
+    teal500 = Teal500,
+    teal600 = Teal600,
 
     // Gray
     gray01 = Gray01,
@@ -194,6 +248,20 @@ private fun MoiveColorsPreview() {
                 MoiveTheme.colors.blue700,
                 MoiveTheme.colors.blue800,
                 MoiveTheme.colors.blue900,
+                MoiveTheme.colors.pink50,
+                MoiveTheme.colors.pink100,
+                MoiveTheme.colors.pink200,
+                MoiveTheme.colors.pink300,
+                MoiveTheme.colors.pink400,
+                MoiveTheme.colors.pink500,
+                MoiveTheme.colors.pink600,
+                MoiveTheme.colors.teal50,
+                MoiveTheme.colors.teal100,
+                MoiveTheme.colors.teal200,
+                MoiveTheme.colors.teal300,
+                MoiveTheme.colors.teal400,
+                MoiveTheme.colors.teal500,
+                MoiveTheme.colors.teal600,
                 MoiveTheme.colors.gray01,
                 MoiveTheme.colors.gray10,
                 MoiveTheme.colors.gray50,
