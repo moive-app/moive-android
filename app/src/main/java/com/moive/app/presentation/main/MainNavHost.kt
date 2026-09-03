@@ -14,7 +14,10 @@ import com.moive.app.presentation.meeting.create.navigation.meetingCreationGraph
 import com.moive.app.presentation.meeting.infoconfirm.navigation.meetingInfoConfirmGraph
 import com.moive.app.presentation.meeting.list.navigation.meetingListGraph
 import com.moive.app.presentation.mypage.navigation.myPageGraph
+import com.moive.app.presentation.placedetail.navigation.placeDetailGraph
+import com.moive.app.presentation.recommendation.navigation.recommendationGraph
 import com.moive.app.presentation.splash.navigation.splashGraph
+import com.moive.app.presentation.votestatus.navigation.voteStatusGraph
 
 @Composable
 fun MainNavHost(
@@ -73,6 +76,20 @@ fun MainNavHost(
 
         conditionGraph(
             navController = navController,
+            innerPadding = innerPadding,
+        )
+
+        recommendationGraph(
+            navController = navController,
+            innerPadding = innerPadding,
+        )
+
+        placeDetailGraph(
+            navController = navController,
+            innerPadding = innerPadding,
+        )
+
+        voteStatusGraph(
             innerPadding = innerPadding,
         )
 
