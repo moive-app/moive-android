@@ -3,7 +3,6 @@ package com.moive.app.presentation.splash.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.navOptions
 import com.moive.app.core.extensions.clearBackStackNavOptions
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.home.navigation.navigateToHome
