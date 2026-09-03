@@ -8,6 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.moive.app.core.navigation.Route
+import com.moive.app.presentation.condition.navigation.navigateToCondition
 import com.moive.app.presentation.meeting.confirmed.navigation.navigateToMeetingConfirmed
 import com.moive.app.presentation.meeting.detail.MeetingDetailRoute
 import kotlinx.serialization.Serializable
@@ -22,6 +23,7 @@ fun NavGraphBuilder.meetingDetailGraph(
 ) {
     composable<MeetingDetail> {
         MeetingDetailRoute(
+            navigateToCondition = navController::navigateToCondition,
             navigateToMeetingConfirmed = navController::navigateToMeetingConfirmed,
             modifier = Modifier.padding(innerPadding),
         )

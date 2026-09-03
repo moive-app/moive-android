@@ -19,6 +19,7 @@ import com.moive.app.presentation.meeting.detail.MeetingDetailContract.MeetingSt
 
 @Composable
 fun MeetingDetailRoute(
+    navigateToCondition: () -> Unit,
     navigateToMeetingConfirmed: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MeetingDetailViewModel = hiltViewModel(),
@@ -30,7 +31,7 @@ fun MeetingDetailRoute(
         onStatusChange = viewModel::changeStatus,
         onBottomButtonClick = {
             when (it) {
-                MeetingStatus.INPUTTING -> {}// Todo: 조건 입력 화면
+                MeetingStatus.INPUTTING -> navigateToCondition()
                 MeetingStatus.VOTING -> {}// Todo: 투표 화면
                 MeetingStatus.CONFIRMED -> navigateToMeetingConfirmed()
             }
@@ -60,7 +61,6 @@ private fun MeetingDetailScreen(
 
         Button(
             onClick = { onBottomButtonClick(status) },
-            enabled = status != MeetingStatus.INPUTTING,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
@@ -68,7 +68,7 @@ private fun MeetingDetailScreen(
         ) {
             Text(
                 text = when (status) {
-                    MeetingStatus.INPUTTING -> "아직 조건 입력 중이에요"
+                    MeetingStatus.INPUTTING -> "조건 입력하기"
                     MeetingStatus.VOTING -> "추천 장소 확인 및 투표"
                     MeetingStatus.CONFIRMED -> "확정된 모임 보러가기"
                 }
