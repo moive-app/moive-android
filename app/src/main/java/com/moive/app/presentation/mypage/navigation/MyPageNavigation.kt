@@ -11,6 +11,7 @@ import com.moive.app.core.extensions.clearBackStackNavOptions
 import com.moive.app.core.navigation.MainTabRoute
 import com.moive.app.presentation.login.navigation.navigateToLogin
 import com.moive.app.presentation.mypage.MyPageRoute
+import com.moive.app.presentation.withdraw.navigation.navigateToWithDraw
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToMyPage(
@@ -24,6 +25,7 @@ fun NavGraphBuilder.myPageGraph(
     composable<MyPage> {
         MyPageRoute(
             navigateToLogin = navController::navigateToLogin,
+            navigateToWithDraw = navController::navigateToWithDraw,
             modifier = Modifier.padding(innerPadding),
         )
     }
