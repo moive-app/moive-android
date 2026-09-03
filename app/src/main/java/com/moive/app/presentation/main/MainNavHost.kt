@@ -5,8 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import com.moive.app.presentation.home.navigation.homeGraph
 import com.moive.app.presentation.login.navigation.loginGraph
-import com.moive.app.presentation.meeting.navigation.meetingGraph
 import com.moive.app.presentation.login.signup.navigation.signUpCompleteGraph
+import com.moive.app.presentation.meeting.complete.navigation.meetingCompleteGraph
+import com.moive.app.presentation.meeting.confirmed.navigation.meetingConfirmedGraph
+import com.moive.app.presentation.meeting.detail.navigation.meetingDetailGraph
+import com.moive.app.presentation.meeting.create.navigation.meetingGraph
+import com.moive.app.presentation.meeting.list.navigation.meetingListGraph
 import com.moive.app.presentation.mypage.navigation.myPageGraph
 import com.moive.app.presentation.splash.navigation.splashGraph
 
@@ -36,6 +40,7 @@ fun MainNavHost(
         )
 
         homeGraph(
+            navController = navController,
             innerPadding = innerPadding,
         )
 
@@ -45,6 +50,24 @@ fun MainNavHost(
         )
 
         meetingGraph(
+            innerPadding = innerPadding,
+        )
+
+        meetingListGraph(
+            navController = navController,
+            innerPadding = innerPadding,
+        )
+
+        meetingDetailGraph(
+            navController = navController,
+            innerPadding = innerPadding,
+        )
+
+        meetingConfirmedGraph(
+            innerPadding = innerPadding,
+        )
+
+        meetingCompleteGraph(
             innerPadding = innerPadding,
         )
 
