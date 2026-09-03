@@ -19,6 +19,7 @@ import com.moive.app.presentation.meeting.detail.MeetingDetailContract.MeetingSt
 
 @Composable
 fun MeetingDetailRoute(
+    navigateToMeetingConfirmed: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MeetingDetailViewModel = hiltViewModel(),
 ) {
@@ -26,6 +27,14 @@ fun MeetingDetailRoute(
 
     MeetingDetailScreen(
         status = uiState.status,
+        onStatusChange = viewModel::changeStatus,
+        onBottomButtonClick = {
+            when (it) {
+                MeetingStatus.INPUTTING -> {}// Todo: 조건 입력 화면
+                MeetingStatus.VOTING -> {}// Todo: 투표 화면
+                MeetingStatus.CONFIRMED -> navigateToMeetingConfirmed()
+            }
+        },
         modifier = modifier,
     )
 }
