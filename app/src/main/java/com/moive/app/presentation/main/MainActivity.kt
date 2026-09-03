@@ -27,14 +27,7 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(Unit) {
                     authManager.authEvent.collect {
-                        appState.navController.navigateToLogin(
-                            navOptions {
-                                popUpTo(0) {
-                                    inclusive = true
-                                }
-                                launchSingleTop = true
-                            }
-                        )
+                        appState.navController.navigateToLogin()
                     }
                 }
 

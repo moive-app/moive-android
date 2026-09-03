@@ -23,11 +23,7 @@ fun NavGraphBuilder.myPageGraph(
 ) {
     composable<MyPage> {
         MyPageRoute(
-            navigateToLogin = {
-                navController.navigateToLogin(
-                    navOptions = navController.clearBackStackNavOptions()
-                )
-            },
+            navigateToLogin = navController::navigateToLogin,
             modifier = Modifier.padding(innerPadding),
         )
     }
