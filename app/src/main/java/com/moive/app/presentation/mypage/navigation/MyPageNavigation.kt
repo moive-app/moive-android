@@ -8,6 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
+import com.moive.app.core.extensions.clearBackStackNavOptions
 import com.moive.app.core.navigation.MainTabRoute
 import com.moive.app.presentation.login.navigation.navigateToLogin
 import com.moive.app.presentation.mypage.MyPageRoute
@@ -25,9 +26,7 @@ fun NavGraphBuilder.myPageGraph(
         MyPageRoute(
             navigateToLogin = {
                 navController.navigateToLogin(
-                    navOptions {
-                        popUpTo<MyPage> { inclusive = true }
-                    }
+                    navOptions = navController.clearBackStackNavOptions()
                 )
             },
             modifier = Modifier.padding(innerPadding),
