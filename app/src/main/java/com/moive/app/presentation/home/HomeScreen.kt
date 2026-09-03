@@ -15,9 +15,15 @@ import com.moive.app.core.extensions.noRippleClickable
 
 @Composable
 fun HomeRoute(
+    navigateToMeetingList: () -> Unit,
+    navigateToMeetingDetail: () -> Unit,
+    navigateToMeetingComplete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     HomeScreen(
+        onShowListClick = navigateToMeetingList,
+        onOngoingMeetingClick = navigateToMeetingDetail,
+        onEndMeetingClick = navigateToMeetingComplete,
         modifier = modifier,
     )
 }
