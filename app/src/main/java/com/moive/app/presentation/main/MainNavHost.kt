@@ -9,7 +9,8 @@ import com.moive.app.presentation.login.signup.navigation.signUpCompleteGraph
 import com.moive.app.presentation.meeting.complete.navigation.meetingCompleteGraph
 import com.moive.app.presentation.meeting.confirmed.navigation.meetingConfirmedGraph
 import com.moive.app.presentation.meeting.detail.navigation.meetingDetailGraph
-import com.moive.app.presentation.meeting.create.navigation.meetingGraph
+import com.moive.app.presentation.meeting.create.navigation.meetingCreationGraph
+import com.moive.app.presentation.meeting.infoconfirm.navigation.meetingInfoConfirmGraph
 import com.moive.app.presentation.meeting.list.navigation.meetingListGraph
 import com.moive.app.presentation.mypage.navigation.myPageGraph
 import com.moive.app.presentation.splash.navigation.splashGraph
@@ -49,7 +50,13 @@ fun MainNavHost(
             innerPadding = innerPadding,
         )
 
-        meetingGraph(
+        meetingCreationGraph(
+            navController = navController,
+            innerPadding = innerPadding,
+        )
+
+        meetingInfoConfirmGraph(
+            navController = navController,
             innerPadding = innerPadding,
         )
 
