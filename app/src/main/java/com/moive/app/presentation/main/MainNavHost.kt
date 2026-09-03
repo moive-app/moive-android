@@ -3,6 +3,7 @@ package com.moive.app.presentation.main
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
+import com.moive.app.presentation.condition.navigation.conditionGraph
 import com.moive.app.presentation.home.navigation.homeGraph
 import com.moive.app.presentation.login.navigation.loginGraph
 import com.moive.app.presentation.login.signup.navigation.signUpCompleteGraph
@@ -66,6 +67,11 @@ fun MainNavHost(
         )
 
         meetingDetailGraph(
+            navController = navController,
+            innerPadding = innerPadding,
+        )
+
+        conditionGraph(
             navController = navController,
             innerPadding = innerPadding,
         )
