@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import com.moive.app.presentation.home.navigation.homeGraph
 import com.moive.app.presentation.login.navigation.loginGraph
 import com.moive.app.presentation.meeting.navigation.meetingGraph
+import com.moive.app.presentation.login.signup.navigation.signUpCompleteGraph
 import com.moive.app.presentation.mypage.navigation.myPageGraph
 import com.moive.app.presentation.splash.navigation.splashGraph
 
@@ -25,6 +26,11 @@ fun MainNavHost(
         )
 
         loginGraph(
+            navController = navController,
+            innerPadding = innerPadding,
+        )
+
+        signUpCompleteGraph(
             navController = navController,
             innerPadding = innerPadding,
         )
