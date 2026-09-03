@@ -11,6 +11,10 @@ private data class CheckMaxLength(
     private val maxLength: Int
 ) : InputTransformation {
 
+    init {
+        require(maxLength >= 0) { "maxLength must be at least zero" }
+    }
+
     override fun TextFieldBuffer.transformInput() {
         val length = asCharSequence().toString().checkLength()
 
