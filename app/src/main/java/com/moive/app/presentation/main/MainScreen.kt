@@ -1,12 +1,9 @@
 package com.moive.app.presentation.main
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -27,7 +24,7 @@ import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
 import com.moive.app.core.designsystem.component.toast.MoiveToast
 import com.moive.app.presentation.main.component.MainBottomBar
 import com.moive.app.presentation.main.component.MainTab
-import com.moive.app.presentation.meeting.navigation.navigateToMeeting
+import com.moive.app.presentation.meeting.create.navigation.navigateToMeetingCreation
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -77,7 +74,7 @@ fun MainScreen(
                         isVisible = isBottomBarVisible,
                         tabs = MainTab.entries.toPersistentList(),
                         currentTab = currentTab,
-                        onMeetingBtnClick = appState.navController::navigateToMeeting,
+                        onMeetingBtnClick = appState.navController::navigateToMeetingCreation,
                         onTabSelected = appState::navigate,
                         modifier = Modifier
                             .onGloballyPositioned { coordinates ->
