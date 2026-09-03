@@ -2,11 +2,13 @@ package com.moive.app.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -18,12 +20,14 @@ fun HomeRoute(
     navigateToMeetingList: () -> Unit,
     navigateToMeetingDetail: () -> Unit,
     navigateToMeetingComplete: () -> Unit,
+    navigateToNotification: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     HomeScreen(
         onShowListClick = navigateToMeetingList,
         onOngoingMeetingClick = navigateToMeetingDetail,
         onEndMeetingClick = navigateToMeetingComplete,
+        onNotificationClick = navigateToNotification,
         modifier = modifier,
     )
 }
@@ -33,6 +37,7 @@ private fun HomeScreen(
     onShowListClick: () -> Unit,
     onOngoingMeetingClick: () -> Unit,
     onEndMeetingClick: () -> Unit,
+    onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -41,6 +46,18 @@ private fun HomeScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(text = "홈")
+            Text(
+                text = "알림",
+                modifier = Modifier.noRippleClickable(onClick = onNotificationClick),
+            )
+        }
+
         Text(
             text = "내모임 전체보기",
             modifier = Modifier.noRippleClickable(onClick = onShowListClick),
@@ -72,6 +89,7 @@ private fun HomeScreenPreview() {
             onShowListClick = {},
             onOngoingMeetingClick = {},
             onEndMeetingClick = {},
+            onNotificationClick = {},
         )
     }
 }
