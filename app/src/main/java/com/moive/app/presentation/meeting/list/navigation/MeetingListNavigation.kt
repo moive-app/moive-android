@@ -1,4 +1,4 @@
-package com.moive.app.presentation.home.navigation
+package com.moive.app.presentation.meeting.list.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -7,32 +7,28 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.moive.app.core.navigation.MainTabRoute
-import com.moive.app.presentation.home.HomeRoute
+import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.meeting.complete.navigation.navigateToMeetingComplete
 import com.moive.app.presentation.meeting.detail.navigation.navigateToMeetingDetail
-import com.moive.app.presentation.meeting.list.navigation.navigateToMeetingList
-import com.moive.app.presentation.notification.navigation.navigateToNotification
+import com.moive.app.presentation.meeting.list.MeetingListRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToHome(
+fun NavController.navigateToMeetingList(
     navOptions: NavOptions? = null
-) = navigate(Home, navOptions)
+) = navigate(MeetingList, navOptions)
 
-fun NavGraphBuilder.homeGraph(
+fun NavGraphBuilder.meetingListGraph(
     navController: NavController,
     innerPadding: PaddingValues,
 ) {
-    composable<Home> {
-        HomeRoute(
-            navigateToMeetingList = navController::navigateToMeetingList,
+    composable<MeetingList> {
+        MeetingListRoute(
             navigateToMeetingDetail = navController::navigateToMeetingDetail,
             navigateToMeetingComplete = navController::navigateToMeetingComplete,
-            navigateToNotification = navController::navigateToNotification,
             modifier = Modifier.padding(innerPadding),
         )
     }
 }
 
 @Serializable
-data object Home: MainTabRoute
+data object MeetingList : Route

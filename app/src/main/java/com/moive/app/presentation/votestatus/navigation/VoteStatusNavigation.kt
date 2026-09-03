@@ -1,4 +1,4 @@
-package com.moive.app.presentation.meeting.navigation
+package com.moive.app.presentation.votestatus.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -8,23 +8,22 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.moive.app.core.navigation.Route
-import com.moive.app.presentation.home.HomeRoute
-import com.moive.app.presentation.meeting.MeetingRoute
+import com.moive.app.presentation.votestatus.VoteStatusRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToMeeting(
+fun NavController.navigateToVoteStatus(
     navOptions: NavOptions? = null
-) = navigate(Meeting, navOptions)
+) = navigate(VoteStatus, navOptions)
 
-fun NavGraphBuilder.meetingGraph(
+fun NavGraphBuilder.voteStatusGraph(
     innerPadding: PaddingValues,
 ) {
-    composable<Meeting> {
-        MeetingRoute(
+    composable<VoteStatus> {
+        VoteStatusRoute(
             modifier = Modifier.padding(innerPadding),
         )
     }
 }
 
 @Serializable
-data object Meeting: Route
+data object VoteStatus : Route

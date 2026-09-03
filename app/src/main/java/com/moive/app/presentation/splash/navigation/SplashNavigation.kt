@@ -15,11 +15,7 @@ fun NavGraphBuilder.splashGraph(
 ) {
     composable<Splash> {
         SplashRoute(
-            navigateToLogin = {
-                navController.navigateToLogin(
-                    navOptions = navController.clearBackStackNavOptions()
-                )
-            },
+            navigateToLogin = navController::navigateToLogin,
             navigateToHome = {
                 navController.navigateToHome(
                     navOptions = navController.clearBackStackNavOptions()

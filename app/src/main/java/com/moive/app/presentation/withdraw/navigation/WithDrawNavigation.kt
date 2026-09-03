@@ -1,4 +1,4 @@
-package com.moive.app.presentation.mypage.navigation
+package com.moive.app.presentation.withdraw.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -7,29 +7,27 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.moive.app.core.extensions.clearBackStackNavOptions
-import com.moive.app.core.navigation.MainTabRoute
+import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.login.navigation.navigateToLogin
-import com.moive.app.presentation.mypage.MyPageRoute
-import com.moive.app.presentation.withdraw.navigation.navigateToWithDraw
+import com.moive.app.presentation.withdraw.WithDrawRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToMyPage(
+fun NavController.navigateToWithDraw(
     navOptions: NavOptions? = null
-) = navigate(MyPage, navOptions)
+) = navigate(WithDraw, navOptions)
 
-fun NavGraphBuilder.myPageGraph(
+fun NavGraphBuilder.withDrawGraph(
     navController: NavController,
     innerPadding: PaddingValues,
 ) {
-    composable<MyPage> {
-        MyPageRoute(
+    composable<WithDraw> {
+        WithDrawRoute(
+            navigateBack = { navController.popBackStack() },
             navigateToLogin = navController::navigateToLogin,
-            navigateToWithDraw = navController::navigateToWithDraw,
             modifier = Modifier.padding(innerPadding),
         )
     }
 }
 
 @Serializable
-data object MyPage: MainTabRoute
+data object WithDraw : Route

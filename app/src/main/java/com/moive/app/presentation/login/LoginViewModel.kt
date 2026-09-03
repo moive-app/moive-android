@@ -31,11 +31,11 @@ class LoginViewModel @Inject constructor(
 
         authRepository.postKakaoLogin(token)
             .onSuccess { result ->
+                _uiState.update { it.copy(needRegister = !result.registered) }
+
                 if (result.registered) {
                     kakaoAccessToken = null
-                    _sideEffect.send(SideEffect.NavigateToMyPage)
-                } else {
-                    _uiState.update { it.copy(needRegister = true) }
+                    _sideEffect.send(SideEffect.NavigateToHome)
                 }
             }
             .onFailure {
@@ -72,7 +72,7 @@ class LoginViewModel @Inject constructor(
             )
                 .onSuccess {
                     kakaoAccessToken = null
-                    _sideEffect.send(SideEffect.NavigateToMyPage)
+                    _sideEffect.send(SideEffect.NavigateToSignUpComplete)
                 }
                 .onFailure {
                     showToast(SIGN_UP_FAILURE_MESSAGE)

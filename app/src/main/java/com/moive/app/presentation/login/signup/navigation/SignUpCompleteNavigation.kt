@@ -1,4 +1,4 @@
-package com.moive.app.presentation.login.navigation
+package com.moive.app.presentation.login.signup.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -10,30 +10,28 @@ import androidx.navigation.compose.composable
 import com.moive.app.core.extensions.clearBackStackNavOptions
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.home.navigation.navigateToHome
-import com.moive.app.presentation.login.LoginRoute
-import com.moive.app.presentation.login.signup.navigation.navigateToSignUpComplete
+import com.moive.app.presentation.login.signup.SignUpCompleteRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToLogin(
+fun NavController.navigateToSignUpComplete(
     navOptions: NavOptions? = clearBackStackNavOptions()
-) = navigate(Login, navOptions)
+) = navigate(SignUpComplete, navOptions)
 
-fun NavGraphBuilder.loginGraph(
+fun NavGraphBuilder.signUpCompleteGraph(
     navController: NavController,
     innerPadding: PaddingValues,
 ) {
-    composable<Login> {
-        LoginRoute(
+    composable<SignUpComplete> {
+        SignUpCompleteRoute(
             navigateToHome = {
                 navController.navigateToHome(
                     navOptions = navController.clearBackStackNavOptions()
                 )
             },
-            navigateToSignUpComplete = navController::navigateToSignUpComplete,
             modifier = Modifier.padding(innerPadding),
         )
     }
 }
 
 @Serializable
-data object Login: Route
+data object SignUpComplete : Route

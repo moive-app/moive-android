@@ -28,13 +28,15 @@ import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.extensions.noRippleClickable
 import com.moive.app.presentation.login.KakaoLoginManager.KakaoLoginResult
-import com.moive.app.presentation.login.LoginContract.SideEffect.NavigateToMyPage
+import com.moive.app.presentation.login.LoginContract.SideEffect.NavigateToHome
+import com.moive.app.presentation.login.LoginContract.SideEffect.NavigateToSignUpComplete
 import com.moive.app.presentation.login.LoginContract.SideEffect.OnShowToast
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginRoute(
-    navigateToMyPage: () -> Unit,
+    navigateToHome: () -> Unit,
+    navigateToSignUpComplete: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
@@ -50,7 +52,8 @@ fun LoginRoute(
         lifeCycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.sideEffect.collect { sideEffect ->
                 when (sideEffect) {
-                    NavigateToMyPage -> navigateToMyPage()
+                    NavigateToHome -> navigateToHome()
+                    NavigateToSignUpComplete -> navigateToSignUpComplete()
                     is OnShowToast -> showToast.invoke(sideEffect.msg)
                 }
             }

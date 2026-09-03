@@ -15,7 +15,8 @@ interface LoginContract {
     }
 
     sealed class SideEffect {
-        data object NavigateToMyPage : SideEffect()
+        data object NavigateToHome : SideEffect()
+        data object NavigateToSignUpComplete : SideEffect()
         data class OnShowToast(val msg: String) : SideEffect()
     }
 }

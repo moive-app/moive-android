@@ -7,7 +7,10 @@ import com.moive.app.presentation.mypage.MyPageContract.SideEffect.NavigateToLog
 import com.moive.app.presentation.mypage.MyPageContract.SideEffect.OnShowToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,10 +19,26 @@ class MyPageViewModel @Inject constructor(
     private val authRepository: AuthRepository,
 ): ViewModel() {
 
+    private val _uiState = MutableStateFlow(MyPageContract.State())
+    val uiState = _uiState.asStateFlow()
+
     private val _sideEffect = Channel<MyPageContract.SideEffect>(Channel.BUFFERED)
     val sideEffect = _sideEffect.receiveAsFlow()
 
-    fun postLogout() = viewModelScope.launch {
+    fun onLogoutClick() {
+        _uiState.update { it.copy(isLogoutConfirmVisible = true) }
+    }
+
+    fun onLogoutCancelClick() {
+        _uiState.update { it.copy(isLogoutConfirmVisible = false) }
+    }
+
+    fun onLogoutConfirmClick() {
+        _uiState.update { it.copy(isLogoutConfirmVisible = false) }
+        postLogout()
+    }
+
+    private fun postLogout() = viewModelScope.launch {
         authRepository.postLogout()
             .onSuccess {
                 _sideEffect.send(NavigateToLogin)
