@@ -15,9 +15,13 @@ import com.moive.app.core.extensions.noRippleClickable
 
 @Composable
 fun MeetingListRoute(
+    navigateToMeetingDetail: () -> Unit,
+    navigateToMeetingComplete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     MeetingListScreen(
+        onOngoingMeetingClick = navigateToMeetingDetail,
+        onEndMeetingClick = navigateToMeetingComplete,
         modifier = modifier,
     )
 }
@@ -25,7 +29,7 @@ fun MeetingListRoute(
 @Composable
 private fun MeetingListScreen(
     onOngoingMeetingClick: () -> Unit,
-    onEndedMeetingClick: () -> Unit,
+    onEndMeetingClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -43,7 +47,7 @@ private fun MeetingListScreen(
 
         MeetingCard(
             title = "종료된 모임",
-            onClick = onEndedMeetingClick,
+            onClick = onEndMeetingClick,
         )
     }
 }
@@ -69,7 +73,7 @@ private fun MeetingListScreenPreview() {
     MoiveTheme {
         MeetingListScreen(
             onOngoingMeetingClick = {},
-            onEndedMeetingClick = {},
+            onEndMeetingClick = {},
         )
     }
 }
