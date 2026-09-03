@@ -20,7 +20,7 @@ import com.moive.app.presentation.meeting.detail.MeetingDetailContract.MeetingSt
 @Composable
 fun MeetingDetailRoute(
     navigateToCondition: () -> Unit,
-    navigateToRecommendation: () -> Unit,
+    navigateToVoting: () -> Unit,
     navigateToMeetingConfirmed: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MeetingDetailViewModel = hiltViewModel(),
@@ -33,7 +33,7 @@ fun MeetingDetailRoute(
         onBottomButtonClick = {
             when (it) {
                 MeetingStatus.INPUTTING -> navigateToCondition()
-                MeetingStatus.VOTING -> navigateToRecommendation()
+                MeetingStatus.VOTING -> navigateToVoting()
                 MeetingStatus.CONFIRMED -> navigateToMeetingConfirmed()
             }
         },

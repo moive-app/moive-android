@@ -11,7 +11,7 @@ import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.condition.navigation.navigateToCondition
 import com.moive.app.presentation.meeting.confirmed.navigation.navigateToMeetingConfirmed
 import com.moive.app.presentation.meeting.detail.MeetingDetailRoute
-import com.moive.app.presentation.recommendation.navigation.navigateToRecommendation
+import com.moive.app.presentation.voting.navigation.navigateToVoting
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToMeetingDetail(
@@ -25,7 +25,7 @@ fun NavGraphBuilder.meetingDetailGraph(
     composable<MeetingDetail> {
         MeetingDetailRoute(
             navigateToCondition = navController::navigateToCondition,
-            navigateToRecommendation = navController::navigateToRecommendation,
+            navigateToVoting = navController::navigateToVoting,
             navigateToMeetingConfirmed = navController::navigateToMeetingConfirmed,
             modifier = Modifier.padding(innerPadding),
         )
