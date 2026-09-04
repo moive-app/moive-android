@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
+import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.extensions.noRippleClickable
 import com.moive.app.presentation.login.KakaoLoginManager.KakaoLoginResult
@@ -54,7 +55,7 @@ fun LoginRoute(
                 when (sideEffect) {
                     NavigateToHome -> navigateToHome()
                     NavigateToSignUpComplete -> navigateToSignUpComplete()
-                    is OnShowToast -> showToast.invoke(sideEffect.msg)
+                    is OnShowToast -> showToast.invoke(sideEffect.msg, sideEffect.type)
                 }
             }
         }
@@ -66,7 +67,7 @@ fun LoginRoute(
             scope.launch {
                 when (val result = kakaoLoginManager.loginKakao(context)) {
                     is KakaoLoginResult.Success -> viewModel.postKakaoLogin(result.token)
-                    is KakaoLoginResult.Failure -> viewModel.showToast(result.error)
+                    is KakaoLoginResult.Failure -> viewModel.showToast(result.error, ToastType.ERROR)
                 }
             }
         },

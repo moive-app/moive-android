@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
 import com.moive.app.core.designsystem.component.toast.MoiveToast
 import com.moive.app.core.designsystem.component.toast.MoiveToastVisuals
+import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.presentation.main.component.MainBottomBar
 import com.moive.app.presentation.main.component.MainTab
 import com.moive.app.presentation.meeting.create.navigation.navigateToMeetingCreation
@@ -47,7 +48,7 @@ fun MainScreen(
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
 
-    val onShowToast: (String) -> Unit = { message ->
+    val onShowToast: (String, ToastType) -> Unit = { message, type ->
         job?.cancel()
         job = coroutineScope.launch {
             snackbarHostState.currentSnackbarData?.dismiss()
@@ -58,8 +59,11 @@ fun MainScreen(
             }
 
             snackbarHostState.showSnackbar(
-                message = message,
-                withDismissAction = false,
+                MoiveToastVisuals(
+                    message = message,
+                    type = type,
+                    withDismissAction = false,
+                ),
             )
         }
     }

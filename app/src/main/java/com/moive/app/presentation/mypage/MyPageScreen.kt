@@ -44,7 +44,7 @@ fun MyPageRoute(
             viewModel.sideEffect.collect { sideEffect ->
                 when (sideEffect) {
                     NavigateToLogin -> navigateToLogin()
-                    is OnShowToast -> showToast.invoke(sideEffect.msg)
+                    is OnShowToast -> showToast.invoke(sideEffect.msg, sideEffect.type)
                 }
             }
         }
