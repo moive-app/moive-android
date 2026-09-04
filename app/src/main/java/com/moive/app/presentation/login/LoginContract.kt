@@ -1,6 +1,7 @@
 package com.moive.app.presentation.login
 
 import androidx.compose.runtime.Immutable
+import com.moive.app.core.designsystem.component.toast.ToastType
 
 interface LoginContract {
     @Immutable
@@ -17,6 +18,6 @@ interface LoginContract {
     sealed class SideEffect {
         data object NavigateToHome : SideEffect()
         data object NavigateToSignUpComplete : SideEffect()
-        data class OnShowToast(val msg: String) : SideEffect()
+        data class OnShowToast(val msg: String, val type: ToastType) : SideEffect()
     }
 }

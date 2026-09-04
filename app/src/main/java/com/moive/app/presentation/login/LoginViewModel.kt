@@ -2,6 +2,7 @@ package com.moive.app.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.data.auth.repository.AuthRepository
 import com.moive.app.presentation.login.LoginContract.SideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,7 +40,7 @@ class LoginViewModel @Inject constructor(
                 }
             }
             .onFailure {
-                showToast(LOGIN_FAILURE_MESSAGE)
+                showToast(LOGIN_FAILURE_MESSAGE, ToastType.ERROR)
             }
     }
 
@@ -75,7 +76,7 @@ class LoginViewModel @Inject constructor(
                     _sideEffect.send(SideEffect.NavigateToSignUpComplete)
                 }
                 .onFailure {
-                    showToast(SIGN_UP_FAILURE_MESSAGE)
+                    showToast(SIGN_UP_FAILURE_MESSAGE, ToastType.ERROR)
                 }
 
             _uiState.update { it.copy(isSignUpSubmitting = false) }
@@ -84,8 +85,9 @@ class LoginViewModel @Inject constructor(
 
     fun showToast(
         text: String,
+        type: ToastType,
     ) = viewModelScope.launch {
-        _sideEffect.send(SideEffect.OnShowToast(text))
+        _sideEffect.send(SideEffect.OnShowToast(text, type))
     }
 
     companion object {
