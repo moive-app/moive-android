@@ -67,6 +67,7 @@ fun rememberMapViewWithLifecycle(
         lifecycle.addObserver(observer)
         onDispose {
             lifecycle.removeObserver(observer)
+            mapView.finish()
         }
     }
     return mapView
