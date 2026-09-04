@@ -80,6 +80,7 @@ val WhiteAlpha40 = Color(0x66FFFFFF)
 // Shadow
 val Shadow8 = Color(0x1416181A)
 val Shadow20 = Color(0x3316181A)
+val ModalShadow = Color(0x14181D21)
 
 @Immutable
 data class MoiveColors(
@@ -94,6 +95,7 @@ data class MoiveColors(
     val accent: Accent,
     val shadow8: Color,
     val shadow20: Color,
+    val modalShadow: Color,
 ) {
     @Immutable
     data class Primary(
@@ -325,6 +327,7 @@ val defaultMoiveColors = MoiveColors(
     ),
     shadow8 = Shadow8,
     shadow20 = Shadow20,
+    modalShadow = ModalShadow,
 )
 
 @Preview
