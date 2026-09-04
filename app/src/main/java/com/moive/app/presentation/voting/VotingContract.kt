@@ -11,6 +11,9 @@ interface VotingContract {
     data class State(
         val step: Step = Step.RECOMMENDATION,
         val isPlaceListVisible: Boolean = false,
+        val locationX: Double = 127.0246, // 신논현역
+        val locationY: Double = 37.5044, // 신논현역
+        val regionName: String = "신논현동",
         val placeList: PersistentList<PlaceDetailModel> = places,
         val selectedPlaceList: PersistentSet<Long> = persistentSetOf(),
         val currentPlaceId: Long? = null,

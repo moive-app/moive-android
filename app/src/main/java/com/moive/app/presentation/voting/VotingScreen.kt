@@ -48,6 +48,9 @@ private fun VotingScreen(
 ) {
     when (state.step) {
         Step.RECOMMENDATION -> PlaceListContent(
+            locationX = state.locationX,
+            locationY = state.locationY,
+            regionName = state.regionName,
             places = state.placeList,
             selectedPlaceIds = state.selectedPlaceList,
             isPlaceListVisible = state.isPlaceListVisible,

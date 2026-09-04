@@ -2,6 +2,7 @@ package com.moive.app
 
 import android.app.Application
 import com.kakao.sdk.common.KakaoSdk
+import com.kakao.vectormap.KakaoMapSdk
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -12,6 +13,7 @@ class MoiveApplication : Application() {
 
         initTimber()
         initKakaoSdk()
+        initKakaoMapSdk()
     }
 
     private fun initTimber() {
@@ -20,5 +22,9 @@ class MoiveApplication : Application() {
 
     private fun initKakaoSdk() {
         KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
+    }
+
+    private fun initKakaoMapSdk() {
+        KakaoMapSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 }
