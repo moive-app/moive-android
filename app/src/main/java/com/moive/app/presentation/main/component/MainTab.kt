@@ -13,13 +13,13 @@ enum class MainTab(
     val route: MainTabRoute,
 ) {
     HOME(
-        iconRes = R.drawable.ic_home,
+        iconRes = R.drawable.ic_home_28,
         titleRes = "home",
         route = Home,
     ),
 
     MYPAGE(
-        iconRes = R.drawable.ic_profile,
+        iconRes = R.drawable.ic_profile_28,
         titleRes = "mypage",
         route = MyPage,
     );
