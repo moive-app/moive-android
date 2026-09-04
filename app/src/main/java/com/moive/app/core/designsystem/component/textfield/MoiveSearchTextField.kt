@@ -1,6 +1,7 @@
 package com.moive.app.core.designsystem.component.textfield
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -46,8 +47,13 @@ fun MoiveSearchTextField(
 
     Row(
         modifier = modifier
+            .border(
+                color = colors.stroke.default03,
+                width = 1.dp,
+                shape = RoundedCornerShape(radius.sm),
+            )
             .background(
-                color = colors.gray01,
+                color = colors.fill.default08,
                 shape = RoundedCornerShape(radius.sm),
             )
             .padding(vertical = 9.dp, horizontal = 12.dp),
@@ -66,10 +72,10 @@ fun MoiveSearchTextField(
 
         MoiveBasicTextField(
             state = state,
-            textColor = colors.gray800,
+            textColor = colors.text.default,
             textStyle = typography.body.smNormalR,
             placeholder = placeholder,
-            placeholderColor = colors.gray300,
+            placeholderColor = colors.text.disabled,
             placeholderStyle = typography.body.smNormalR,
             modifier = Modifier.weight(1f),
             keyboardOptions = keyboardOptions,
@@ -79,6 +85,7 @@ fun MoiveSearchTextField(
             },
             lineLimits = TextFieldLineLimits.SingleLine,
             interactionSource = interactionSource,
+            cursorColor = colors.secondary.pressed,
         )
 
         if (hasValue) {
