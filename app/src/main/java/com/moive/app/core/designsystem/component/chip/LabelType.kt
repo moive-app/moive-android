@@ -17,7 +17,8 @@ enum class LabelType {
     CONFIRMED,
     COMPLETE,
     CATEGORY,
-    INFO;
+    INFO,
+    REGION;
 
     @Composable
     fun getStyle(): LabelStyle =
@@ -63,6 +64,12 @@ enum class LabelType {
                     contentColor = colors.gray500,
                     backgroundColor = colors.gray50,
                     borderColor = colors.gray200,
+                )
+            REGION ->
+                LabelStyle(
+                    contentColor = colors.gray01,
+                    backgroundColor = colors.gray800,
+                    borderColor = colors.gray800,
                 )
         }
 }
