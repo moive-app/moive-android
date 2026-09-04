@@ -41,6 +41,7 @@ timber = "5.0.1"
 
 # Kakao
 kakaoUser = "2.24.0"
+kakaoMap = "2.15.1"
 
 # Test
 junit = "4.13.2"
@@ -93,6 +94,7 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 # Kakao
 kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakaoUser" }
+kakao-map = { group = "com.kakao.maps.open", name = "android", version.ref = "kakaoMap" }
 
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
