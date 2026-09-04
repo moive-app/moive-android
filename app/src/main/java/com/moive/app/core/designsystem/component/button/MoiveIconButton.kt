@@ -79,12 +79,12 @@ private fun MoiveIconButtonPreview() {
             MoiveIconButtonSize.entries.forEach { size ->
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     MoiveIconButton(
-                        icon = ImageVector.vectorResource(R.drawable.ic_home),
+                        icon = ImageVector.vectorResource(R.drawable.ic_home_28),
                         onClick = {},
                         size = size,
                     )
                     MoiveIconButton(
-                        icon = ImageVector.vectorResource(R.drawable.ic_home),
+                        icon = ImageVector.vectorResource(R.drawable.ic_home_28),
                         onClick = {},
                         size = size,
                         enabled = false,
