@@ -21,10 +21,11 @@ import androidx.compose.ui.unit.dp
 fun Modifier.noRippleClickable(
     onClick: () -> Unit,
     isEnabled: Boolean = true,
+    interactionSource: MutableInteractionSource? = null,
 ): Modifier = composed {
     clickable(
         indication = null,
-        interactionSource = remember { MutableInteractionSource() },
+        interactionSource = interactionSource ?: remember { MutableInteractionSource() },
         onClick = onClick,
         enabled = isEnabled,
     )
