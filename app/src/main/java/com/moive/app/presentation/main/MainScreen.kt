@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
 import com.moive.app.core.designsystem.component.toast.MoiveToast
+import com.moive.app.core.designsystem.component.toast.MoiveToastVisuals
 import com.moive.app.presentation.main.component.MainBottomBar
 import com.moive.app.presentation.main.component.MainTab
 import com.moive.app.presentation.meeting.create.navigation.navigateToMeetingCreation
@@ -104,9 +105,14 @@ fun MainScreen(
                     .navigationBarsPadding(),
             ) { data ->
 
+                val moiveToastVisuals = data.visuals as MoiveToastVisuals
+
                 MoiveToast(
-                    text = data.visuals.message,
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text = moiveToastVisuals.message,
+                    type = moiveToastVisuals.type,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 80.dp),
                 )
             }
         }
