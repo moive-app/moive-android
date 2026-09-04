@@ -69,7 +69,7 @@ private fun MoiveRadiusPreview() {
                                 modifier = Modifier
                                     .size(80.dp)
                                     .background(
-                                        color = MoiveTheme.colors.purple300,
+                                        color = MoiveTheme.colors.primary.sub01,
                                         shape = RoundedCornerShape(radius),
                                     ),
                             )

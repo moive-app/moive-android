@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
@@ -13,47 +14,52 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-// Primary
-val Purple50 = Color(0xFFF3F2FF)
-val Purple100 = Color(0xFFE2DFFF)
-val Purple200 = Color(0xFFC8C7F6)
+// Purple
+val Purple50 = Color(0xFFEDE8FF)
+val Purple200 = Color(0xFFCBC5FF)
 val Purple300 = Color(0xFFB3AAFF)
-val Purple400 = Color(0xFF9178FF)
 val Purple500 = Color(0xFF7742FE)
-val Purple600 = Color(0xFF6C3CE7)
 val Purple700 = Color(0xFF542FB4)
-val Purple800 = Color(0xFF41248C)
-val Purple900 = Color(0xFF321C6B)
 
-// Secondary
+// Blue
 val Blue50 = Color(0xFFE9EEFE)
-val Blue100 = Color(0xFFBBCCFC)
 val Blue200 = Color(0xFF9BB3FA)
 val Blue300 = Color(0xFF6D90F8)
 val Blue400 = Color(0xFF517AF6)
 val Blue500 = Color(0xFF3661E0)
-val Blue600 = Color(0xFF2647CC)
-val Blue700 = Color(0xFF203FAA)
-val Blue800 = Color(0xFF1A3389)
-val Blue900 = Color(0xFF14286C)
 
 // Pink
 val Pink50 = Color(0xFFFAECF3)
 val Pink100 = Color(0xFFE9B2CD)
-val Pink200 = Color(0xFFE093B8)
-val Pink300 = Color(0xFFD3649A)
 val Pink400 = Color(0xFFCA4485)
-val Pink500 = Color(0xFF8D305D)
-val Pink600 = Color(0xFF7B2951)
 
 // Teal
 val Teal50 = Color(0xFFE0F5FA)
 val Teal100 = Color(0xFF9DD4D5)
-val Teal200 = Color(0xFF74C3C4)
-val Teal300 = Color(0xFF38A9AA)
-val Teal400 = Color(0xFF0F9799)
 val Teal500 = Color(0xFF0B6A6B)
-val Teal600 = Color(0xFF095C5D)
+
+// Green
+val Green50 = Color(0xFFE6F9EB)
+val Green200 = Color(0xFF9EE6B5)
+val Green500 = Color(0xFF00BF40)
+val Green700 = Color(0xFF00892D)
+
+// Orange
+val Orange50 = Color(0xFFFFF5E8)
+val Orange200 = Color(0xFFFFD08A)
+val Orange500 = Color(0xFFFF9200)
+val Orange700 = Color(0xFFBF5F00)
+
+// Red
+val Red50 = Color(0xFFFFF1F1)
+val Red200 = Color(0xFFFFC2C2)
+val Red500 = Color(0xFFFF4242)
+val Red700 = Color(0xFFC82424)
+
+// Yellow
+val Yellow50 = Color(0xFFFFFBEA)
+val Yellow100 = Color(0xFFFFF4BF)
+val Yellow500 = Color(0xFFFFD728)
 
 // Gray
 val Gray01 = Color(0xFFFFFFFF)
@@ -65,17 +71,11 @@ val Gray300 = Color(0xFFBCC2C8)
 val Gray400 = Color(0xFF8E959C)
 val Gray500 = Color(0xFF6D747B)
 val Gray600 = Color(0xFF495057)
-val Gray700 = Color(0xFF343A40)
 val Gray800 = Color(0xFF212528)
 val Gray900 = Color(0xFF16181A)
 
-// Status
-val Positive = Color(0xFF00BF40)
-val Cautionary = Color(0xFFFF9200)
-val Destructive = Color(0xFFFF4242)
-
-// Accent
-val Yellow = Color(0xFFFFD728)
+// Alpha
+val WhiteAlpha40 = Color(0x66FFFFFF)
 
 // Shadow
 val Shadow8 = Color(0x1416181A)
@@ -83,214 +83,284 @@ val Shadow20 = Color(0x3316181A)
 
 @Immutable
 data class MoiveColors(
-    // Primary
-    val purple50: Color,
-    val purple100: Color,
-    val purple200: Color,
-    val purple300: Color,
-    val purple400: Color,
-    val purple500: Color,
-    val purple600: Color,
-    val purple700: Color,
-    val purple800: Color,
-    val purple900: Color,
+    val primary: Primary,
+    val secondary: Secondary,
+    val text: Text,
+    val icon: Icon,
+    val stroke: Stroke,
+    val fill: Fill,
+    val background: Background,
+    val status: Status,
+    val accent: Accent,
+    val shadow8: Color,
+    val shadow20: Color,
+) {
+    @Immutable
+    data class Primary(
+        val default: Color,
+        val pressed: Color,
+        val sub01: Color,
+        val sub02: Color,
+        val sub03: Color,
+    )
 
-    // Secondary
-    val blue50: Color,
-    val blue100: Color,
-    val blue200: Color,
-    val blue300: Color,
-    val blue400: Color,
-    val blue500: Color,
-    val blue600: Color,
-    val blue700: Color,
-    val blue800: Color,
-    val blue900: Color,
+    @Immutable
+    data class Secondary(
+        val default: Color,
+        val pressed: Color,
+        val sub01: Color,
+        val sub02: Color,
+        val sub03: Color,
+    )
 
-    // Pink
-    val pink50: Color,
-    val pink100: Color,
-    val pink200: Color,
-    val pink300: Color,
-    val pink400: Color,
-    val pink500: Color,
-    val pink600: Color,
+    @Immutable
+    data class Text(
+        val default: Color,
+        val secondary: Color,
+        val tertiary: Color,
+        val subtle: Color,
+        val disabled: Color,
+        val onBg: Color,
+    )
 
-    // Teal
-    val teal50: Color,
-    val teal100: Color,
-    val teal200: Color,
-    val teal300: Color,
-    val teal400: Color,
-    val teal500: Color,
-    val teal600: Color,
+    @Immutable
+    data class Icon(
+        val default: Color,
+        val secondary: Color,
+        val tertiary: Color,
+        val disabled: Color,
+        val onBg: Color,
+        val onBgSub: Color,
+    )
 
-    // Gray
-    val gray01: Color,
-    val gray10: Color,
-    val gray50: Color,
-    val gray100: Color,
-    val gray200: Color,
-    val gray300: Color,
-    val gray400: Color,
-    val gray500: Color,
-    val gray600: Color,
-    val gray700: Color,
-    val gray800: Color,
-    val gray900: Color,
+    @Immutable
+    data class Stroke(
+        val default00: Color,
+        val default01: Color,
+        val default02: Color,
+        val default03: Color,
+        val default04: Color,
+        val default05: Color,
+        val onBg: Color,
+    )
 
-    // Status
-    val positive: Color,
-    val cautionary: Color,
-    val destructive: Color,
+    @Immutable
+    data class Fill(
+        val default00: Color,
+        val default01: Color,
+        val default02: Color,
+        val default03: Color,
+        val default04: Color,
+        val default05: Color,
+        val default06: Color,
+        val default07: Color,
+        val default08: Color,
+    )
 
-    // Accent
-    val yellow: Color,
+    @Immutable
+    data class Background(
+        val default00: Color,
+        val default01: Color,
+        val default02: Color,
+        val default03: Color,
+        val default04: Color,
+        val default05: Color,
+    )
 
-    // Shadow
-    val shadow_8: Color,
-    val shadow_20: Color,
-)
+    @Immutable
+    data class Status(
+        val success: Success,
+        val caution: Caution,
+        val error: Error,
+    ) {
+        @Immutable
+        data class Success(
+            val default: Color,
+            val pressed: Color,
+            val sub01: Color,
+            val sub02: Color,
+        )
+
+        @Immutable
+        data class Caution(
+            val default: Color,
+            val pressed: Color,
+            val sub01: Color,
+            val sub02: Color,
+        )
+
+        @Immutable
+        data class Error(
+            val default: Color,
+            val pressed: Color,
+            val sub01: Color,
+            val sub02: Color,
+        )
+    }
+
+    @Immutable
+    data class Accent(
+        val yellow: Yellow,
+        val pink: Pink,
+        val teal: Teal,
+    ) {
+        @Immutable
+        data class Yellow(
+            val default: Color,
+            val sub01: Color,
+            val sub02: Color,
+        )
+
+        @Immutable
+        data class Pink(
+            val default: Color,
+            val sub01: Color,
+            val sub02: Color,
+        )
+
+        @Immutable
+        data class Teal(
+            val default: Color,
+            val sub01: Color,
+            val sub02: Color,
+        )
+    }
+}
 
 val defaultMoiveColors = MoiveColors(
-    // Primary
-    purple50 = Purple50,
-    purple100 = Purple100,
-    purple200 = Purple200,
-    purple300 = Purple300,
-    purple400 = Purple400,
-    purple500 = Purple500,
-    purple600 = Purple600,
-    purple700 = Purple700,
-    purple800 = Purple800,
-    purple900 = Purple900,
-
-    // Secondary
-    blue50 = Blue50,
-    blue100 = Blue100,
-    blue200 = Blue200,
-    blue300 = Blue300,
-    blue400 = Blue400,
-    blue500 = Blue500,
-    blue600 = Blue600,
-    blue700 = Blue700,
-    blue800 = Blue800,
-    blue900 = Blue900,
-
-    // Pink
-    pink50 = Pink50,
-    pink100 = Pink100,
-    pink200 = Pink200,
-    pink300 = Pink300,
-    pink400 = Pink400,
-    pink500 = Pink500,
-    pink600 = Pink600,
-
-    // Teal
-    teal50 = Teal50,
-    teal100 = Teal100,
-    teal200 = Teal200,
-    teal300 = Teal300,
-    teal400 = Teal400,
-    teal500 = Teal500,
-    teal600 = Teal600,
-
-    // Gray
-    gray01 = Gray01,
-    gray10 = Gray10,
-    gray50 = Gray50,
-    gray100 = Gray100,
-    gray200 = Gray200,
-    gray300 = Gray300,
-    gray400 = Gray400,
-    gray500 = Gray500,
-    gray600 = Gray600,
-    gray700 = Gray700,
-    gray800 = Gray800,
-    gray900 = Gray900,
-
-    // Status
-    positive = Positive,
-    cautionary = Cautionary,
-    destructive = Destructive,
-
-    // Accent
-    yellow = Yellow,
-
-    // Shadow
-    shadow_8 = Shadow8,
-    shadow_20 = Shadow20,
+    primary = MoiveColors.Primary(
+        default = Purple500,
+        pressed = Purple700,
+        sub01 = Purple300,
+        sub02 = Purple200,
+        sub03 = Purple50,
+    ),
+    secondary = MoiveColors.Secondary(
+        default = Blue400,
+        pressed = Blue500,
+        sub01 = Blue300,
+        sub02 = Blue200,
+        sub03 = Blue50,
+    ),
+    text = MoiveColors.Text(
+        default = Gray800,
+        secondary = Gray600,
+        tertiary = Gray500,
+        subtle = Gray400,
+        disabled = Gray300,
+        onBg = Gray01,
+    ),
+    icon = MoiveColors.Icon(
+        default = Gray800,
+        secondary = Gray600,
+        tertiary = Gray500,
+        disabled = Gray300,
+        onBg = Gray01,
+        onBgSub = WhiteAlpha40,
+    ),
+    stroke = MoiveColors.Stroke(
+        default00 = Gray800,
+        default01 = Gray500,
+        default02 = Gray300,
+        default03 = Gray200,
+        default04 = Gray100,
+        default05 = Gray50,
+        onBg = Gray01,
+    ),
+    fill = MoiveColors.Fill(
+        default00 = Gray900,
+        default01 = Gray800,
+        default02 = Gray600,
+        default03 = Gray300,
+        default04 = Gray200,
+        default05 = Gray100,
+        default06 = Gray50,
+        default07 = Gray10,
+        default08 = Gray01,
+    ),
+    background = MoiveColors.Background(
+        default00 = Gray01,
+        default01 = Gray10,
+        default02 = Gray50,
+        default03 = Gray100,
+        default04 = Gray200,
+        default05 = Gray300,
+    ),
+    status = MoiveColors.Status(
+        success = MoiveColors.Status.Success(
+            default = Green500,
+            pressed = Green700,
+            sub01 = Green200,
+            sub02 = Green50,
+        ),
+        caution = MoiveColors.Status.Caution(
+            default = Orange500,
+            pressed = Orange700,
+            sub01 = Orange200,
+            sub02 = Orange50,
+        ),
+        error = MoiveColors.Status.Error(
+            default = Red500,
+            pressed = Red700,
+            sub01 = Red200,
+            sub02 = Red50,
+        ),
+    ),
+    accent = MoiveColors.Accent(
+        yellow = MoiveColors.Accent.Yellow(
+            default = Yellow500,
+            sub01 = Yellow100,
+            sub02 = Yellow50,
+        ),
+        pink = MoiveColors.Accent.Pink(
+            default = Pink400,
+            sub01 = Pink100,
+            sub02 = Pink50,
+        ),
+        teal = MoiveColors.Accent.Teal(
+            default = Teal500,
+            sub01 = Teal100,
+            sub02 = Teal50,
+        ),
+    ),
+    shadow8 = Shadow8,
+    shadow20 = Shadow20,
 )
 
 @Preview
 @Composable
 private fun MoiveColorsPreview() {
     MoiveTheme {
-        Column {
-            listOf(
-                MoiveTheme.colors.purple50,
-                MoiveTheme.colors.purple100,
-                MoiveTheme.colors.purple200,
-                MoiveTheme.colors.purple300,
-                MoiveTheme.colors.purple400,
-                MoiveTheme.colors.purple500,
-                MoiveTheme.colors.purple600,
-                MoiveTheme.colors.purple700,
-                MoiveTheme.colors.purple800,
-                MoiveTheme.colors.purple900,
-                MoiveTheme.colors.blue50,
-                MoiveTheme.colors.blue100,
-                MoiveTheme.colors.blue200,
-                MoiveTheme.colors.blue300,
-                MoiveTheme.colors.blue400,
-                MoiveTheme.colors.blue500,
-                MoiveTheme.colors.blue600,
-                MoiveTheme.colors.blue700,
-                MoiveTheme.colors.blue800,
-                MoiveTheme.colors.blue900,
-                MoiveTheme.colors.pink50,
-                MoiveTheme.colors.pink100,
-                MoiveTheme.colors.pink200,
-                MoiveTheme.colors.pink300,
-                MoiveTheme.colors.pink400,
-                MoiveTheme.colors.pink500,
-                MoiveTheme.colors.pink600,
-                MoiveTheme.colors.teal50,
-                MoiveTheme.colors.teal100,
-                MoiveTheme.colors.teal200,
-                MoiveTheme.colors.teal300,
-                MoiveTheme.colors.teal400,
-                MoiveTheme.colors.teal500,
-                MoiveTheme.colors.teal600,
-                MoiveTheme.colors.gray01,
-                MoiveTheme.colors.gray10,
-                MoiveTheme.colors.gray50,
-                MoiveTheme.colors.gray100,
-                MoiveTheme.colors.gray200,
-                MoiveTheme.colors.gray300,
-                MoiveTheme.colors.gray400,
-                MoiveTheme.colors.gray500,
-                MoiveTheme.colors.gray600,
-                MoiveTheme.colors.gray700,
-                MoiveTheme.colors.gray800,
-                MoiveTheme.colors.gray900,
-                MoiveTheme.colors.positive,
-                MoiveTheme.colors.cautionary,
-                MoiveTheme.colors.destructive,
-                MoiveTheme.colors.yellow,
-                MoiveTheme.colors.shadow_8,
-                MoiveTheme.colors.shadow_20,
-            ).chunked(10).forEach { rowColors ->
-                Row(modifier = Modifier.padding(vertical = 4.dp)) {
-                    rowColors.forEach { color ->
-                        Box(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .background(color),
-                        )
-                    }
-                }
-            }
+        Column(modifier = Modifier.padding(8.dp)) {
+            val colors = MoiveTheme.colors
+
+            ColorRow("primary", listOf(colors.primary.default, colors.primary.pressed, colors.primary.sub01, colors.primary.sub02, colors.primary.sub03))
+            ColorRow("secondary", listOf(colors.secondary.default, colors.secondary.pressed, colors.secondary.sub01, colors.secondary.sub02, colors.secondary.sub03))
+            ColorRow("text", listOf(colors.text.default, colors.text.secondary, colors.text.tertiary, colors.text.subtle, colors.text.disabled, colors.text.onBg))
+            ColorRow("icon", listOf(colors.icon.default, colors.icon.secondary, colors.icon.tertiary, colors.icon.disabled, colors.icon.onBg, colors.icon.onBgSub))
+            ColorRow("stroke", listOf(colors.stroke.default00, colors.stroke.default01, colors.stroke.default02, colors.stroke.default03, colors.stroke.default04, colors.stroke.default05, colors.stroke.onBg))
+            ColorRow("fill", listOf(colors.fill.default00, colors.fill.default01, colors.fill.default02, colors.fill.default03, colors.fill.default04, colors.fill.default05, colors.fill.default06, colors.fill.default07, colors.fill.default08))
+            ColorRow("background", listOf(colors.background.default00, colors.background.default01, colors.background.default02, colors.background.default03, colors.background.default04, colors.background.default05))
+            ColorRow("status.success", listOf(colors.status.success.default, colors.status.success.pressed, colors.status.success.sub01, colors.status.success.sub02))
+            ColorRow("status.caution", listOf(colors.status.caution.default, colors.status.caution.pressed, colors.status.caution.sub01, colors.status.caution.sub02))
+            ColorRow("status.error", listOf(colors.status.error.default, colors.status.error.pressed, colors.status.error.sub01, colors.status.error.sub02))
+            ColorRow("accent.yellow", listOf(colors.accent.yellow.default, colors.accent.yellow.sub01, colors.accent.yellow.sub02))
+            ColorRow("accent.pink", listOf(colors.accent.pink.default, colors.accent.pink.sub01, colors.accent.pink.sub02))
+            ColorRow("accent.teal", listOf(colors.accent.teal.default, colors.accent.teal.sub01, colors.accent.teal.sub02))
+        }
+    }
+}
+
+@Composable
+private fun ColorRow(label: String, swatches: List<Color>) {
+    Row(modifier = Modifier.padding(vertical = 4.dp)) {
+        Text(text = label, modifier = Modifier.padding(end = 8.dp))
+        swatches.forEach { color ->
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .background(color),
+            )
         }
     }
 }
