@@ -51,8 +51,10 @@ sealed interface TypographyTokens {
         val mdM: TextStyle,
         val mdR: TextStyle,
         val smM: TextStyle,
+        val smR: TextStyle,
         val xsM: TextStyle,
         val xsR: TextStyle,
+        val xxsR: TextStyle,
     ) : TypographyTokens
 }
 
@@ -156,6 +158,11 @@ val defaultMoiveTypography = MoiveTypography(
             fontSize = 14.sp,
             lineHeight = 20.sp,
         ),
+        smR = moiveTextStyle(
+            fontFamily = PretendardFont.Regular,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+        ),
         xsM = moiveTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 12.sp,
@@ -165,6 +172,11 @@ val defaultMoiveTypography = MoiveTypography(
             fontFamily = PretendardFont.Regular,
             fontSize = 12.sp,
             lineHeight = 18.sp,
+        ),
+        xxsR = moiveTextStyle(
+            fontFamily = PretendardFont.Regular,
+            fontSize = 11.sp,
+            lineHeight = 16.sp,
         ),
     ),
 )
@@ -194,8 +206,10 @@ fun MoiveTypographyPreview() {
             Text("label.mdM", style = MoiveTheme.typography.label.mdM)
             Text("label.mdR", style = MoiveTheme.typography.label.mdR)
             Text("label.smM", style = MoiveTheme.typography.label.smM)
+            Text("label.smR", style = MoiveTheme.typography.label.smR)
             Text("label.xsM", style = MoiveTheme.typography.label.xsM)
             Text("label.xsR", style = MoiveTheme.typography.label.xsR)
+            Text("label.xxsR", style = MoiveTheme.typography.label.xxsR)
         }
     }
 }
