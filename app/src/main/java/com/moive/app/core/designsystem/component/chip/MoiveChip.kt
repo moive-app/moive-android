@@ -33,11 +33,11 @@ fun MoiveChip(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = if (isSelected) colors.gray800 else colors.gray200,
+                color = if (isSelected) colors.fill.default01 else colors.stroke.default03,
                 shape = RoundedCornerShape(radius.circular),
             )
             .background(
-                color = if (isSelected) colors.gray800 else colors.gray01,
+                color = if (isSelected) colors.fill.default01 else colors.fill.default08,
                 shape = RoundedCornerShape(radius.circular)
             )
             .padding(horizontal = type.horizontalPadding, vertical = type.verticalPadding)
@@ -45,7 +45,7 @@ fun MoiveChip(
     ) {
         Text(
             text = text,
-            color = if (isSelected) colors.gray01 else colors.gray800,
+            color = if (isSelected) colors.text.onBg else colors.text.default,
             style = typography.label.smM,
         )
     }
