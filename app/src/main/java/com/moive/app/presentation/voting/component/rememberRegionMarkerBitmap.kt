@@ -53,7 +53,7 @@ fun rememberRegionMarkerBitmap(
         }
 
         Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_profile),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_profile_28),
             contentDescription = null,
             modifier = Modifier.size(28.dp),
         )
