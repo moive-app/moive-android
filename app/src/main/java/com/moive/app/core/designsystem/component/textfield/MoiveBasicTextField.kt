@@ -88,10 +88,10 @@ private fun MoiveBasicTextFieldPreview() {
     MoiveTheme {
         MoiveBasicTextField(
             state = state,
-            textColor = MoiveTheme.colors.gray800,
+            textColor = MoiveTheme.colors.text.default,
             textStyle = MoiveTheme.typography.body.smNormalR,
             placeholder = "장소를 입력하세요",
-            placeholderColor = MoiveTheme.colors.gray300,
+            placeholderColor = MoiveTheme.colors.text.disabled,
             placeholderStyle = MoiveTheme.typography.body.smNormalR,
         )
     }

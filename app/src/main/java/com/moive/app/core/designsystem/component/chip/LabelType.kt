@@ -25,51 +25,51 @@ enum class LabelType {
         when (this) {
             DATE ->
                 LabelStyle(
-                    contentColor = colors.gray800,
-                    backgroundColor = colors.yellow,
-                    borderColor = colors.yellow,
+                    contentColor = colors.text.default,
+                    backgroundColor = colors.accent.yellow.default,
+                    borderColor = colors.accent.yellow.default,
                 )
             CONDITION ->
                 LabelStyle(
-                    contentColor = colors.pink400,
-                    backgroundColor = colors.pink50,
-                    borderColor = colors.pink100,
+                    contentColor = colors.accent.pink.default,
+                    backgroundColor = colors.accent.pink.sub02,
+                    borderColor = colors.accent.pink.sub01,
                 )
             VOTING ->
                 LabelStyle(
-                    contentColor = colors.teal500,
-                    backgroundColor = colors.teal50,
-                    borderColor = colors.teal100,
+                    contentColor = colors.accent.teal.default,
+                    backgroundColor = colors.accent.teal.sub02,
+                    borderColor = colors.accent.teal.sub01,
                 )
             CATEGORY ->
                 LabelStyle(
-                    contentColor = colors.blue500,
-                    backgroundColor = colors.blue50,
-                    borderColor = colors.blue50,
+                    contentColor = colors.secondary.pressed,
+                    backgroundColor = colors.secondary.sub03,
+                    borderColor = colors.secondary.sub03,
                 )
             INFO ->
                 LabelStyle(
-                    contentColor = colors.purple500,
-                    backgroundColor = colors.purple50,
-                    borderColor = colors.purple50,
+                    contentColor = colors.primary.default,
+                    backgroundColor = colors.primary.sub03,
+                    borderColor = colors.primary.sub03,
                 )
             CONFIRMED ->
                 LabelStyle(
-                    contentColor = colors.purple500,
-                    backgroundColor = colors.purple50,
-                    borderColor = colors.purple200,
+                    contentColor = colors.primary.default,
+                    backgroundColor = colors.primary.sub03,
+                    borderColor = colors.primary.sub02,
                 )
             COMPLETE ->
                 LabelStyle(
-                    contentColor = colors.gray500,
-                    backgroundColor = colors.gray50,
-                    borderColor = colors.gray200,
+                    contentColor = colors.text.tertiary,
+                    backgroundColor = colors.fill.default06,
+                    borderColor = colors.stroke.default03,
                 )
             REGION ->
                 LabelStyle(
-                    contentColor = colors.gray01,
-                    backgroundColor = colors.gray800,
-                    borderColor = colors.gray800,
+                    contentColor = colors.text.onBg,
+                    backgroundColor = colors.fill.default01,
+                    borderColor = colors.fill.default01,
                 )
         }
 }

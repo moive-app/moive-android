@@ -22,7 +22,7 @@ fun MoiveToast(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = MoiveTheme.colors.gray600,
+                color = MoiveTheme.colors.fill.default02,
                 shape = RoundedCornerShape(6.dp),
             )
             .padding(horizontal = 4.dp),
@@ -31,7 +31,7 @@ fun MoiveToast(
 
         Text(
             text = text,
-            color = MoiveTheme.colors.gray01,
+            color = MoiveTheme.colors.text.onBg,
             modifier = Modifier.padding(vertical = 11.dp)
         )
 

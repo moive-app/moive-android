@@ -60,7 +60,7 @@ private fun SplashScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = colors.gray01),
+            .background(color = colors.background.default00),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

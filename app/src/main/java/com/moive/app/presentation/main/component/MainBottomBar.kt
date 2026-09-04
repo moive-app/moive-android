@@ -66,11 +66,11 @@ fun MainBottomBar(
                             topStart = radius.xxl,
                             topEnd = radius.xxl,
                         ),
-                        color = colors.shadow_8,
+                        color = colors.shadow8,
                         blur = 15.dp,
                     )
                     .background(
-                        color = colors.gray01,
+                        color = colors.fill.default08,
                         shape = RoundedCornerShape(
                             topStart = radius.xxl,
                             topEnd = radius.xxl,
@@ -108,7 +108,7 @@ private fun MainBottomBarItem(
     Icon(
         imageVector = ImageVector.vectorResource(tab.iconRes),
         contentDescription = tab.titleRes,
-        tint = if (isSelected) colors.gray900 else colors.gray300,
+        tint = if (isSelected) colors.icon.default else colors.icon.disabled,
         modifier = modifier.noRippleClickable(onClick),
     )
 }
@@ -122,12 +122,12 @@ private fun MeetingFloatingButton(
         modifier = modifier
             .customShadow(
                 shape = RoundedCornerShape(radius.circular),
-                color = colors.shadow_20,
+                color = colors.shadow20,
                 blur = 10.dp,
                 offsetY = 4.dp,
             )
             .background(
-                color = colors.gray900,
+                color = colors.fill.default00,
                 shape = RoundedCornerShape(radius.circular)
             )
             .padding(16.dp)
@@ -137,7 +137,7 @@ private fun MeetingFloatingButton(
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.ic_union),
             contentDescription = null,
-            tint = colors.gray01,
+            tint = colors.icon.onBg,
             modifier = Modifier.size(16.dp)
         )
     }
