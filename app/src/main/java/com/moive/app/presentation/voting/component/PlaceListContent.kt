@@ -67,7 +67,7 @@ fun PlaceListContent(
         },
     )
 
-    LaunchedEffect(kakaoMapState, regionPinBitmap) {
+    LaunchedEffect(kakaoMapState, regionPinBitmap, locationX, locationY) {
         val kakaoMap = kakaoMapState ?: return@LaunchedEffect
         val bitmap = regionPinBitmap ?: return@LaunchedEffect
 
