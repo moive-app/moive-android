@@ -7,8 +7,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.moive.app.core.extensions.clearBackStackNavOptions
 import com.moive.app.core.navigation.MainTabRoute
+import com.moive.app.presentation.login.navigation.navigateToLogin
 import com.moive.app.presentation.mypage.MyPageRoute
+import com.moive.app.presentation.withdraw.navigation.navigateToWithDraw
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToMyPage(
@@ -16,10 +19,13 @@ fun NavController.navigateToMyPage(
 ) = navigate(MyPage, navOptions)
 
 fun NavGraphBuilder.myPageGraph(
+    navController: NavController,
     innerPadding: PaddingValues,
 ) {
     composable<MyPage> {
         MyPageRoute(
+            navigateToLogin = navController::navigateToLogin,
+            navigateToWithDraw = navController::navigateToWithDraw,
             modifier = Modifier.padding(innerPadding),
         )
     }

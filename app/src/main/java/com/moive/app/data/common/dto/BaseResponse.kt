@@ -2,7 +2,6 @@ package com.moive.app.data.common.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.net.HttpURLConnection.HTTP_OK
 
 private const val HTTP_OK = 200
 
@@ -18,7 +17,11 @@ data class BaseResponse<T>(
     val data: T?,
 )
 
-fun <T> BaseResponse<T>.checkData(): T {
+fun BaseResponse<*>.checkSuccess() {
     if (code != HTTP_OK) throw IllegalStateException("API request failed.")
+}
+
+fun <T> BaseResponse<T>.checkData(): T {
+    checkSuccess()
     return data ?: throw IllegalStateException("Successful response but data was null.")
 }

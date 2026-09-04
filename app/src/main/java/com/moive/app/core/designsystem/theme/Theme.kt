@@ -12,6 +12,9 @@ private val LocalMoiveColors = staticCompositionLocalOf<MoiveColors> {
 private val LocalMoiveTypography = staticCompositionLocalOf<MoiveTypography> {
     error("No MoiveTypography provided")
 }
+private val LocalMoiveRadius = staticCompositionLocalOf<MoiveRadius> {
+    error("No MoiveRadius provided")
+}
 
 object MoiveTheme {
     val colors: MoiveColors
@@ -23,17 +26,24 @@ object MoiveTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalMoiveTypography.current
+
+    val radius: MoiveRadius
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalMoiveRadius.current
 }
 
 @Composable
-fun ProvideMoiveColorsAndTypography(
+fun ProvideMoiveDesignTokens(
     colors: MoiveColors,
     typography: MoiveTypography,
+    radius: MoiveRadius,
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
         LocalMoiveColors provides colors,
         LocalMoiveTypography provides typography,
+        LocalMoiveRadius provides radius,
         content = content,
     )
 }
@@ -42,9 +52,10 @@ fun ProvideMoiveColorsAndTypography(
 fun MoiveTheme(
     content: @Composable () -> Unit
 ) {
-    ProvideMoiveColorsAndTypography(
+    ProvideMoiveDesignTokens(
         colors = defaultMoiveColors,
         typography = defaultMoiveTypography,
+        radius = defaultMoiveRadius,
     ) {
         MaterialTheme(
             content = content

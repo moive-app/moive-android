@@ -9,6 +9,10 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.moive.app.core.navigation.MainTabRoute
 import com.moive.app.presentation.home.HomeRoute
+import com.moive.app.presentation.meeting.complete.navigation.navigateToMeetingComplete
+import com.moive.app.presentation.meeting.detail.navigation.navigateToMeetingDetail
+import com.moive.app.presentation.meeting.list.navigation.navigateToMeetingList
+import com.moive.app.presentation.notification.navigation.navigateToNotification
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToHome(
@@ -16,10 +20,15 @@ fun NavController.navigateToHome(
 ) = navigate(Home, navOptions)
 
 fun NavGraphBuilder.homeGraph(
+    navController: NavController,
     innerPadding: PaddingValues,
 ) {
     composable<Home> {
         HomeRoute(
+            navigateToMeetingList = navController::navigateToMeetingList,
+            navigateToMeetingDetail = navController::navigateToMeetingDetail,
+            navigateToMeetingComplete = navController::navigateToMeetingComplete,
+            navigateToNotification = navController::navigateToNotification,
             modifier = Modifier.padding(innerPadding),
         )
     }
