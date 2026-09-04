@@ -2,6 +2,7 @@ package com.moive.app.presentation.mypage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.data.auth.repository.AuthRepository
 import com.moive.app.presentation.mypage.MyPageContract.SideEffect.NavigateToLogin
 import com.moive.app.presentation.mypage.MyPageContract.SideEffect.OnShowToast
@@ -44,7 +45,7 @@ class MyPageViewModel @Inject constructor(
                 _sideEffect.send(NavigateToLogin)
             }
             .onFailure {
-                _sideEffect.send(OnShowToast(LOG_OUT_FAILURE_MESSAGE))
+                _sideEffect.send(OnShowToast(LOG_OUT_FAILURE_MESSAGE, ToastType.ERROR))
             }
     }
 
