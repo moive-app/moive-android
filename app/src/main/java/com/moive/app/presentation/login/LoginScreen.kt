@@ -160,10 +160,10 @@ private fun AgreementSection(
             onClick = onConfirmClick,
             enabled = isBtnEnabled,
             colors = ButtonDefaults.buttonColors(
-                containerColor = MoiveTheme.colors.purple500,
-                contentColor = MoiveTheme.colors.gray01,
-                disabledContainerColor = MoiveTheme.colors.gray300,
-                disabledContentColor = MoiveTheme.colors.gray01,
+                containerColor = MoiveTheme.colors.primary.default,
+                contentColor = MoiveTheme.colors.text.onBg,
+                disabledContainerColor = MoiveTheme.colors.fill.default03,
+                disabledContentColor = MoiveTheme.colors.text.onBg,
             ),
             modifier = Modifier.fillMaxWidth(),
         ) {
