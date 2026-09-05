@@ -7,12 +7,14 @@ interface LoginContract {
     @Immutable
     data class State(
         val needRegister: Boolean = false,
+        val isAgreementSheetDismissed: Boolean = false,
         val isServiceAgreed: Boolean = false,
         val isPrivacyAgreed: Boolean = false,
         val isMarketingAgreed: Boolean = false,
         val isSignUpSubmitting: Boolean = false,
     ) {
         val isBtnEnabled: Boolean = isServiceAgreed && isPrivacyAgreed && !isSignUpSubmitting
+        val showAgreementSheet: Boolean = needRegister && !isAgreementSheetDismissed
     }
 
     sealed class SideEffect {

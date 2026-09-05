@@ -32,7 +32,9 @@ class LoginViewModel @Inject constructor(
 
         authRepository.postKakaoLogin(token)
             .onSuccess { result ->
-                _uiState.update { it.copy(needRegister = !result.registered) }
+                _uiState.update {
+                    it.copy(needRegister = !result.registered, isAgreementSheetDismissed = false)
+                }
 
                 if (result.registered) {
                     kakaoAccessToken = null
@@ -54,6 +56,10 @@ class LoginViewModel @Inject constructor(
 
     fun onMarketingCheck(agreed: Boolean) {
         _uiState.update { it.copy(isMarketingAgreed = agreed) }
+    }
+
+    fun onAgreementSheetDismiss() {
+        _uiState.update { it.copy(isAgreementSheetDismissed = true) }
     }
 
     fun postSignUp() {

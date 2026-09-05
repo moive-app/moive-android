@@ -88,6 +88,7 @@ fun LoginRoute(
         onPrivacyCheck = viewModel::onPrivacyCheck,
         onMarketingCheck = viewModel::onMarketingCheck,
         onConfirmClick = viewModel::postSignUp,
+        onAgreementSheetDismiss = viewModel::onAgreementSheetDismiss,
         modifier = modifier,
     )
 }
@@ -100,6 +101,7 @@ private fun LoginScreen(
     onPrivacyCheck: (Boolean) -> Unit,
     onMarketingCheck: (Boolean) -> Unit,
     onConfirmClick: () -> Unit,
+    onAgreementSheetDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -159,7 +161,7 @@ private fun LoginScreen(
         }
     }
 
-    if (uiState.needRegister) {
+    if (uiState.showAgreementSheet) {
         AgreementBottomSheet(
             isServiceAgreed = uiState.isServiceAgreed,
             isPrivacyAgreed = uiState.isPrivacyAgreed,
@@ -169,7 +171,7 @@ private fun LoginScreen(
             onPrivacyClick = onPrivacyCheck,
             onMarketingClick = onMarketingCheck,
             onConfirmClick = onConfirmClick,
-            onDismissRequest = {},
+            onDismissRequest = onAgreementSheetDismiss,
         )
     }
 }
@@ -186,6 +188,7 @@ private fun LoginScreenPreview() {
             onPrivacyCheck = {},
             onMarketingCheck = {},
             onConfirmClick = {},
+            onAgreementSheetDismiss = {},
         )
     }
 }
