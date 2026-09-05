@@ -87,7 +87,7 @@ fun MoiveSearchTextField(
 
         if (hasValue) {
             Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_search_20),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_remove_circle_20),
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier
