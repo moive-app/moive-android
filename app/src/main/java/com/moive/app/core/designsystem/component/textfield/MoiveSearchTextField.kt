@@ -3,11 +3,10 @@ package com.moive.app.core.designsystem.component.textfield
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
@@ -26,7 +25,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.moive.app.R.drawable.ic_launcher_background
+import com.moive.app.R
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
@@ -58,17 +57,15 @@ fun MoiveSearchTextField(
             )
             .padding(vertical = 9.dp, horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        if (!hasValue) {
-            Icon(
-                imageVector = ImageVector.vectorResource(ic_launcher_background),
-                contentDescription = null,
-                tint = Color.Unspecified,
-                modifier = Modifier
-                    .size(20.dp),
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-        }
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_search_20),
+            contentDescription = null,
+            tint = if (hasValue) colors.icon.tertiary else colors.icon.disabled,
+            modifier = Modifier
+                .size(20.dp),
+        )
 
         MoiveBasicTextField(
             state = state,
@@ -89,9 +86,8 @@ fun MoiveSearchTextField(
         )
 
         if (hasValue) {
-            Spacer(modifier = Modifier.width(8.dp))
             Icon(
-                imageVector = ImageVector.vectorResource(ic_launcher_background),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_search_20),
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier
