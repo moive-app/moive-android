@@ -137,7 +137,7 @@ private fun MoiveBottomSheetPreview() {
         ) {
             MoiveButton(
                 text = "바텀시트 열기",
-                type = MoiveButtonType.PURPLE,
+                type = MoiveButtonType.PRIMARY,
                 size = MoiveButtonSize.LARGE,
                 onClick = { showBottomSheet = true },
             )
@@ -153,7 +153,7 @@ private fun MoiveBottomSheetPreview() {
                 buttonContent = {
                     MoiveButton(
                         text = "다음",
-                        type = MoiveButtonType.PURPLE,
+                        type = MoiveButtonType.PRIMARY,
                         size = MoiveButtonSize.LARGE,
                         onClick = {},
                     )

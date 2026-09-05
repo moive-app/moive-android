@@ -73,10 +73,15 @@ val Gray500 = Color(0xFF6D747B)
 val Gray600 = Color(0xFF495057)
 val Gray800 = Color(0xFF212528)
 val Gray900 = Color(0xFF16181A)
+val Gray990 = Color(0xFF000000)
+
+// Kakao
+val KakaoYellow = Color(0xFFFEE500)
 
 // Alpha
 val WhiteAlpha40 = Color(0x66FFFFFF)
 val BlackAlpha60 = Color(0x99000000)
+val BlackAlpha85 = Color(0xD9000000)
 
 // Shadow
 val Shadow8 = Color(0x1416181A)
@@ -95,6 +100,7 @@ data class MoiveColors(
     val status: Status,
     val accent: Accent,
     val dim: Dim,
+    val kakao: Kakao,
     val shadow8: Color,
     val shadow20: Color,
     val modalShadow: Color,
@@ -234,6 +240,13 @@ data class MoiveColors(
     data class Dim(
         val default: Color,
     )
+
+    @Immutable
+    data class Kakao(
+        val container: Color,
+        val symbol: Color,
+        val label: Color,
+    )
 }
 
 val defaultMoiveColors = MoiveColors(
@@ -335,6 +348,11 @@ val defaultMoiveColors = MoiveColors(
     dim = MoiveColors.Dim(
         default = BlackAlpha60,
     ),
+    kakao = MoiveColors.Kakao(
+        container = KakaoYellow,
+        symbol = Gray990,
+        label = BlackAlpha85,
+    ),
     shadow8 = Shadow8,
     shadow20 = Shadow20,
     modalShadow = ModalShadow,
@@ -361,6 +379,7 @@ private fun MoiveColorsPreview() {
             ColorRow("accent.pink", listOf(colors.accent.pink.default, colors.accent.pink.sub01, colors.accent.pink.sub02))
             ColorRow("accent.teal", listOf(colors.accent.teal.default, colors.accent.teal.sub01, colors.accent.teal.sub02))
             ColorRow("dim", listOf(colors.dim.default))
+            ColorRow("kakao", listOf(colors.kakao.container, colors.kakao.symbol, colors.kakao.label))
         }
     }
 }
