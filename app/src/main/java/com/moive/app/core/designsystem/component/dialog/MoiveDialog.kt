@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -140,14 +139,14 @@ private fun MoiveDialogPreview() {
                     MoiveButton(
                         text = "취소",
                         onClick = { isModal1Visible = false },
-                        type = MoiveButtonType.WHITE,
+                        type = MoiveButtonType.TERTIARY,
                         size = MoiveButtonSize.MEDIUM,
                         modifier = Modifier.weight(1f)
                     )
                     MoiveButton(
                         text = "나가기",
                         onClick = { isModal1Visible = false },
-                        type = MoiveButtonType.PURPLE,
+                        type = MoiveButtonType.PRIMARY,
                         size = MoiveButtonSize.MEDIUM,
                         modifier = Modifier.weight(1f)
                     )
@@ -163,7 +162,7 @@ private fun MoiveDialogPreview() {
                 MoiveButton(
                     text = "닫기",
                     onClick = { isModal3Visible = false },
-                    type = MoiveButtonType.PURPLE,
+                    type = MoiveButtonType.PRIMARY,
                     size = MoiveButtonSize.MEDIUM,
                     modifier = Modifier.fillMaxWidth(),
                 )

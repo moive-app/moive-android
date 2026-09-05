@@ -11,16 +11,16 @@ data class MoiveButtonStyle(
 )
 
 enum class MoiveButtonType {
-    PURPLE,
-    BLACK,
-    WHITE;
+    PRIMARY,
+    SECONDARY,
+    TERTIARY;
 
     @Composable
     fun getStyle(
         enabled: Boolean,
         isPressed: Boolean,
     ): MoiveButtonStyle = when (this) {
-        PURPLE -> when {
+        PRIMARY -> when {
             !enabled -> MoiveButtonStyle(
                 containerColor = colors.fill.default06,
                 contentColor = colors.text.disabled,
@@ -35,7 +35,7 @@ enum class MoiveButtonType {
             )
         }
 
-        BLACK -> when {
+        SECONDARY -> when {
             !enabled -> MoiveButtonStyle(
                 containerColor = colors.fill.default06,
                 contentColor = colors.text.disabled,
@@ -50,7 +50,7 @@ enum class MoiveButtonType {
             )
         }
 
-        WHITE -> when {
+        TERTIARY -> when {
             !enabled -> MoiveButtonStyle(
                 containerColor = colors.fill.default08,
                 contentColor = colors.text.disabled,
