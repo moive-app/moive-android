@@ -85,6 +85,7 @@ val BlackAlpha85 = Color(0xD9000000)
 
 // Shadow
 val Shadow8 = Color(0x1416181A)
+val Shadow10 = Color(0x1A000000)
 val Shadow20 = Color(0x3316181A)
 val ModalShadow = Color(0x14181D21)
 
@@ -102,6 +103,7 @@ data class MoiveColors(
     val dim: Dim,
     val kakao: Kakao,
     val shadow8: Color,
+    val shadow10: Color,
     val shadow20: Color,
     val modalShadow: Color,
 ) {
@@ -354,6 +356,7 @@ val defaultMoiveColors = MoiveColors(
         label = BlackAlpha85,
     ),
     shadow8 = Shadow8,
+    shadow10 = Shadow10,
     shadow20 = Shadow20,
     modalShadow = ModalShadow,
 )
@@ -380,6 +383,7 @@ private fun MoiveColorsPreview() {
             ColorRow("accent.teal", listOf(colors.accent.teal.default, colors.accent.teal.sub01, colors.accent.teal.sub02))
             ColorRow("dim", listOf(colors.dim.default))
             ColorRow("kakao", listOf(colors.kakao.container, colors.kakao.symbol, colors.kakao.label))
+            ColorRow("shadow", listOf(colors.shadow8, colors.shadow10, colors.shadow20))
         }
     }
 }
