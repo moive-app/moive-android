@@ -57,6 +57,7 @@ fun MeetingCard(
             .border(
                 width = 1.dp,
                 color = colors.stroke.default05,
+                shape = shape,
             )
             .background(
                 color = colors.fill.default08,
