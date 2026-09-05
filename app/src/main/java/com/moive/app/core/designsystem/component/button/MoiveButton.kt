@@ -39,6 +39,7 @@ fun MoiveButton(
 
     Row(
         modifier = modifier
+            .fillMaxWidth()
             .border(
                 width = 1.dp,
                 color = style.borderColor ?: Color.Transparent,
