@@ -1,0 +1,83 @@
+package com.moive.app.core.designsystem.component.topbar
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.moive.app.R
+import com.moive.app.core.designsystem.theme.MoiveTheme
+import com.moive.app.core.designsystem.theme.MoiveTheme.colors
+import com.moive.app.core.designsystem.theme.MoiveTheme.radius
+import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+
+@Composable
+fun MoiveMainTopBar(
+    title: String,
+    isAlarmUnRead: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = colors.fill.default08
+            )
+            .padding(horizontal = 20.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_launcher_background),
+            contentDescription = null,
+            modifier = Modifier
+                .size(32.dp)
+                .clip(
+                    shape = RoundedCornerShape(radius.circular),
+                )
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Text(
+            text = title,
+            color = colors.text.default,
+            style = typography.title.lgB,
+            modifier = Modifier.weight(1f),
+        )
+
+        Icon(
+            imageVector = ImageVector.vectorResource(
+                if (isAlarmUnRead) R.drawable.ic_bell_notification_24 else R.drawable.ic_bell_24
+            ),
+            contentDescription = null,
+            tint = Color.Unspecified,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MoiveMainTopBarPreview() {
+    MoiveTheme {
+        MoiveMainTopBar(
+            title = "title",
+            isAlarmUnRead = true,
+        )
+    }
+}
