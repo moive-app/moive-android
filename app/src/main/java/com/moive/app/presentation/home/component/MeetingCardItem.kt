@@ -100,6 +100,7 @@ fun MeetingCard(
             ParticipantAvatars(
                 profileList = participantImageList,
                 extraCount = extraCount,
+                borderColor = colors.stroke.onBg,
             )
 
             Spacer(modifier = Modifier.weight(1f))

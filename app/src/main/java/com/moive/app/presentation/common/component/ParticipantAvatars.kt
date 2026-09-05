@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.moive.app.core.designsystem.component.image.UrlImage
@@ -24,6 +25,7 @@ import kotlinx.collections.immutable.ImmutableList
 fun ParticipantAvatars(
     profileList: ImmutableList<String>,
     extraCount: Int,
+    borderColor: Color,
     modifier: Modifier = Modifier,
 ) {
     val circle = RoundedCornerShape(radius.circular)
@@ -58,7 +60,7 @@ fun ParticipantAvatars(
                     .clip(circle)
                     .border(
                         width = 1.dp,
-                        color = colors.stroke.onBg,
+                        color = borderColor,
                         shape = circle,
                     ),
                 contentAlignment = Alignment.Center,
