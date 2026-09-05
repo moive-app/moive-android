@@ -93,8 +93,7 @@ private fun BottomSheetContent(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
