@@ -3,7 +3,6 @@ package com.moive.app.core.designsystem.component.textfield
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,10 +32,9 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.noRippleClickable
 
 @Composable
-fun MoiveSearchTextField(
+fun MoiveInputTextField(
     state: TextFieldState,
     placeholder: String,
-    onSearch: () -> Unit,
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
 ) {
@@ -55,18 +53,10 @@ fun MoiveSearchTextField(
                 color = colors.fill.default08,
                 shape = RoundedCornerShape(radius.sm),
             )
-            .padding(vertical = 9.dp, horizontal = 12.dp),
+            .padding(vertical = 9.dp)
+            .padding(start = 16.dp, end = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_search_20),
-            contentDescription = null,
-            tint = if (hasValue) colors.icon.tertiary else colors.icon.disabled,
-            modifier = Modifier
-                .size(20.dp),
-        )
-
         MoiveBasicTextField(
             state = state,
             textColor = colors.text.default,
@@ -77,7 +67,6 @@ fun MoiveSearchTextField(
             modifier = Modifier.weight(1f),
             keyboardOptions = keyboardOptions,
             onKeyboardAction = {
-                onSearch()
                 focusManager.clearFocus()
             },
             lineLimits = TextFieldLineLimits.SingleLine,
@@ -101,13 +90,12 @@ fun MoiveSearchTextField(
 
 @Preview
 @Composable
-private fun MoiveSearchTextFieldPreview() {
+private fun MoiveInputTextFieldPreview() {
     val state = rememberTextFieldState(initialText = "")
     MoiveTheme {
-        MoiveSearchTextField(
+        MoiveInputTextField(
             state = state,
-            placeholder = "장소를 검색해주세요.",
-            onSearch = {},
+            placeholder = "input_textfield",
             modifier = Modifier.padding(20.dp)
         )
     }
