@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,13 +43,12 @@ private fun SignUpCompleteScreen(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(
                 color = colors.background.default00
             )
             .padding(horizontal = 20.dp)
             .padding(bottom = 12.dp),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.weight(184f))

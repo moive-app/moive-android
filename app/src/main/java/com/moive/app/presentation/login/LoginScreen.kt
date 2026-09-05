@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -106,13 +107,12 @@ private fun LoginScreen(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(
                 color = colors.background.default00
             )
             .padding(bottom = 12.dp)
             .padding(horizontal = 20.dp),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.weight(140f))
@@ -149,6 +149,7 @@ private fun LoginScreen(
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_logo_kakao_20),
                 contentDescription = null,
+                tint = colors.kakao.symbol,
             )
 
             Spacer(modifier = Modifier.width(6.dp))
