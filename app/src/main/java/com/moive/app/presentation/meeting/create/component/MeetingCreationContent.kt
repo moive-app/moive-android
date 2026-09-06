@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -27,11 +26,8 @@ import com.moive.app.core.designsystem.component.textfield.MoiveInputTextField
 import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
-import com.moive.app.core.extensions.checkMaxLength
 import com.moive.app.presentation.common.component.ShadowButton
 import com.moive.app.presentation.meeting.create.MeetingCreationContract
-
-private const val MEETING_NAME_MAX_LENGTH = 10
 
 @Composable
 fun MeetingCreationContent(
@@ -97,14 +93,9 @@ fun MeetingCreationContent(
                 MoiveInputTextField(
                     state = uiState.meetingName,
                     placeholder = "모임 이름을 입력해주세요.",
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next,
-                    ),
                     onKeyboardAction = {
-                        focusManager.moveFocus(focusDirection = FocusDirection.Down)
+                        focusManager.clearFocus()
                     },
-                    inputTransformation = InputTransformation.checkMaxLength(MEETING_NAME_MAX_LENGTH),
                     isError = uiState.isMeetingNameInvalid,
                 )
 
