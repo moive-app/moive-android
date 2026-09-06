@@ -26,7 +26,6 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.data.home.model.UpcomingMeetingItemModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlin.random.Random
 
 @Composable
 fun UpcomingMeetingPager(
@@ -37,8 +36,8 @@ fun UpcomingMeetingPager(
 ) {
     val pageCount = if (meetings.size == 1) 2 else meetings.size
     val pagerState = rememberPagerState(pageCount = { pageCount })
-    val purple = colors.primary.default
-    val blue = colors.secondary.default
+    val cardColors = persistentListOf(colors.primary.default, colors.secondary.default, colors.fill.default02)
+
 
     Column(
         modifier = modifier,
@@ -50,9 +49,7 @@ fun UpcomingMeetingPager(
         ) { page ->
             if (page < meetings.size) {
                 val meeting = meetings[page]
-                val cardColor = remember(meeting.id) {
-                    if (Random.nextBoolean()) purple else blue
-                }
+                val cardColor = cardColors[page % cardColors.size]
 
                 UpcomingMeetingCardItem(
                     title = meeting.title,
@@ -124,6 +121,24 @@ private fun UpcomingMeetingPagerPreview() {
                 ),
                 UpcomingMeetingItemModel(
                     id = 2L,
+                    title = "주말 맛집 모임",
+                    dateTime = "8월 29일 14:00",
+                    location = "홍대입구역 2번 출구",
+                    participantImageList = persistentListOf("", ""),
+                    extraCount = 1,
+                    dDayText = "D-3",
+                ),
+                UpcomingMeetingItemModel(
+                    id = 3L,
+                    title = "주말 맛집 모임",
+                    dateTime = "8월 29일 14:00",
+                    location = "홍대입구역 2번 출구",
+                    participantImageList = persistentListOf("", ""),
+                    extraCount = 1,
+                    dDayText = "D-3",
+                ),
+                UpcomingMeetingItemModel(
+                    id = 4L,
                     title = "주말 맛집 모임",
                     dateTime = "8월 29일 14:00",
                     location = "홍대입구역 2번 출구",
