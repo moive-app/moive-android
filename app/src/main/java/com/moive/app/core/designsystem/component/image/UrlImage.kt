@@ -1,5 +1,6 @@
 package com.moive.app.core.designsystem.component.image
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ fun UrlImage(
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
     contentDescription: String? = null,
+    @DrawableRes placeholder: Int = R.drawable.ic_launcher_background,
 ) {
     if (LocalInspectionMode.current) {
         Image(
@@ -33,8 +35,8 @@ fun UrlImage(
             model = url,
             contentDescription = contentDescription,
             contentScale = contentScale,
-            placeholder = painterResource(R.drawable.ic_launcher_background),
-            error = painterResource(R.drawable.ic_launcher_background),
+            placeholder = painterResource(placeholder),
+            error = painterResource(placeholder),
             modifier = modifier
         )
     }
