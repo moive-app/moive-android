@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
@@ -40,15 +41,16 @@ fun MoiveInputTextField(
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
     onKeyboardAction: KeyboardActionHandler? = null,
+    inputTransformation: InputTransformation? = null,
+    isError: Boolean = false,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val focusManager = LocalFocusManager.current
     val hasValue = state.text.isNotEmpty()
 
     Row(
         modifier = modifier
             .border(
-                color = colors.stroke.default03,
+                color = if (isError) colors.status.error.default else colors.stroke.default03,
                 width = 1.dp,
                 shape = RoundedCornerShape(radius.sm),
             )
@@ -70,6 +72,7 @@ fun MoiveInputTextField(
             modifier = Modifier.weight(1f),
             keyboardOptions = keyboardOptions,
             onKeyboardAction = onKeyboardAction,
+            inputTransformation = inputTransformation,
             lineLimits = TextFieldLineLimits.SingleLine,
             interactionSource = interactionSource,
             cursorColor = colors.secondary.pressed,

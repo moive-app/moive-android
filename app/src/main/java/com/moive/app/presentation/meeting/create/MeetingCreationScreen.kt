@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,15 +28,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.moive.app.core.designsystem.component.button.MoiveButton
-import com.moive.app.core.designsystem.component.button.MoiveButtonSize
-import com.moive.app.core.designsystem.component.button.MoiveButtonType
 import com.moive.app.core.designsystem.component.chip.MoiveSingleSelectChipList
 import com.moive.app.core.designsystem.component.textfield.MoiveInputTextField
 import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.core.extensions.checkMaxLength
+import com.moive.app.presentation.common.component.ShadowButton
+
+private const val MEETING_NAME_MAX_LENGTH = 10
 
 @Composable
 fun MeetingCreationRoute(
@@ -48,7 +52,10 @@ fun MeetingCreationRoute(
         onBackClick = {},
         onToggleScheduleConfirmed = viewModel::toggleScheduleConfirmed,
         onTogglePurpose = viewModel::toggleMeetingPurpose,
-        onNextButtonClick = navigateToMeetingInfoConfirm,
+        onNextButtonClick = {
+            viewModel.trimMeetingName()
+            navigateToMeetingInfoConfirm()
+        },
         modifier = modifier,
     )
 }
@@ -63,6 +70,10 @@ private fun MeetingCreationScreen(
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
+    val lazyListState = rememberLazyListState()
+    val isContentScrollable by remember {
+        derivedStateOf { lazyListState.canScrollForward || lazyListState.canScrollBackward }
+    }
 
     Column(
         modifier = modifier
@@ -77,6 +88,7 @@ private fun MeetingCreationScreen(
         )
 
         LazyColumn(
+            state = lazyListState,
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(
                 horizontal = 20.dp,
@@ -119,7 +131,19 @@ private fun MeetingCreationScreen(
                     onKeyboardAction = {
                         focusManager.moveFocus(focusDirection = FocusDirection.Down)
                     },
+                    inputTransformation = InputTransformation.checkMaxLength(MEETING_NAME_MAX_LENGTH),
+                    isError = uiState.isMeetingNameInvalid,
                 )
+
+                if (uiState.isMeetingNameInvalid) {
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "한영 10자 이내, 공백 및 특수문자 불가",
+                        color = colors.status.error.default,
+                        style = typography.label.xsR,
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(32.dp))
             }
@@ -151,6 +175,16 @@ private fun MeetingCreationScreen(
                             focusManager.clearFocus()
                         },
                     )
+
+                    if (uiState.isMeetingScheduleFormatInvalid) {
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "날짜와 시간을 올바른 형식으로 입력해주세요.",
+                            color = colors.status.error.default,
+                            style = typography.label.xsR,
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -173,14 +207,11 @@ private fun MeetingCreationScreen(
             }
         }
 
-        MoiveButton(
+        ShadowButton(
             text = "다음",
-            size = MoiveButtonSize.LARGE,
-            type = MoiveButtonType.PRIMARY,
+            isEnabled = uiState.isNextButtonEnabled,
             onClick = onNextButtonClick,
-            enabled = uiState.isNextButtonEnabled,
-            modifier = Modifier
-                .padding(vertical = 12.dp, horizontal = 20.dp),
+            showShadow = isContentScrollable,
         )
     }
 }
