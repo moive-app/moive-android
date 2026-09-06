@@ -118,7 +118,7 @@ private fun WithDrawScreen(
         ConfirmBottomSheet(
             title = "정말 탈퇴",
             description = "탈퇴 후에는 데이터를 복구할 수 없어요",
-            btnText = "회원 탈퇴",
+            btnText = "탈퇴",
             onDismissRequest = onDismissRequest,
             onButtonClick = onWithdrawConfirmClick,
         )
@@ -160,17 +160,17 @@ private fun WithDrawContent(
             Text(
                 text = "• 탈퇴 시 모든 모임 기록과 데이터가 삭제됩니다.",
                 color = colors.status.error.default,
-                style = typography.label.mdR,
+                style = typography.body.smNormalR,
             )
             Text(
                 text = "• 삭제된 데이터는 복구할 수 없어요.",
                 color = colors.status.error.default,
-                style = typography.label.mdR,
+                style = typography.body.smNormalR,
             )
             Text(
                 text = "• 탈퇴 후 같은 계정으로 재가입 시 이전 데이터는 복원되지 않습니다.",
                 color = colors.status.error.default,
-                style = typography.label.mdR,
+                style = typography.body.smNormalR,
             )
         }
 
