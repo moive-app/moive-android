@@ -1,6 +1,7 @@
 package com.moive.app.presentation.meeting.create
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +18,7 @@ import com.moive.app.presentation.meeting.create.component.MeetingInfoConfirmCon
 
 @Composable
 fun MeetingCreationRoute(
+    innerPadding: PaddingValues,
     navigateBack: () -> Unit,
     navigateToMeetingDetail: () -> Unit,
     modifier: Modifier = Modifier,
@@ -29,6 +31,7 @@ fun MeetingCreationRoute(
     }
 
     MeetingCreationScreen(
+        innerPadding = innerPadding,
         uiState = uiState,
         onBackClick = navigateBack,
         onToggleScheduleConfirmed = viewModel::toggleScheduleConfirmed,
@@ -45,6 +48,7 @@ fun MeetingCreationRoute(
 
 @Composable
 private fun MeetingCreationScreen(
+    innerPadding: PaddingValues,
     uiState: MeetingCreationContract.State,
     onBackClick: () -> Unit,
     onToggleScheduleConfirmed: (String) -> Unit,
@@ -56,6 +60,7 @@ private fun MeetingCreationScreen(
 ) {
     when (uiState.step) {
         Step.CREATE -> MeetingCreationContent(
+            innerPadding = innerPadding,
             uiState = uiState,
             onBackClick = onBackClick,
             onToggleScheduleConfirmed = onToggleScheduleConfirmed,
@@ -65,6 +70,7 @@ private fun MeetingCreationScreen(
         )
 
         Step.CONFIRM -> MeetingInfoConfirmContent(
+            innerPadding = innerPadding,
             meetingName = uiState.meetingName.text.toString(),
             schedule = uiState.meetingSchedule.text.toString(),
             purpose = uiState.selectedMeetingPurpose,
@@ -83,6 +89,7 @@ private fun MeetingCreationScreenPreview() {
         var uiState by remember { mutableStateOf(MeetingCreationContract.State()) }
 
         MeetingCreationScreen(
+            innerPadding = PaddingValues(),
             uiState = uiState,
             onBackClick = {},
             onToggleScheduleConfirmed = { uiState = uiState.copy(selectedScheduleConfirmed = it) },

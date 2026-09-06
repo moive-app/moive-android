@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,10 +28,12 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 
 @Composable
 fun SignUpCompleteRoute(
+    innerPadding: PaddingValues,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SignUpCompleteScreen(
+        innerPadding = innerPadding,
         onStartClick = navigateToHome,
         modifier = modifier,
     )
@@ -38,6 +41,7 @@ fun SignUpCompleteRoute(
 
 @Composable
 private fun SignUpCompleteScreen(
+    innerPadding: PaddingValues,
     onStartClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -47,6 +51,7 @@ private fun SignUpCompleteScreen(
             .background(
                 color = colors.background.default00
             )
+            .padding(innerPadding)
             .padding(horizontal = 20.dp)
             .padding(bottom = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -91,6 +96,7 @@ private fun SignUpCompleteScreen(
 private fun SignUpCompleteScreenPreview() {
     MoiveTheme {
         SignUpCompleteScreen(
+            innerPadding = PaddingValues(),
             onStartClick = {},
         )
     }

@@ -1,6 +1,8 @@
 package com.moive.app.presentation.condition
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -15,6 +17,7 @@ import com.moive.app.presentation.condition.component.ConditionPlaceSearchConten
 
 @Composable
 fun ConditionRoute(
+    innerPadding: PaddingValues,
     navigateToMeetingDetail: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConditionViewModel = hiltViewModel(),
@@ -26,6 +29,7 @@ fun ConditionRoute(
     }
 
     ConditionScreen(
+        innerPadding = innerPadding,
         state = uiState,
         onSearchClick = viewModel::onPlaceSearchBoxClick,
         onPlaceItemClick = viewModel::onPlaceItemClick,
@@ -37,6 +41,7 @@ fun ConditionRoute(
 
 @Composable
 private fun ConditionScreen(
+    innerPadding: PaddingValues,
     state: ConditionContract.State,
     onSearchClick: () -> Unit,
     onPlaceItemClick: (String) -> Unit,
@@ -49,18 +54,18 @@ private fun ConditionScreen(
             selectedPlace = state.selectedPlace,
             onSearchClick = onSearchClick,
             onNextButtonClick = onNextButtonClick,
-            modifier = modifier,
+            modifier = modifier.padding(innerPadding),
         )
 
         Step.SEARCH -> ConditionPlaceSearchContent(
             onPlaceItemClick = onPlaceItemClick,
-            modifier = modifier,
+            modifier = modifier.padding(innerPadding),
         )
 
         Step.CONFIRM -> ConditionConfirmContent(
             selectedPlace = state.selectedPlace,
             onCompleteButtonClick = onCompleteButtonClick,
-            modifier = modifier,
+            modifier = modifier.padding(innerPadding),
         )
     }
 }
@@ -70,6 +75,7 @@ private fun ConditionScreen(
 private fun ConditionScreenPreview() {
     MoiveTheme {
         ConditionScreen(
+            innerPadding = PaddingValues(),
             state = ConditionContract.State(),
             onSearchClick = {},
             onPlaceItemClick = {},

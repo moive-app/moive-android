@@ -3,6 +3,7 @@ package com.moive.app.presentation.withdraw
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,6 +47,7 @@ import com.moive.app.presentation.withdraw.WithDrawContract.SideEffect.NavigateT
 
 @Composable
 fun WithDrawRoute(
+    innerPadding: PaddingValues,
     navigateBack: () -> Unit,
     navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
@@ -64,6 +66,7 @@ fun WithDrawRoute(
         }
     }
     WithDrawScreen(
+        innerPadding = innerPadding,
         uiState = uiState,
         onCancelClick = navigateBack,
         onAgreementClick = viewModel::toggleAgreement,
@@ -76,6 +79,7 @@ fun WithDrawRoute(
 
 @Composable
 private fun WithDrawScreen(
+    innerPadding: PaddingValues,
     uiState: WithDrawContract.State,
     onCancelClick: () -> Unit,
     onAgreementClick: () -> Unit,
@@ -87,7 +91,8 @@ private fun WithDrawScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = colors.background.default00),
+            .background(color = colors.background.default00)
+            .padding(innerPadding),
     ) {
         MoiveSubTitleTopBar(
             title = "회원 탈퇴",
@@ -206,6 +211,7 @@ private fun WithDrawScreenPreview() {
         var uiState by remember { mutableStateOf(WithDrawContract.State()) }
 
         WithDrawScreen(
+            innerPadding = PaddingValues(),
             uiState = uiState,
             onCancelClick = {},
             onAgreementClick = { uiState = uiState.copy(isAgreed = !uiState.isAgreed) },

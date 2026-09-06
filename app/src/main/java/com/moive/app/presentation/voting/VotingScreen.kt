@@ -1,6 +1,8 @@
 package com.moive.app.presentation.voting
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -15,6 +17,7 @@ import kotlinx.collections.immutable.persistentSetOf
 
 @Composable
 fun VotingRoute(
+    innerPadding: PaddingValues,
     navigateToVoteStatus: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: VotingViewModel = hiltViewModel(),
@@ -26,6 +29,7 @@ fun VotingRoute(
     }
 
     VotingScreen(
+        innerPadding = innerPadding,
         state = uiState,
         onRegionPinClick = viewModel::onRegionPinClick,
         onPlaceItemClick = viewModel::onPlaceItemClick,
@@ -38,6 +42,7 @@ fun VotingRoute(
 
 @Composable
 private fun VotingScreen(
+    innerPadding: PaddingValues,
     state: VotingContract.State,
     onRegionPinClick: () -> Unit,
     onPlaceItemClick: (Long) -> Unit,
@@ -58,13 +63,13 @@ private fun VotingScreen(
             onPlaceItemClick = onPlaceItemClick,
             onCheckboxClick = onCheckboxClick,
             onCompleteButtonClick = onCompleteButtonClick,
-            modifier = modifier,
+            modifier = modifier.padding(innerPadding),
         )
 
         Step.DETAIL -> PlaceDetailContent(
             placeId = state.currentPlaceId,
             onSelectButtonClick = onSelectButtonClick,
-            modifier = modifier,
+            modifier = modifier.padding(innerPadding),
         )
     }
 }
@@ -74,6 +79,7 @@ private fun VotingScreen(
 private fun VotingScreenPreview() {
     MoiveTheme {
         VotingScreen(
+            innerPadding = PaddingValues(),
             state = VotingContract.State(
                 isPlaceListVisible = true,
                 selectedPlaceList = persistentSetOf(1L),

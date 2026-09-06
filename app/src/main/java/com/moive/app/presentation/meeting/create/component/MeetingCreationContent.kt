@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,6 +32,7 @@ import com.moive.app.presentation.meeting.create.MeetingCreationContract
 
 @Composable
 fun MeetingCreationContent(
+    innerPadding: PaddingValues,
     uiState: MeetingCreationContract.State,
     onBackClick: () -> Unit,
     onToggleScheduleConfirmed: (String) -> Unit,
@@ -49,7 +51,8 @@ fun MeetingCreationContent(
             .fillMaxSize()
             .background(
                 color = colors.background.default00
-            ),
+            )
+            .padding(innerPadding),
     ) {
         MoiveSubTitleTopBar(
             title = "모임 생성",

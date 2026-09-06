@@ -2,6 +2,7 @@ package com.moive.app.presentation.mypage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -35,6 +36,7 @@ import com.moive.app.presentation.mypage.component.ProfileCard
 
 @Composable
 fun MyPageRoute(
+    innerPadding: PaddingValues,
     navigateToLogin: () -> Unit,
     navigateToWithDraw: () -> Unit,
     modifier: Modifier = Modifier,
@@ -56,6 +58,7 @@ fun MyPageRoute(
     }
 
     MyPageScreen(
+        innerPadding = innerPadding,
         uiState = uiState,
         onAlarmClick = {},
         onQuestionClick = {},
@@ -70,6 +73,7 @@ fun MyPageRoute(
 
 @Composable
 private fun MyPageScreen(
+    innerPadding: PaddingValues,
     uiState: MyPageContract.State,
     onAlarmClick: () -> Unit,
     onQuestionClick: () -> Unit,
@@ -85,10 +89,11 @@ private fun MyPageScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(state = scrollState)
             .background(
                 color = colors.background.default02
-            ),
+            )
+            .padding(innerPadding)
+            .verticalScroll(state = scrollState),
     ) {
         MoiveSubIconTopBar(
             leadingIcon = null,
@@ -166,6 +171,7 @@ private fun MyPageScreen(
 private fun MyPageScreenPreview() {
     MoiveTheme {
         MyPageScreen(
+            innerPadding = PaddingValues(),
             uiState = MyPageContract.State(
                 name = "다인다인",
                 email = "dain@example.com"

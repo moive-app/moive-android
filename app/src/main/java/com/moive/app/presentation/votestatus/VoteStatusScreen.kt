@@ -1,7 +1,9 @@
 package com.moive.app.presentation.votestatus
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -11,19 +13,24 @@ import com.moive.app.core.designsystem.theme.MoiveTheme
 
 @Composable
 fun VoteStatusRoute(
+    innerPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     VoteStatusScreen(
+        innerPadding = innerPadding,
         modifier = modifier,
     )
 }
 
 @Composable
 private fun VoteStatusScreen(
+    innerPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(innerPadding),
         contentAlignment = Alignment.Center,
     ) {
         Text(text = "투표 현황")
@@ -34,6 +41,6 @@ private fun VoteStatusScreen(
 @Composable
 private fun VoteStatusScreenPreview() {
     MoiveTheme {
-        VoteStatusScreen()
+        VoteStatusScreen(innerPadding = PaddingValues())
     }
 }

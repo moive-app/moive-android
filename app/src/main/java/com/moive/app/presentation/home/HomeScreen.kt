@@ -2,6 +2,7 @@ package com.moive.app.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import com.moive.app.core.extensions.noRippleClickable
 
 @Composable
 fun HomeRoute(
+    innerPadding: PaddingValues,
     navigateToMeetingList: () -> Unit,
     navigateToMeetingDetail: () -> Unit,
     navigateToMeetingComplete: () -> Unit,
@@ -24,6 +26,7 @@ fun HomeRoute(
     modifier: Modifier = Modifier,
 ) {
     HomeScreen(
+        innerPadding = innerPadding,
         onShowListClick = navigateToMeetingList,
         onOngoingMeetingClick = navigateToMeetingDetail,
         onEndMeetingClick = navigateToMeetingComplete,
@@ -34,6 +37,7 @@ fun HomeRoute(
 
 @Composable
 private fun HomeScreen(
+    innerPadding: PaddingValues,
     onShowListClick: () -> Unit,
     onOngoingMeetingClick: () -> Unit,
     onEndMeetingClick: () -> Unit,
@@ -43,6 +47,7 @@ private fun HomeScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(innerPadding)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -86,6 +91,7 @@ private fun HomeScreen(
 private fun HomeScreenPreview() {
     MoiveTheme {
         HomeScreen(
+            innerPadding = PaddingValues(),
             onShowListClick = {},
             onOngoingMeetingClick = {},
             onEndMeetingClick = {},

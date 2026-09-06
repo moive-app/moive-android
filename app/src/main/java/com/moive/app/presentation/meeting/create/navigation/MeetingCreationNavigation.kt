@@ -1,8 +1,6 @@
 package com.moive.app.presentation.meeting.create.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -34,7 +32,7 @@ fun NavGraphBuilder.meetingCreationGraph(
                     },
                 )
             },
-            modifier = Modifier.padding(innerPadding),
+            innerPadding = innerPadding,
         )
     }
 }

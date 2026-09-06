@@ -2,6 +2,7 @@ package com.moive.app.presentation.meeting.list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,11 +16,13 @@ import com.moive.app.core.extensions.noRippleClickable
 
 @Composable
 fun MeetingListRoute(
+    innerPadding: PaddingValues,
     navigateToMeetingDetail: () -> Unit,
     navigateToMeetingComplete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     MeetingListScreen(
+        innerPadding = innerPadding,
         onOngoingMeetingClick = navigateToMeetingDetail,
         onEndMeetingClick = navigateToMeetingComplete,
         modifier = modifier,
@@ -28,6 +31,7 @@ fun MeetingListRoute(
 
 @Composable
 private fun MeetingListScreen(
+    innerPadding: PaddingValues,
     onOngoingMeetingClick: () -> Unit,
     onEndMeetingClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -35,6 +39,7 @@ private fun MeetingListScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(innerPadding)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -72,6 +77,7 @@ private fun MeetingCard(
 private fun MeetingListScreenPreview() {
     MoiveTheme {
         MeetingListScreen(
+            innerPadding = PaddingValues(),
             onOngoingMeetingClick = {},
             onEndMeetingClick = {},
         )
