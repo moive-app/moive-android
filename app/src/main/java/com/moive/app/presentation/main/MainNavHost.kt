@@ -1,5 +1,8 @@
 package com.moive.app.presentation.main
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -9,8 +12,8 @@ import com.moive.app.presentation.login.navigation.loginGraph
 import com.moive.app.presentation.login.signup.navigation.signUpCompleteGraph
 import com.moive.app.presentation.meeting.complete.navigation.meetingCompleteGraph
 import com.moive.app.presentation.meeting.confirmed.navigation.meetingConfirmedGraph
-import com.moive.app.presentation.meeting.detail.navigation.meetingDetailGraph
 import com.moive.app.presentation.meeting.create.navigation.meetingCreationGraph
+import com.moive.app.presentation.meeting.detail.navigation.meetingDetailGraph
 import com.moive.app.presentation.meeting.list.navigation.meetingListGraph
 import com.moive.app.presentation.mypage.navigation.myPageGraph
 import com.moive.app.presentation.notification.navigation.notificationGraph
@@ -18,6 +21,8 @@ import com.moive.app.presentation.splash.navigation.splashGraph
 import com.moive.app.presentation.votestatus.navigation.voteStatusGraph
 import com.moive.app.presentation.voting.navigation.votingGraph
 import com.moive.app.presentation.withdraw.navigation.withDrawGraph
+
+private const val NAV_TRANSITION_DURATION_MS = 300
 
 @Composable
 fun MainNavHost(
@@ -29,6 +34,10 @@ fun MainNavHost(
     NavHost(
         navController = navController,
         startDestination = appState.startDestination,
+        enterTransition = { fadeIn(animationSpec = tween(NAV_TRANSITION_DURATION_MS)) },
+        exitTransition = { fadeOut(animationSpec = tween(NAV_TRANSITION_DURATION_MS)) },
+        popEnterTransition = { fadeIn(animationSpec = tween(NAV_TRANSITION_DURATION_MS)) },
+        popExitTransition = { fadeOut(animationSpec = tween(NAV_TRANSITION_DURATION_MS)) },
     ) {
         splashGraph(
             navController = navController,
