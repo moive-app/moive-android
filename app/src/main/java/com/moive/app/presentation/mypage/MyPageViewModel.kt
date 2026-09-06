@@ -26,16 +26,16 @@ class MyPageViewModel @Inject constructor(
     private val _sideEffect = Channel<MyPageContract.SideEffect>(Channel.BUFFERED)
     val sideEffect = _sideEffect.receiveAsFlow()
 
-    fun onLogoutClick() {
-        _uiState.update { it.copy(isLogoutConfirmVisible = true) }
+    fun dismissLogoutBottomSheet() {
+        _uiState.update { it.copy(showLogoutBottomSheet = false) }
     }
 
-    fun onLogoutCancelClick() {
-        _uiState.update { it.copy(isLogoutConfirmVisible = false) }
+    fun onLogoutClick() {
+        _uiState.update { it.copy(showLogoutBottomSheet = true) }
     }
 
     fun onLogoutConfirmClick() {
-        _uiState.update { it.copy(isLogoutConfirmVisible = false) }
+        dismissLogoutBottomSheet()
         postLogout()
     }
 

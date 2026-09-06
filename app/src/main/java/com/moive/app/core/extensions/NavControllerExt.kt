@@ -1,5 +1,7 @@
 package com.moive.app.core.extensions
 
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.navOptions
@@ -25,3 +27,9 @@ fun NavController.clearBackStackWithRestoreNavOptions() = navOptions {
     }
     restoreState = true
 }
+
+/**
+ * lifecycle이 RESUMED 상태일 때만 popBackStack 실행 - 중복 호출 방지
+ */
+@Composable
+fun NavController.safePopBackStack(): () -> Unit = dropUnlessResumed { popBackStack() }
