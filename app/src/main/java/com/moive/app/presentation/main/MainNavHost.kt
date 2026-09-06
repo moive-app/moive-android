@@ -22,7 +22,7 @@ import com.moive.app.presentation.votestatus.navigation.voteStatusGraph
 import com.moive.app.presentation.voting.navigation.votingGraph
 import com.moive.app.presentation.withdraw.navigation.withDrawGraph
 
-private const val NAV_TRANSITION_DURATION_MS = 300
+private const val NAV_TRANSITION_DURATION_MS = 400
 
 @Composable
 fun MainNavHost(
