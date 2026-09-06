@@ -37,6 +37,7 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.noRippleClickable
+import com.moive.app.presentation.common.component.ConfirmBottomSheet
 
 @Composable
 fun WithDrawRoute(
@@ -51,7 +52,9 @@ fun WithDrawRoute(
         uiState = uiState,
         onCancelClick = navigateBack,
         onAgreementClick = viewModel::toggleAgreement,
-        onWithdrawClick = navigateToLogin,
+        onWithdrawClick = viewModel::onWithdrawClick,
+        onDismissRequest = viewModel::dismissWithDrawBottomSheet,
+        onWithdrawConfirmClick = viewModel::onWithDrawConfirmClick,
         modifier = modifier,
     )
 }
@@ -62,6 +65,8 @@ private fun WithDrawScreen(
     onCancelClick: () -> Unit,
     onAgreementClick: () -> Unit,
     onWithdrawClick: () -> Unit,
+    onDismissRequest: () -> Unit,
+    onWithdrawConfirmClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -90,6 +95,16 @@ private fun WithDrawScreen(
             enabled = uiState.isAgreed,
             onClick = onWithdrawClick,
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+        )
+    }
+
+    if (uiState.showConfirmBottomSheet) {
+        ConfirmBottomSheet(
+            title = "정말 탈퇴",
+            description = "탈퇴 후에는 데이터를 복구할 수 없어요",
+            btnText = "회원 탈퇴",
+            onDismissRequest = onDismissRequest,
+            onButtonClick = onWithdrawConfirmClick,
         )
     }
 }
@@ -179,7 +194,9 @@ private fun WithDrawScreenPreview() {
             uiState = uiState,
             onCancelClick = {},
             onAgreementClick = { uiState = uiState.copy(isAgreed = !uiState.isAgreed) },
-            onWithdrawClick = {},
+            onWithdrawClick = { uiState = uiState.copy(showConfirmBottomSheet = true) },
+            onDismissRequest = { uiState = uiState.copy(showConfirmBottomSheet = false) },
+            onWithdrawConfirmClick = { uiState = uiState.copy(showConfirmBottomSheet = false) },
         )
     }
 }
