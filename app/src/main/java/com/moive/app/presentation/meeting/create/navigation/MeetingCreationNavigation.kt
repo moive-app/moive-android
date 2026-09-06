@@ -8,6 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
+import com.moive.app.core.extensions.safePopBackStack
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.meeting.create.MeetingCreationRoute
 import com.moive.app.presentation.meeting.detail.navigation.navigateToMeetingDetail
@@ -23,7 +24,7 @@ fun NavGraphBuilder.meetingCreationGraph(
 ) {
     composable<MeetingCreation> {
         MeetingCreationRoute(
-            navigateBack = { navController.popBackStack() },
+            navigateBack = navController.safePopBackStack(),
             navigateToMeetingDetail = {
                 navController.navigateToMeetingDetail(
                     navOptions = navOptions {
