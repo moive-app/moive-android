@@ -22,37 +22,39 @@ import com.moive.app.core.extensions.noRippleClickable
 
 @Composable
 fun MoiveSubIconTopBar(
-    @DrawableRes trailingIcon: Int,
-    onBackClick: () -> Unit,
-    onTrailingIconClick: () -> Unit,
     modifier: Modifier = Modifier,
+    @DrawableRes leadingIcon: Int? = R.drawable.ic_arrow_chevron_left_24,
+    onLeadingIconClick: () -> Unit = {},
+    @DrawableRes trailingIcon: Int? = null,
+    onTrailingIconClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(
-                color = colors.fill.default08
-            )
             .padding(horizontal = 20.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_chevron_left_24),
-            contentDescription = null,
-            tint = colors.icon.default,
-            modifier = Modifier
-                .noRippleClickable(onClick = onBackClick),
-        )
+        if (leadingIcon != null) {
+            Icon(
+                imageVector = ImageVector.vectorResource(leadingIcon),
+                contentDescription = null,
+                tint = colors.icon.default,
+                modifier = Modifier
+                    .noRippleClickable(onClick = onLeadingIconClick),
+            )
+        }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Icon(
-            imageVector = ImageVector.vectorResource(trailingIcon),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier
-                .noRippleClickable(onClick = onTrailingIconClick),
-        )
+        if (trailingIcon != null) {
+            Icon(
+                imageVector = ImageVector.vectorResource(trailingIcon),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .noRippleClickable(onClick = onTrailingIconClick),
+            )
+        }
     }
 }
 
@@ -62,7 +64,7 @@ private fun MoiveSubIconTopBarPreview() {
     MoiveTheme {
         MoiveSubIconTopBar(
             trailingIcon = R.drawable.ic_more_24,
-            onBackClick = {},
+            onLeadingIconClick = {},
             onTrailingIconClick = {},
         )
     }
