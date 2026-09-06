@@ -11,7 +11,6 @@ import com.moive.app.presentation.meeting.complete.navigation.meetingCompleteGra
 import com.moive.app.presentation.meeting.confirmed.navigation.meetingConfirmedGraph
 import com.moive.app.presentation.meeting.detail.navigation.meetingDetailGraph
 import com.moive.app.presentation.meeting.create.navigation.meetingCreationGraph
-import com.moive.app.presentation.meeting.infoconfirm.navigation.meetingInfoConfirmGraph
 import com.moive.app.presentation.meeting.list.navigation.meetingListGraph
 import com.moive.app.presentation.mypage.navigation.myPageGraph
 import com.moive.app.presentation.notification.navigation.notificationGraph
@@ -66,11 +65,6 @@ fun MainNavHost(
         )
 
         meetingCreationGraph(
-            navController = navController,
-            innerPadding = innerPadding,
-        )
-
-        meetingInfoConfirmGraph(
             navController = navController,
             innerPadding = innerPadding,
         )
