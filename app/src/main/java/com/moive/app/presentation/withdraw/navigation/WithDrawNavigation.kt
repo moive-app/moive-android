@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.moive.app.core.extensions.safePopBackStack
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.login.navigation.navigateToLogin
 import com.moive.app.presentation.withdraw.WithDrawRoute
@@ -22,7 +23,7 @@ fun NavGraphBuilder.withDrawGraph(
 ) {
     composable<WithDraw> {
         WithDrawRoute(
-            navigateBack = { navController.popBackStack() },
+            navigateBack = navController.safePopBackStack(),
             navigateToLogin = navController::navigateToLogin,
             modifier = Modifier.padding(innerPadding),
         )
