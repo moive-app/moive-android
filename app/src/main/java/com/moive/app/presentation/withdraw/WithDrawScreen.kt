@@ -42,7 +42,7 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.noRippleClickable
 import com.moive.app.presentation.common.component.ConfirmBottomSheet
-import com.moive.app.presentation.mypage.MyPageContract.SideEffect.NavigateToLogin
+import com.moive.app.presentation.withdraw.WithDrawContract.SideEffect.NavigateToLogin
 
 @Composable
 fun WithDrawRoute(
@@ -59,7 +59,6 @@ fun WithDrawRoute(
             viewModel.sideEffect.collect { sideEffect ->
                 when (sideEffect) {
                     NavigateToLogin -> navigateToLogin()
-                    else -> {}
                 }
             }
         }

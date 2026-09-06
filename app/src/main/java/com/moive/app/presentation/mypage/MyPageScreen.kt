@@ -81,7 +81,7 @@ private fun MyPageScreen(
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
