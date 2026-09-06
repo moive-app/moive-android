@@ -178,6 +178,7 @@ private fun MeetingCreationScreen(
             size = MoiveButtonSize.LARGE,
             type = MoiveButtonType.PRIMARY,
             onClick = onNextButtonClick,
+            enabled = uiState.isNextButtonEnabled,
             modifier = Modifier
                 .padding(vertical = 12.dp, horizontal = 20.dp),
         )

@@ -14,10 +14,16 @@ interface MeetingCreationContract {
         val meetingName: TextFieldState = TextFieldState(initialText = ""),
         val meetingSchedule: TextFieldState = TextFieldState(initialText = ""),
         val scheduleConfirmed: ImmutableList<String> = SCHEDULE_LIST,
-        val selectedScheduleConfirmed: String = scheduleConfirmed.first(),
+        val selectedScheduleConfirmed: String = "",
         val meetingPurpose: ImmutableList<String> = MEETING_PURPOSE_LIST,
-        val selectedMeetingPurpose: String = meetingPurpose.first(),
-    )
+        val selectedMeetingPurpose: String = "",
+    ) {
+        val isNextButtonEnabled: Boolean
+            get() = meetingName.text.isNotEmpty() &&
+                selectedScheduleConfirmed.isNotEmpty() &&
+                (selectedScheduleConfirmed != "네" || meetingSchedule.text.isNotEmpty()) &&
+                selectedMeetingPurpose.isNotEmpty()
+    }
 
     companion object {
         private val SCHEDULE_LIST = persistentListOf("네", "아니오")
