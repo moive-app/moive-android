@@ -79,6 +79,7 @@ class LoginViewModel @Inject constructor(
             )
                 .onSuccess {
                     kakaoAccessToken = null
+                    onAgreementSheetDismiss()
                     _sideEffect.send(SideEffect.NavigateToSignUpComplete)
                 }
                 .onFailure {
