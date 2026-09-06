@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
@@ -22,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moive.app.R
@@ -36,16 +39,18 @@ fun MoiveInputTextField(
     state: TextFieldState,
     placeholder: String,
     modifier: Modifier = Modifier,
-    keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+    onKeyboardAction: KeyboardActionHandler? = null,
+    inputTransformation: InputTransformation? = null,
+    isError: Boolean = false,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val focusManager = LocalFocusManager.current
     val hasValue = state.text.isNotEmpty()
 
     Row(
         modifier = modifier
             .border(
-                color = colors.stroke.default03,
+                color = if (isError) colors.status.error.default else colors.stroke.default03,
                 width = 1.dp,
                 shape = RoundedCornerShape(radius.sm),
             )
@@ -66,9 +71,8 @@ fun MoiveInputTextField(
             placeholderStyle = typography.body.smNormalR,
             modifier = Modifier.weight(1f),
             keyboardOptions = keyboardOptions,
-            onKeyboardAction = {
-                focusManager.clearFocus()
-            },
+            onKeyboardAction = onKeyboardAction,
+            inputTransformation = inputTransformation,
             lineLimits = TextFieldLineLimits.SingleLine,
             interactionSource = interactionSource,
             cursorColor = colors.secondary.pressed,

@@ -7,9 +7,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
+import com.moive.app.core.extensions.safePopBackStack
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.meeting.create.MeetingCreationRoute
-import com.moive.app.presentation.meeting.infoconfirm.navigation.navigateToMeetingInfoConfirm
+import com.moive.app.presentation.meeting.detail.navigation.navigateToMeetingDetail
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToMeetingCreation(
@@ -22,7 +24,16 @@ fun NavGraphBuilder.meetingCreationGraph(
 ) {
     composable<MeetingCreation> {
         MeetingCreationRoute(
-            navigateToMeetingInfoConfirm = navController::navigateToMeetingInfoConfirm,
+            navigateBack = navController.safePopBackStack(),
+            navigateToMeetingDetail = {
+                navController.navigateToMeetingDetail(
+                    navOptions = navOptions {
+                        popUpTo<MeetingCreation> {
+                            inclusive = true
+                        }
+                    },
+                )
+            },
             modifier = Modifier.padding(innerPadding),
         )
     }
