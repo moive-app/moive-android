@@ -6,7 +6,11 @@ import com.moive.app.core.designsystem.component.toast.ToastType
 interface MyPageContract {
     @Immutable
     data class State(
-        val isLogoutConfirmVisible: Boolean = false,
+        val hasUnReadAlarm: Boolean = false,
+        val name: String = "",
+        val email: String = "",
+        val profileImage: String = "",
+        val showLogoutBottomSheet: Boolean = false,
     )
 
     sealed class SideEffect {

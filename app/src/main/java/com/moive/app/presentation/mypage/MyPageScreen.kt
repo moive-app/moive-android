@@ -1,19 +1,17 @@
 package com.moive.app.presentation.mypage
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,11 +20,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.moive.app.R
 import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
+import com.moive.app.core.designsystem.component.topbar.MoiveSubIconTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
-import com.moive.app.core.extensions.noRippleClickable
+import com.moive.app.core.designsystem.theme.MoiveTheme.colors
+import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.presentation.common.component.ConfirmBottomSheet
 import com.moive.app.presentation.mypage.MyPageContract.SideEffect.NavigateToLogin
 import com.moive.app.presentation.mypage.MyPageContract.SideEffect.OnShowToast
+import com.moive.app.presentation.mypage.component.MyPageInfoCard
+import com.moive.app.presentation.mypage.component.MyPageMenuItem
+import com.moive.app.presentation.mypage.component.ProfileCard
 
 @Composable
 fun MyPageRoute(
@@ -51,9 +56,12 @@ fun MyPageRoute(
     }
 
     MyPageScreen(
-        isLogoutConfirmVisible = uiState.isLogoutConfirmVisible,
+        uiState = uiState,
+        onAlarmClick = {},
+        onQuestionClick = {},
+        onTermsClick = {},
         onLogoutClick = viewModel::onLogoutClick,
-        onLogoutCancelClick = viewModel::onLogoutCancelClick,
+        onDismissRequest = viewModel::dismissLogoutBottomSheet,
         onLogoutConfirmClick = viewModel::onLogoutConfirmClick,
         onWithdrawClick = navigateToWithDraw,
         modifier = modifier,
@@ -62,58 +70,93 @@ fun MyPageRoute(
 
 @Composable
 private fun MyPageScreen(
-    isLogoutConfirmVisible: Boolean,
+    uiState: MyPageContract.State,
+    onAlarmClick: () -> Unit,
+    onQuestionClick: () -> Unit,
+    onTermsClick: () -> Unit,
     onLogoutClick: () -> Unit,
-    onLogoutCancelClick: () -> Unit,
+    onDismissRequest: () -> Unit,
     onLogoutConfirmClick: () -> Unit,
     onWithdrawClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier.fillMaxSize(),
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(state = scrollState)
+            .background(
+                color = colors.background.default02
+            ),
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(text = "MyPage Screen")
-            Text(
-                text = "로그아웃",
-                modifier = Modifier.noRippleClickable(onClick = onLogoutClick),
-            )
-            Text(
-                text = "회원 탈퇴",
-                modifier = Modifier.noRippleClickable(onClick = onWithdrawClick),
-            )
-        }
+        MoiveSubIconTopBar(
+            leadingIcon = null,
+            trailingIcon = if (uiState.hasUnReadAlarm) R.drawable.ic_bell_notification_24 else R.drawable.ic_bell_24,
+            onTrailingIconClick = onAlarmClick,
+        )
 
-        if (isLogoutConfirmVisible) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(24.dp),
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    Text(text = "로그아웃 하시겠어요?")
+        Spacer(modifier = Modifier.height(24.dp))
 
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Button(onClick = onLogoutConfirmClick) {
-                            Text(text = "로그아웃")
-                        }
-                        OutlinedButton(onClick = onLogoutCancelClick) {
-                            Text(text = "취소")
-                        }
-                    }
-                }
+        ProfileCard(
+            profileImage = uiState.profileImage,
+            name = uiState.name,
+            email = uiState.email,
+        )
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        MyPageInfoCard {
+            Column {
+                Text(
+                    text = "고객 지원",
+                    color = colors.text.subtle,
+                    style = typography.label.xsM
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                MyPageMenuItem(
+                    text = "자주 묻는 질문",
+                    onMoreClick = onQuestionClick,
+                    modifier = Modifier.padding(vertical = 12.dp),
+                )
+
+                MyPageMenuItem(
+                    text = "이용 약관",
+                    onMoreClick = onTermsClick,
+                    modifier = Modifier.padding(top = 12.dp),
+                )
             }
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        MyPageInfoCard {
+            MyPageMenuItem(
+                text = "로그아웃",
+                onMoreClick = onLogoutClick,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        MyPageInfoCard {
+            MyPageMenuItem(
+                text = "회원탈퇴",
+                onMoreClick = onWithdrawClick,
+            )
+        }
+    }
+
+    if (uiState.showLogoutBottomSheet) {
+        ConfirmBottomSheet(
+            title = "로그아웃",
+            description = "로그아웃 후 다시 로그인이 필요해요.",
+            btnText = "로그아웃",
+            onDismissRequest = onDismissRequest,
+            onButtonClick = onLogoutConfirmClick,
+        )
     }
 }
 
@@ -123,25 +166,18 @@ private fun MyPageScreen(
 private fun MyPageScreenPreview() {
     MoiveTheme {
         MyPageScreen(
-            isLogoutConfirmVisible = false,
+            uiState = MyPageContract.State(
+                name = "다인다인",
+                email = "dain@example.com"
+            ),
+            onAlarmClick = {},
+            onQuestionClick = {},
+            onTermsClick = {},
             onLogoutClick = {},
-            onLogoutCancelClick = {},
+            onDismissRequest = {},
             onLogoutConfirmClick = {},
             onWithdrawClick = {},
         )
     }
 }
 
-@Preview(showBackground = true, name = "로그아웃 확인")
-@Composable
-private fun MyPageScreenLogoutConfirmPreview() {
-    MoiveTheme {
-        MyPageScreen(
-            isLogoutConfirmVisible = true,
-            onLogoutClick = {},
-            onLogoutCancelClick = {},
-            onLogoutConfirmClick = {},
-            onWithdrawClick = {},
-        )
-    }
-}
