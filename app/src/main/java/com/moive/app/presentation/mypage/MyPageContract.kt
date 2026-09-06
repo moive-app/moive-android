@@ -10,7 +10,7 @@ interface MyPageContract {
         val name: String = "",
         val email: String = "",
         val profileImage: String = "",
-        val isLogoutConfirmVisible: Boolean = false,
+        val showLogoutBottomSheet: Boolean = false,
     )
 
     sealed class SideEffect {
