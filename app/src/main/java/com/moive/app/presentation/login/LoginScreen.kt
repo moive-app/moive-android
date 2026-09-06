@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +51,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginRoute(
+    innerPadding: PaddingValues,
     navigateToHome: () -> Unit,
     navigateToSignUpComplete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -76,6 +78,7 @@ fun LoginRoute(
     }
 
     LoginScreen(
+        innerPadding = innerPadding,
         uiState = uiState,
         onKakaoClick = {
             scope.launch {
@@ -96,6 +99,7 @@ fun LoginRoute(
 
 @Composable
 private fun LoginScreen(
+    innerPadding: PaddingValues,
     uiState: LoginContract.State,
     onKakaoClick: () -> Unit,
     onServiceCheck: (Boolean) -> Unit,
@@ -111,6 +115,7 @@ private fun LoginScreen(
             .background(
                 color = colors.background.default00
             )
+            .padding(innerPadding)
             .padding(bottom = 12.dp)
             .padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -183,6 +188,7 @@ private fun LoginScreen(
 private fun LoginScreenPreview() {
     MoiveTheme {
         LoginScreen(
+            innerPadding = PaddingValues(),
             uiState = LoginContract.State(),
             onKakaoClick = {},
             onServiceCheck = {},

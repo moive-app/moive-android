@@ -2,6 +2,7 @@ package com.moive.app.presentation.notification
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -19,10 +20,12 @@ private val notifications = listOf(
 
 @Composable
 fun NotificationRoute(
+    innerPadding: PaddingValues,
     navigateToMeetingDetail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NotificationScreen(
+        innerPadding = innerPadding,
         onNotificationItemClick = navigateToMeetingDetail,
         modifier = modifier,
     )
@@ -30,12 +33,14 @@ fun NotificationRoute(
 
 @Composable
 private fun NotificationScreen(
+    innerPadding: PaddingValues,
     onNotificationItemClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(innerPadding)
             .padding(16.dp),
     ) {
         Text(text = "알림")
@@ -56,6 +61,7 @@ private fun NotificationScreen(
 private fun NotificationScreenPreview() {
     MoiveTheme {
         NotificationScreen(
+            innerPadding = PaddingValues(),
             onNotificationItemClick = {},
         )
     }

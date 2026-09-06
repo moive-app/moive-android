@@ -28,6 +28,7 @@ import com.moive.app.presentation.common.component.ShadowButton
 
 @Composable
 fun MeetingInfoConfirmContent(
+    innerPadding: PaddingValues,
     meetingName: String,
     schedule: String,
     purpose: String,
@@ -43,7 +44,8 @@ fun MeetingInfoConfirmContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = colors.background.default00),
+            .background(color = colors.background.default00)
+            .padding(innerPadding),
     ) {
         MoiveSubTitleTopBar(
             title = "모임 정보 확인",

@@ -1,8 +1,6 @@
 package com.moive.app.presentation.login.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -30,7 +28,7 @@ fun NavGraphBuilder.loginGraph(
                 )
             },
             navigateToSignUpComplete = navController::navigateToSignUpComplete,
-            modifier = Modifier.padding(innerPadding),
+            innerPadding = innerPadding,
         )
     }
 }

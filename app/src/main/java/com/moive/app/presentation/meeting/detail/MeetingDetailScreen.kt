@@ -1,6 +1,7 @@
 package com.moive.app.presentation.meeting.detail
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,6 +20,7 @@ import com.moive.app.presentation.meeting.detail.MeetingDetailContract.MeetingSt
 
 @Composable
 fun MeetingDetailRoute(
+    innerPadding: PaddingValues,
     navigateToCondition: () -> Unit,
     navigateToVoting: () -> Unit,
     navigateToMeetingConfirmed: () -> Unit,
@@ -28,6 +30,7 @@ fun MeetingDetailRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MeetingDetailScreen(
+        innerPadding = innerPadding,
         status = uiState.status,
         onStatusChange = viewModel::changeStatus,
         onBottomButtonClick = {
@@ -43,13 +46,16 @@ fun MeetingDetailRoute(
 
 @Composable
 private fun MeetingDetailScreen(
+    innerPadding: PaddingValues,
     status: MeetingStatus,
     onStatusChange: () -> Unit,
     onBottomButtonClick: (MeetingStatus) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(innerPadding),
     ) {
         Text(text = "모임 상세")
 
@@ -83,6 +89,7 @@ private fun MeetingDetailScreen(
 private fun MeetingDetailScreenPreview() {
     MoiveTheme {
         MeetingDetailScreen(
+            innerPadding = PaddingValues(),
             status = MeetingStatus.INPUTTING,
             onStatusChange = {},
             onBottomButtonClick = {},

@@ -2,6 +2,7 @@ package com.moive.app.presentation.meeting.confirmed
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,20 +17,24 @@ import com.moive.app.core.designsystem.theme.MoiveTheme
 
 @Composable
 fun MeetingConfirmedRoute(
+    innerPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     MeetingConfirmedScreen(
+        innerPadding = innerPadding,
         modifier = modifier,
     )
 }
 
 @Composable
 private fun MeetingConfirmedScreen(
+    innerPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(innerPadding)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -49,6 +54,6 @@ private fun MeetingConfirmedScreen(
 @Composable
 private fun MeetingConfirmedScreenPreview() {
     MoiveTheme {
-        MeetingConfirmedScreen()
+        MeetingConfirmedScreen(innerPadding = PaddingValues())
     }
 }
