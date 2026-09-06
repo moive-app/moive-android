@@ -36,6 +36,14 @@ class MeetingCreationViewModel @Inject constructor(
         _uiState.value.meetingName.trim()
     }
 
+    fun moveToConfirmStep() {
+        _uiState.update { it.copy(step = MeetingCreationContract.Step.CONFIRM) }
+    }
+
+    fun backToCreateStep() {
+        _uiState.update { it.copy(step = MeetingCreationContract.Step.CREATE) }
+    }
+
     companion object {
         private const val SCHEDULE_NOT_CONFIRMED = "아니오"
     }

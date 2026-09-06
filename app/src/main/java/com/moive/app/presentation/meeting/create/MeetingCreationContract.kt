@@ -11,6 +11,7 @@ import kotlinx.collections.immutable.persistentListOf
 interface MeetingCreationContract {
     @Immutable
     data class State(
+        val step: Step = Step.CREATE,
         val meetingName: TextFieldState = TextFieldState(initialText = ""),
         val meetingSchedule: TextFieldState = TextFieldState(initialText = ""),
         val scheduleConfirmed: ImmutableList<String> = SCHEDULE_LIST,
@@ -34,6 +35,11 @@ interface MeetingCreationContract {
                         (meetingSchedule.text.isNotEmpty() && !isMeetingScheduleFormatInvalid)
                 ) &&
                 selectedMeetingPurpose.isNotEmpty()
+    }
+
+    enum class Step {
+        CREATE,
+        CONFIRM,
     }
 
     companion object {
