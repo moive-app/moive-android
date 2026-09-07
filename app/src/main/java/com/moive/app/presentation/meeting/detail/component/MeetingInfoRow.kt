@@ -49,7 +49,7 @@ fun MeetingInfoRow(
             Text(
                 text = meetingPurpose,
                 color = colors.text.tertiary,
-                style = typography.label.xsM,
+                style = typography.body.mdNormalR,
                 modifier = Modifier.fillMaxWidth()
             )
         }
