@@ -36,7 +36,6 @@ fun ConditionInputContent(
     onPlaceBoxClick: () -> Unit,
     onTimeClick: (String) -> Unit,
     onPreferenceClick: (String) -> Unit,
-    onBudgetClick: (String) -> Unit,
     onNextButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -145,7 +144,6 @@ private fun ConditionInputContentPreview() {
             onPlaceBoxClick = {},
             onTimeClick = {},
             onPreferenceClick = {},
-            onBudgetClick = {},
             onNextButtonClick = {},
         )
     }

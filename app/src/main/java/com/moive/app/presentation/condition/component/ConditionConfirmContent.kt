@@ -121,7 +121,6 @@ private fun ConditionConfirmContentPreview() {
                 selectedPlaceName = "진흥아파트",
                 selectedTravelTime = "30분 이내",
                 selectedPreferences = persistentListOf("맛집"),
-                selectedBudget = "2만원 이하",
             ),
             onBackClick = {},
             onConfirmButtonClick = {},
