@@ -16,7 +16,7 @@ fun statusActionButtonText(status: MeetingStatus, isDone: Boolean): String = whe
 
 fun statusTooltipText(status: MeetingStatus): String = when (status) {
     MeetingStatus.INPUTTING -> "아직 조건 입력 중이에요!"
-    MeetingStatus.VOTING -> "이미 조건이 완료된 모임이에요!"
+    MeetingStatus.VOTING -> "이미 조건 입력이 완료된 모임이에요!"
     MeetingStatus.CONFIRMED -> "모임이 확정됐어요. 모임 정보를 확인해보세요!"
 }
 
