@@ -3,8 +3,10 @@ package com.moive.app.presentation.meeting.list
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -63,10 +65,10 @@ private fun MeetingListScreen(
             tabs = uiState.tabList,
             selectedTab = uiState.selectedTab,
             onTabClick = onTabClick,
-            modifier = Modifier
-                .padding(bottom = 4.dp)
-                .padding(horizontal = 20.dp),
+            modifier = Modifier.padding(horizontal = 20.dp),
         )
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         MeetingCardList(
             meetings = uiState.meetingList,
