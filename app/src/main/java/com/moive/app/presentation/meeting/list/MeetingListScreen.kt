@@ -1,30 +1,40 @@
 package com.moive.app.presentation.meeting.list
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
-import com.moive.app.core.extensions.noRippleClickable
+import com.moive.app.core.designsystem.theme.MoiveTheme.colors
+import com.moive.app.presentation.common.component.TabChipList
+import com.moive.app.presentation.meeting.list.component.MeetingCardList
 
 @Composable
 fun MeetingListRoute(
     innerPadding: PaddingValues,
+    navigateBack: () -> Unit,
     navigateToMeetingDetail: () -> Unit,
-    navigateToMeetingComplete: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: MeetingListViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     MeetingListScreen(
         innerPadding = innerPadding,
-        onOngoingMeetingClick = navigateToMeetingDetail,
-        onEndMeetingClick = navigateToMeetingComplete,
+        uiState = uiState,
+        onBackClick = navigateBack,
+        onTabClick = viewModel::postMeetingFilter,
+        onMeetingClick = { navigateToMeetingDetail() },
         modifier = modifier,
     )
 }
@@ -32,44 +42,41 @@ fun MeetingListRoute(
 @Composable
 private fun MeetingListScreen(
     innerPadding: PaddingValues,
-    onOngoingMeetingClick: () -> Unit,
-    onEndMeetingClick: () -> Unit,
+    uiState: MeetingListContract.State,
+    onBackClick: () -> Unit,
+    onTabClick: (String) -> Unit,
+    onMeetingClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(innerPadding)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+            .background(color = colors.background.default00)
+            .padding(innerPadding),
     ) {
-        Text(text = "내 모임")
-
-        MeetingCard(
-            title = "진행중인 모임",
-            onClick = onOngoingMeetingClick,
+        MoiveSubTitleTopBar(
+            title = "전체보기",
+            onBackClick = onBackClick,
         )
 
-        MeetingCard(
-            title = "종료된 모임",
-            onClick = onEndMeetingClick,
+        TabChipList(
+            tabs = uiState.tabList,
+            selectedTab = uiState.selectedTab,
+            onTabClick = onTabClick,
+            modifier = Modifier
+                .padding(bottom = 4.dp)
+                .padding(horizontal = 20.dp),
+        )
+
+        MeetingCardList(
+            meetings = uiState.meetingList,
+            onMeetingClick = onMeetingClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(horizontal = 20.dp),
         )
     }
-}
-
-@Composable
-private fun MeetingCard(
-    title: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        text = title,
-        modifier = modifier
-            .fillMaxWidth()
-            .noRippleClickable(onClick = onClick)
-            .padding(16.dp),
-    )
 }
 
 @Preview(showBackground = true)
@@ -78,8 +85,10 @@ private fun MeetingListScreenPreview() {
     MoiveTheme {
         MeetingListScreen(
             innerPadding = PaddingValues(),
-            onOngoingMeetingClick = {},
-            onEndMeetingClick = {},
+            uiState = MeetingListContract.State(),
+            onBackClick = {},
+            onTabClick = {},
+            onMeetingClick = {},
         )
     }
 }
