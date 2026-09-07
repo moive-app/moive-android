@@ -92,7 +92,7 @@ fun MainScreen(
                             .onGloballyPositioned { coordinates ->
                                 if (isBottomBarVisible) {
                                     bottomBarHeight = with(density) {
-                                        coordinates.size.height.dp
+                                        coordinates.size.height.toDp()
                                     }
                                 }
                             },
