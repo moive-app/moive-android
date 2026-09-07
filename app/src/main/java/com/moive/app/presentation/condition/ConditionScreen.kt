@@ -18,6 +18,7 @@ import com.moive.app.presentation.condition.component.ConditionPlaceSearchConten
 @Composable
 fun ConditionRoute(
     innerPadding: PaddingValues,
+    navigateBack: () -> Unit,
     navigateToMeetingDetail: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConditionViewModel = hiltViewModel(),
@@ -31,10 +32,19 @@ fun ConditionRoute(
     ConditionScreen(
         innerPadding = innerPadding,
         state = uiState,
-        onSearchClick = viewModel::onPlaceSearchBoxClick,
+        onBackClick = navigateBack,
+        onDateBoxClick = viewModel::onDateBoxClick,
+        onDateBottomSheetDismiss = viewModel::dismissDateBottomSheet,
+        onSaveDateClick = viewModel::dismissDateBottomSheet, //Todo: 캘린더 수정 필요
+        onNextDateClick = viewModel::dismissDateBottomSheet, //Todo: 캘린더 수정 필요
+        onPlaceBoxClick = viewModel::onPlaceSearchBoxClick,
+        onPlaceBackClick = viewModel::backToInputStep,
+        onPlaceSearchSubmit = viewModel::postPlaceSearch,
         onPlaceItemClick = viewModel::onPlaceItemClick,
+        onTravelTimeClick = viewModel::onTravelTimeClick,
+        onPreferenceClick = viewModel::onPreferenceClick,
         onNextButtonClick = viewModel::onNextButtonClick,
-        onCompleteButtonClick = navigateToMeetingDetail,
+        onConfirmButtonClick = navigateToMeetingDetail,
         modifier = modifier,
     )
 }
@@ -43,28 +53,49 @@ fun ConditionRoute(
 private fun ConditionScreen(
     innerPadding: PaddingValues,
     state: ConditionContract.State,
-    onSearchClick: () -> Unit,
-    onPlaceItemClick: (String) -> Unit,
+    onBackClick: () -> Unit,
+    onDateBoxClick: () -> Unit,
+    onDateBottomSheetDismiss: () -> Unit,
+    onSaveDateClick: () -> Unit,
+    onNextDateClick: () -> Unit,
+    onPlaceBoxClick: () -> Unit,
+    onPlaceBackClick: () -> Unit,
+    onPlaceSearchSubmit: () -> Unit,
+    onPlaceItemClick: (Long) -> Unit,
+    onTravelTimeClick: (String) -> Unit,
+    onPreferenceClick: (String) -> Unit,
     onNextButtonClick: () -> Unit,
-    onCompleteButtonClick: () -> Unit,
+    onConfirmButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (state.step) {
         Step.INPUT -> ConditionInputContent(
-            selectedPlace = state.selectedPlace,
-            onSearchClick = onSearchClick,
+            state = state,
+            onBackClick = onBackClick,
+            onDateBoxClick = onDateBoxClick,
+            onDateBottomSheetDismiss = onDateBottomSheetDismiss,
+            onSaveDateClick = onSaveDateClick,
+            onNextDateClick = onNextDateClick,
+            onPlaceBoxClick = onPlaceBoxClick,
+            onTimeClick = onTravelTimeClick,
+            onPreferenceClick = onPreferenceClick,
             onNextButtonClick = onNextButtonClick,
             modifier = modifier.padding(innerPadding),
         )
 
         Step.SEARCH -> ConditionPlaceSearchContent(
+            searchState = state.searchFieldState,
+            placeList = state.placeList,
+            onBackClick = onPlaceBackClick,
+            onSearchClick = onPlaceSearchSubmit,
             onPlaceItemClick = onPlaceItemClick,
             modifier = modifier.padding(innerPadding),
         )
 
         Step.CONFIRM -> ConditionConfirmContent(
-            selectedPlace = state.selectedPlace,
-            onCompleteButtonClick = onCompleteButtonClick,
+            state = state,
+            onBackClick = onPlaceBackClick,
+            onConfirmButtonClick = onConfirmButtonClick,
             modifier = modifier.padding(innerPadding),
         )
     }
@@ -77,10 +108,19 @@ private fun ConditionScreenPreview() {
         ConditionScreen(
             innerPadding = PaddingValues(),
             state = ConditionContract.State(),
-            onSearchClick = {},
+            onBackClick = {},
+            onDateBoxClick = {},
+            onDateBottomSheetDismiss = {},
+            onSaveDateClick = {},
+            onNextDateClick = {},
+            onPlaceBoxClick = {},
+            onPlaceBackClick = {},
+            onPlaceSearchSubmit = {},
             onPlaceItemClick = {},
+            onTravelTimeClick = {},
+            onPreferenceClick = {},
             onNextButtonClick = {},
-            onCompleteButtonClick = {},
+            onConfirmButtonClick = {},
         )
     }
 }
