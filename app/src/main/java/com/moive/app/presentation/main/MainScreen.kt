@@ -1,6 +1,9 @@
 package com.moive.app.presentation.main
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -18,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
@@ -47,6 +51,7 @@ fun MainScreen(
     var job by remember { mutableStateOf<Job?>(null) }
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
+    val layoutDirection = LocalLayoutDirection.current
 
     val onShowToast: (String, ToastType) -> Unit = { message, type ->
         job?.cancel()
@@ -73,7 +78,9 @@ fun MainScreen(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Scaffold(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .navigationBarsPadding(),
                 bottomBar = {
                     MainBottomBar(
                         isVisible = isBottomBarVisible,
@@ -83,19 +90,25 @@ fun MainScreen(
                         onTabSelected = appState::navigate,
                         modifier = Modifier
                             .onGloballyPositioned { coordinates ->
-                            if (isBottomBarVisible) {
-                                bottomBarHeight = with(density) {
-                                    coordinates.size.height.dp
+                                if (isBottomBarVisible) {
+                                    bottomBarHeight = with(density) {
+                                        coordinates.size.height.toDp()
+                                    }
                                 }
-                            }
-                        },
+                            },
                     )
                 },
             ) { innerPadding ->
+                val contentInnerPadding = PaddingValues(
+                    start = innerPadding.calculateStartPadding(layoutDirection),
+                    top = innerPadding.calculateTopPadding(),
+                    end = innerPadding.calculateEndPadding(layoutDirection),
+                    bottom = if (isBottomBarVisible) bottomBarHeight else 0.dp,
+                )
 
                 MainNavHost(
                     appState = appState,
-                    innerPadding = innerPadding,
+                    innerPadding = contentInnerPadding,
                 )
             }
 
