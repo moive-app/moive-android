@@ -88,7 +88,7 @@ fun MeetingInfoConfirmContent(
                     if (schedule.isNotEmpty()) {
                         MeetingInfoRow(
                             label = "일정",
-                            value = schedule.ifEmpty { "미정" }
+                            value = schedule
                         )
                     }
 
