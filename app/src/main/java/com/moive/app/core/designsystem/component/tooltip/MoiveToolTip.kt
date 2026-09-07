@@ -22,8 +22,7 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 
-private val TailWidth = 13.dp
-private val TailHeight = 10.dp
+private val TailSize = 12.dp
 private val TailTipRadius = 4.dp
 
 @Composable
@@ -36,8 +35,8 @@ fun MoiveToolTip(
 
     Column(
         modifier = modifier.drawBehind {
-            val tailHeightPx = TailHeight.toPx()
-            val tailHalfWidthPx = (TailWidth / 2).toPx()
+            val tailHeightPx = TailSize.toPx()
+            val tailHalfWidthPx = (TailSize / 2).toPx()
             val bubbleHeight = size.height - tailHeightPx
             val centerX = size.width / 2f
 
@@ -80,7 +79,7 @@ fun MoiveToolTip(
             style = typography.body.smNormalR,
             modifier = Modifier.padding(8.dp),
         )
-        Spacer(modifier = Modifier.size(width = TailWidth, height = TailHeight))
+        Spacer(modifier = Modifier.size(width = TailSize, height = TailSize))
     }
 }
 
