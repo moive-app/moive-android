@@ -1,7 +1,6 @@
 package com.moive.app.presentation.meeting.detail
 
 import androidx.lifecycle.ViewModel
-import com.moive.app.presentation.meeting.detail.MeetingDetailContract.MeetingStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,14 +15,17 @@ class MeetingDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MeetingDetailContract.State())
     val uiState = _uiState.asStateFlow()
 
-    fun changeStatus() {
-        _uiState.update { state ->
-            val nextStatus = when (state.status) {
-                MeetingStatus.INPUTTING -> MeetingStatus.VOTING
-                MeetingStatus.VOTING -> MeetingStatus.CONFIRMED
-                MeetingStatus.CONFIRMED -> MeetingStatus.CONFIRMED
-            }
-            state.copy(status = nextStatus)
-        }
+    fun showLeaveMeetingDialog() {
+        _uiState.update { it.copy(isLeaveMeetingDialogVisible = true) }
     }
+
+    fun dismissLeaveMeetingDialog() {
+        _uiState.update { it.copy(isLeaveMeetingDialogVisible = false) }
+    }
+
+    fun deleteMeeting() {
+        // TODO: 모임 나가기 API 연동
+    }
+
 }
+
