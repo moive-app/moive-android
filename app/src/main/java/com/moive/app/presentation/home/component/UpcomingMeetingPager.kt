@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -44,6 +45,7 @@ fun UpcomingMeetingPager(
     ) {
         HorizontalPager(
             state = pagerState,
+            pageSize = PageSize.Fixed(252.dp),
             contentPadding = PaddingValues(horizontal = 20.dp),
             pageSpacing = 12.dp,
         ) { page ->
