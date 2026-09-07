@@ -26,11 +26,13 @@ import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.core.extensions.noRippleClickable
 
 @Composable
 fun MoiveMainTopBar(
     title: String,
     isAlarmUnRead: Boolean,
+    onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -67,6 +69,7 @@ fun MoiveMainTopBar(
             ),
             contentDescription = null,
             tint = Color.Unspecified,
+            modifier = Modifier.noRippleClickable(onClick = onNotificationClick),
         )
     }
 }
@@ -78,6 +81,7 @@ private fun MoiveMainTopBarPreview() {
         MoiveMainTopBar(
             title = "title",
             isAlarmUnRead = true,
+            onNotificationClick = {},
         )
     }
 }

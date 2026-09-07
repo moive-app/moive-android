@@ -1,4 +1,4 @@
-package com.moive.app.presentation.home.component
+package com.moive.app.presentation.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,12 +28,11 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.customShadow
 import com.moive.app.core.extensions.noRippleClickable
-import com.moive.app.presentation.common.component.ParticipantAvatars
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun MeetingCard(
+fun MyMeetingCardItem(
     title: String,
     dateTime: String,
     participantImageList: ImmutableList<String>,
@@ -116,9 +115,9 @@ fun MeetingCard(
 
 @Preview(showBackground = true)
 @Composable
-private fun MeetingCardPreview() {
+private fun MyMeetingCardItemPreview() {
     MoiveTheme {
-        MeetingCard(
+        MyMeetingCardItem(
             title = "주말 맛집 모임",
             dateTime = "8월 29일 14:00",
             participantImageList = persistentListOf("", "", ""),

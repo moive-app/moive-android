@@ -1,4 +1,4 @@
-package com.moive.app.presentation.home.component
+package com.moive.app.presentation.meeting.list.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,25 +11,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moive.app.core.designsystem.component.chip.LabelType
 import com.moive.app.core.designsystem.theme.MoiveTheme
-import com.moive.app.data.home.model.MeetingCardItemModel
+import com.moive.app.data.meeting.model.MeetingListCardItemModel
+import com.moive.app.presentation.common.component.MyMeetingCardItem
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MeetingCardList(
-    meetings: List<MeetingCardItemModel>,
+    meetings: ImmutableList<MeetingListCardItemModel>,
     onMeetingClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(vertical = 8.dp),
+        contentPadding = PaddingValues(top = 14.dp, bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(
             items = meetings,
             key = { it.id }
         ) { meeting ->
-            MeetingCard(
+            MyMeetingCardItem(
                 title = meeting.title,
                 dateTime = meeting.dateTime,
                 participantImageList = meeting.participantImageUrls,
@@ -47,8 +49,8 @@ fun MeetingCardList(
 private fun MeetingCardListPreview() {
     MoiveTheme {
         MeetingCardList(
-            meetings = listOf(
-                MeetingCardItemModel(
+            meetings = persistentListOf(
+                MeetingListCardItemModel(
                     id = 1L,
                     title = "주말 맛집 모임",
                     dateTime = "8월 29일 14:00",
@@ -57,7 +59,7 @@ private fun MeetingCardListPreview() {
                     statusText = "조건 입력중",
                     statusLabelType = LabelType.CONDITION,
                 ),
-                MeetingCardItemModel(
+                MeetingListCardItemModel(
                     id = 2L,
                     title = "동기 모임",
                     dateTime = "9월 5일 19:00",
@@ -65,7 +67,7 @@ private fun MeetingCardListPreview() {
                     statusText = "투표중",
                     statusLabelType = LabelType.VOTING,
                 ),
-                MeetingCardItemModel(
+                MeetingListCardItemModel(
                     id = 3L,
                     title = "스터디 회식",
                     dateTime = "9월 10일 18:30",

@@ -1,9 +1,9 @@
-package com.moive.app.data.home.model
+package com.moive.app.data.meeting.model
 
 import com.moive.app.core.designsystem.component.chip.LabelType
 import kotlinx.collections.immutable.ImmutableList
 
-data class MeetingCardItemModel(
+data class MeetingListCardItemModel(
     val id: Long,
     val title: String,
     val dateTime: String,

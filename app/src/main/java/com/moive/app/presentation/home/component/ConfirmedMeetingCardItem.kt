@@ -33,7 +33,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun UpcomingMeetingCardItem(
+fun ConfirmedMeetingCardItem(
     title: String,
     dateTime: String,
     location: String,
@@ -127,9 +127,9 @@ fun UpcomingMeetingCardItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun UpcomingMeetingCardItemPreview() {
+private fun ConfirmedMeetingCardItemPreview() {
     MoiveTheme {
-        UpcomingMeetingCardItem(
+        ConfirmedMeetingCardItem(
             title = "강남에서 만나자",
             dateTime = "8월 29일 14:00",
             location = "홍대입구역 2번 출구",

@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.moive.app.presentation.home.navigation.navigateToHome
 import com.moive.app.presentation.main.component.MainTab
+import com.moive.app.presentation.meeting.list.navigation.MeetingList
 import com.moive.app.presentation.mypage.navigation.navigateToMyPage
 import com.moive.app.presentation.splash.navigation.Splash
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +50,7 @@ class MainAppState(
         .map { destination ->
             MainTab.contains { tab ->
                 destination?.hasRoute(tab::class) == true
-            }
+            } || destination?.hasRoute(MeetingList::class) == true
         }
         .stateIn(
             scope = coroutineScope,

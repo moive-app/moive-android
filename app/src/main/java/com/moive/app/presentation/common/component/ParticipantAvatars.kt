@@ -44,7 +44,7 @@ fun ParticipantAvatars(
                     .clip(circle)
                     .border(
                         width = 1.dp,
-                        color = colors.stroke.onBg,
+                        color = borderColor,
                         shape = circle,
                     ),
             )
