@@ -2,7 +2,7 @@ package com.moive.app.data.home.model
 
 import kotlinx.collections.immutable.ImmutableList
 
-data class UpcomingMeetingItemModel(
+data class ConfirmedMeetingItemModel(
     val id: Long,
     val title: String,
     val dateTime: String,

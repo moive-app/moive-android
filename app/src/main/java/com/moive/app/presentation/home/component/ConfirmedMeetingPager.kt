@@ -16,7 +16,6 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,13 +23,13 @@ import androidx.compose.ui.unit.dp
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
-import com.moive.app.data.home.model.UpcomingMeetingItemModel
+import com.moive.app.data.home.model.ConfirmedMeetingItemModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun UpcomingMeetingPager(
-    meetings: ImmutableList<UpcomingMeetingItemModel>,
+fun ConfirmedMeetingPager(
+    meetings: ImmutableList<ConfirmedMeetingItemModel>,
     onMeetingClick: (Long) -> Unit,
     onAddMeetingClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -53,7 +52,7 @@ fun UpcomingMeetingPager(
                 val meeting = meetings[page]
                 val cardColor = cardColors[page % cardColors.size]
 
-                UpcomingMeetingCardItem(
+                ConfirmedMeetingCardItem(
                     title = meeting.title,
                     dateTime = meeting.dateTime,
                     location = meeting.location,
@@ -108,11 +107,11 @@ private fun PagerIndicator(
 
 @Preview(showBackground = true)
 @Composable
-private fun UpcomingMeetingPagerPreview() {
+private fun ConfirmedMeetingPagerPreview() {
     MoiveTheme {
-        UpcomingMeetingPager(
+        ConfirmedMeetingPager(
             meetings = persistentListOf(
-                UpcomingMeetingItemModel(
+                ConfirmedMeetingItemModel(
                     id = 1L,
                     title = "강남에서 만나자",
                     dateTime = "8월 29일 14:00",
@@ -121,7 +120,7 @@ private fun UpcomingMeetingPagerPreview() {
                     extraCount = 2,
                     dDayText = "D-5",
                 ),
-                UpcomingMeetingItemModel(
+                ConfirmedMeetingItemModel(
                     id = 2L,
                     title = "주말 맛집 모임",
                     dateTime = "8월 29일 14:00",
@@ -130,7 +129,7 @@ private fun UpcomingMeetingPagerPreview() {
                     extraCount = 1,
                     dDayText = "D-3",
                 ),
-                UpcomingMeetingItemModel(
+                ConfirmedMeetingItemModel(
                     id = 3L,
                     title = "주말 맛집 모임",
                     dateTime = "8월 29일 14:00",
@@ -139,7 +138,7 @@ private fun UpcomingMeetingPagerPreview() {
                     extraCount = 1,
                     dDayText = "D-3",
                 ),
-                UpcomingMeetingItemModel(
+                ConfirmedMeetingItemModel(
                     id = 4L,
                     title = "주말 맛집 모임",
                     dateTime = "8월 29일 14:00",

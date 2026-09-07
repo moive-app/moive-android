@@ -2,8 +2,8 @@ package com.moive.app.presentation.home
 
 import androidx.compose.runtime.Immutable
 import com.moive.app.core.designsystem.component.chip.LabelType
-import com.moive.app.data.home.model.MeetingCardItemModel
-import com.moive.app.data.home.model.UpcomingMeetingItemModel
+import com.moive.app.data.home.model.MyMeetingCardItemModel
+import com.moive.app.data.home.model.ConfirmedMeetingItemModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -13,8 +13,8 @@ interface HomeContract {
         val userName: String = "",
         val isAlarmUnRead: Boolean = false,
         val selectedTab: String = MeetingTab.ALL.label,
-        val myMeetingList: ImmutableList<MeetingCardItemModel> = persistentListOf(
-            MeetingCardItemModel(
+        val myMeetingList: ImmutableList<MyMeetingCardItemModel> = persistentListOf(
+            MyMeetingCardItemModel(
                 id = 1L,
                 title = "주말 맛집 모임",
                 dateTime = "8월 29일 14:00",
@@ -23,7 +23,7 @@ interface HomeContract {
                 statusText = "조건 입력중",
                 statusLabelType = LabelType.CONDITION,
             ),
-            MeetingCardItemModel(
+            MyMeetingCardItemModel(
                 id = 2L,
                 title = "주말 맛집 모임",
                 dateTime = "8월 29일 14:00",
@@ -32,7 +32,7 @@ interface HomeContract {
                 statusText = "투표 진행중",
                 statusLabelType = LabelType.VOTING,
             ),
-            MeetingCardItemModel(
+            MyMeetingCardItemModel(
                 id = 3L,
                 title = "강남에서 만나자",
                 dateTime = "8월 29일 14:00",
@@ -42,8 +42,8 @@ interface HomeContract {
                 statusLabelType = LabelType.CONFIRMED,
             ),
         ),
-        val upcomingMeetings: ImmutableList<UpcomingMeetingItemModel> = persistentListOf(
-            UpcomingMeetingItemModel(
+        val upcomingMeetings: ImmutableList<ConfirmedMeetingItemModel> = persistentListOf(
+            ConfirmedMeetingItemModel(
                 id = 1L,
                 title = "강남에서 만나자",
                 dateTime = "8월 29일 14:00",
@@ -52,7 +52,7 @@ interface HomeContract {
                 extraCount = 2,
                 dDayText = "D-5",
             ),
-            UpcomingMeetingItemModel(
+            ConfirmedMeetingItemModel(
                 id = 2L,
                 title = "주말 맛집 모임",
                 dateTime = "8월 29일 14:00",
@@ -61,7 +61,7 @@ interface HomeContract {
                 extraCount = 1,
                 dDayText = "D-3",
             ),
-            UpcomingMeetingItemModel(
+            ConfirmedMeetingItemModel(
                 id = 1L,
                 title = "주말 맛집 모임",
                 dateTime = "8월 29일 14:00",

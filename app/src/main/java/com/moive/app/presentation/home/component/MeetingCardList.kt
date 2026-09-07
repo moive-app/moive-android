@@ -11,12 +11,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moive.app.core.designsystem.component.chip.LabelType
 import com.moive.app.core.designsystem.theme.MoiveTheme
-import com.moive.app.data.home.model.MeetingCardItemModel
+import com.moive.app.data.home.model.MyMeetingCardItemModel
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MeetingCardList(
-    meetings: List<MeetingCardItemModel>,
+    meetings: List<MyMeetingCardItemModel>,
     onMeetingClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -29,7 +29,7 @@ fun MeetingCardList(
             items = meetings,
             key = { it.id }
         ) { meeting ->
-            MeetingCard(
+            MyMeetingCardItem(
                 title = meeting.title,
                 dateTime = meeting.dateTime,
                 participantImageList = meeting.participantImageUrls,
@@ -48,7 +48,7 @@ private fun MeetingCardListPreview() {
     MoiveTheme {
         MeetingCardList(
             meetings = listOf(
-                MeetingCardItemModel(
+                MyMeetingCardItemModel(
                     id = 1L,
                     title = "주말 맛집 모임",
                     dateTime = "8월 29일 14:00",
@@ -57,7 +57,7 @@ private fun MeetingCardListPreview() {
                     statusText = "조건 입력중",
                     statusLabelType = LabelType.CONDITION,
                 ),
-                MeetingCardItemModel(
+                MyMeetingCardItemModel(
                     id = 2L,
                     title = "동기 모임",
                     dateTime = "9월 5일 19:00",
@@ -65,7 +65,7 @@ private fun MeetingCardListPreview() {
                     statusText = "투표중",
                     statusLabelType = LabelType.VOTING,
                 ),
-                MeetingCardItemModel(
+                MyMeetingCardItemModel(
                     id = 3L,
                     title = "스터디 회식",
                     dateTime = "9월 10일 18:30",

@@ -38,8 +38,8 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.noRippleClickable
 import com.moive.app.presentation.common.component.TabChipList
 import com.moive.app.presentation.home.component.HomeEmptyMeetingList
-import com.moive.app.presentation.home.component.MeetingCard
-import com.moive.app.presentation.home.component.UpcomingMeetingPager
+import com.moive.app.presentation.home.component.MyMeetingCardItem
+import com.moive.app.presentation.home.component.ConfirmedMeetingPager
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -118,7 +118,7 @@ private fun HomeScreen(
                         contentScale = ContentScale.Crop,
                     )
                 } else {
-                    UpcomingMeetingPager(
+                    ConfirmedMeetingPager(
                         meetings = uiState.upcomingMeetings,
                         onMeetingClick = { onMeetingClick() },
                         onAddMeetingClick = onAddMeetingClick,
@@ -181,7 +181,7 @@ private fun HomeScreen(
                     items = uiState.myMeetingList,
                     key = { it.id },
                 ) { meeting ->
-                    MeetingCard(
+                    MyMeetingCardItem(
                         title = meeting.title,
                         dateTime = meeting.dateTime,
                         participantImageList = meeting.participantImageUrls,
