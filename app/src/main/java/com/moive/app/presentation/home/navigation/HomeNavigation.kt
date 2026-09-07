@@ -7,7 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.moive.app.core.navigation.MainTabRoute
 import com.moive.app.presentation.home.HomeRoute
-import com.moive.app.presentation.meeting.complete.navigation.navigateToMeetingComplete
+import com.moive.app.presentation.meeting.create.navigation.navigateToMeetingCreation
 import com.moive.app.presentation.meeting.detail.navigation.navigateToMeetingDetail
 import com.moive.app.presentation.meeting.list.navigation.navigateToMeetingList
 import com.moive.app.presentation.notification.navigation.navigateToNotification
@@ -25,7 +25,7 @@ fun NavGraphBuilder.homeGraph(
         HomeRoute(
             navigateToMeetingList = navController::navigateToMeetingList,
             navigateToMeetingDetail = navController::navigateToMeetingDetail,
-            navigateToMeetingComplete = navController::navigateToMeetingComplete,
+            navigateToMeetingCreation = navController::navigateToMeetingCreation,
             navigateToNotification = navController::navigateToNotification,
             innerPadding = innerPadding,
         )
