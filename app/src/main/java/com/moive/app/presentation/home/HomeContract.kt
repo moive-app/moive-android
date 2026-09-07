@@ -10,7 +10,7 @@ import kotlinx.collections.immutable.persistentListOf
 interface HomeContract {
     @Immutable
     data class State(
-        val userName: String = "",
+        val userName: String = "수현",
         val isAlarmUnRead: Boolean = false,
         val selectedTab: String = MeetingTab.ALL.label,
         val myMeetingList: ImmutableList<MyMeetingCardItemModel> = persistentListOf(

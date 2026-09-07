@@ -37,8 +37,8 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.noRippleClickable
 import com.moive.app.presentation.common.component.TabChipList
+import com.moive.app.presentation.common.component.MyMeetingCardItem
 import com.moive.app.presentation.home.component.HomeEmptyMeetingList
-import com.moive.app.presentation.home.component.MyMeetingCardItem
 import com.moive.app.presentation.home.component.ConfirmedMeetingPager
 import kotlinx.collections.immutable.persistentListOf
 
