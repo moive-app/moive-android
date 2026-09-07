@@ -202,102 +202,14 @@ private fun MeetingDetailScreen(
     }
 }
 
-@Preview(showBackground = true, name = "조건 입력 중")
+@Preview(showBackground = true,)
 @Composable
-private fun MeetingDetailScreenInputtingPreview() {
+private fun MeetingDetailScreenPreview() {
     MoiveTheme {
         MeetingDetailScreen(
             innerPadding = PaddingValues(),
             uiState = MeetingDetailContract.State(
                 status = MeetingStatus.INPUTTING,
-            ),
-            onBackClick = {},
-            onMoreClick = {},
-            onInviteFriendClick = {},
-            onActionButtonClick = {},
-            onBottomButtonClick = {},
-            onLeaveMeetingDialogDismiss = {},
-            onLeaveMeetingClick = {},
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "투표중")
-@Composable
-private fun MeetingDetailScreenVotingPreview() {
-    MoiveTheme {
-        MeetingDetailScreen(
-            innerPadding = PaddingValues(),
-            uiState = MeetingDetailContract.State(
-                status = MeetingStatus.VOTING,
-                participants = persistentListOf(
-                    ParticipantItemModel(
-                        id = 1L,
-                        name = "사용자",
-                        profileImageUrl = "",
-                        isMe = true,
-                        isDone = false
-                    ),
-                    ParticipantItemModel(
-                        id = 2L,
-                        name = "참여자1",
-                        profileImageUrl = "",
-                        isMe = false,
-                        isDone = true
-                    ),
-                    ParticipantItemModel(
-                        id = 3L,
-                        name = "참여자2",
-                        profileImageUrl = "",
-                        isMe = false,
-                        isDone = true
-                    ),
-                ),
-            ),
-            onBackClick = {},
-            onMoreClick = {},
-            onInviteFriendClick = {},
-            onActionButtonClick = {},
-            onBottomButtonClick = {},
-            onLeaveMeetingDialogDismiss = {},
-            onLeaveMeetingClick = {},
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "모두 완료")
-@Composable
-private fun MeetingDetailScreenAllDonePreview() {
-    MoiveTheme {
-        val doneParticipants: ImmutableList<ParticipantItemModel> = persistentListOf(
-            ParticipantItemModel(
-                id = 1L,
-                name = "사용자",
-                profileImageUrl = "",
-                isMe = true,
-                isDone = true
-            ),
-            ParticipantItemModel(
-                id = 2L,
-                name = "참여자1",
-                profileImageUrl = "",
-                isMe = false,
-                isDone = true
-            ),
-            ParticipantItemModel(
-                id = 3L,
-                name = "참여자2",
-                profileImageUrl = "",
-                isMe = false,
-                isDone = true
-            ),
-        )
-
-        MeetingDetailScreen(
-            innerPadding = PaddingValues(),
-            uiState = MeetingDetailContract.State(
-                status = MeetingStatus.INPUTTING,
-                participants = doneParticipants,
             ),
             onBackClick = {},
             onMoreClick = {},
