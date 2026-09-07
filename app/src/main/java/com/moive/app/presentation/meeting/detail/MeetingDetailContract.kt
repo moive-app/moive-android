@@ -12,6 +12,7 @@ interface MeetingDetailContract {
         val meetingName: String = "모임명",
         val meetingPurpose: String = "모임목적",
         val thumbnailUrl: String = "",
+        val isLeaveMeetingDialogVisible: Boolean = false,
         val participants: ImmutableList<ParticipantItemModel> = persistentListOf(
             ParticipantItemModel(
                 id = 1L,

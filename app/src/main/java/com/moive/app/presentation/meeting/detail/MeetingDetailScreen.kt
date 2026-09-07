@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.R
@@ -38,6 +40,7 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.data.meeting.model.ParticipantItemModel
 import com.moive.app.presentation.common.component.ShadowButton
 import com.moive.app.presentation.meeting.detail.MeetingDetailContract.MeetingStatus
+import com.moive.app.presentation.meeting.detail.component.LeaveMeetingDialog
 import com.moive.app.presentation.meeting.detail.component.MeetingInfoRow
 import com.moive.app.presentation.meeting.detail.component.ParticipantItem
 import kotlinx.collections.immutable.ImmutableList
@@ -59,7 +62,6 @@ fun MeetingDetailRoute(
         innerPadding = innerPadding,
         uiState = uiState,
         onBackClick = navigateBack,
-        onMoreClick = {},
         onInviteFriendClick = {},
         onActionButtonClick = {
             when (uiState.status) {
@@ -69,10 +71,17 @@ fun MeetingDetailRoute(
         },
         onBottomButtonClick = {
             when (uiState.status) {
-                MeetingStatus.INPUTTING -> Unit
+                MeetingStatus.INPUTTING -> navigateToVoting()
                 MeetingStatus.VOTING -> navigateToVoting()
                 MeetingStatus.CONFIRMED -> navigateToMeetingConfirmed()
             }
+        },
+        onMoreClick = viewModel::showLeaveMeetingDialog,
+        onLeaveMeetingDialogDismiss = viewModel::dismissLeaveMeetingDialog,
+        onLeaveMeetingClick = {
+            viewModel.dismissLeaveMeetingDialog()
+            viewModel.deleteMeeting()
+            navigateBack()
         },
         modifier = modifier,
     )
@@ -87,6 +96,8 @@ private fun MeetingDetailScreen(
     onInviteFriendClick: () -> Unit,
     onActionButtonClick: () -> Unit,
     onBottomButtonClick: () -> Unit,
+    onLeaveMeetingDialogDismiss: () -> Unit,
+    onLeaveMeetingClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -169,7 +180,8 @@ private fun MeetingDetailScreen(
                 text = statusTooltipText(uiState.status),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 4.dp),
+                    .zIndex(1f)
+                    .offset(y = 8.dp),
             )
         }
 
@@ -178,6 +190,14 @@ private fun MeetingDetailScreen(
             isEnabled = uiState.isAllParticipantsDone,
             onClick = onBottomButtonClick,
             showShadow = isContentScrollable,
+        )
+    }
+
+    if (uiState.isLeaveMeetingDialogVisible) {
+        LeaveMeetingDialog(
+            meetingName = uiState.meetingName,
+            onDismissRequest = onLeaveMeetingDialogDismiss,
+            onLeaveClick = onLeaveMeetingClick,
         )
     }
 }
@@ -196,6 +216,8 @@ private fun MeetingDetailScreenInputtingPreview() {
             onInviteFriendClick = {},
             onActionButtonClick = {},
             onBottomButtonClick = {},
+            onLeaveMeetingDialogDismiss = {},
+            onLeaveMeetingClick = {},
         )
     }
 }
@@ -237,6 +259,8 @@ private fun MeetingDetailScreenVotingPreview() {
             onInviteFriendClick = {},
             onActionButtonClick = {},
             onBottomButtonClick = {},
+            onLeaveMeetingDialogDismiss = {},
+            onLeaveMeetingClick = {},
         )
     }
 }
@@ -280,6 +304,8 @@ private fun MeetingDetailScreenAllDonePreview() {
             onInviteFriendClick = {},
             onActionButtonClick = {},
             onBottomButtonClick = {},
+            onLeaveMeetingDialogDismiss = {},
+            onLeaveMeetingClick = {},
         )
     }
 }
