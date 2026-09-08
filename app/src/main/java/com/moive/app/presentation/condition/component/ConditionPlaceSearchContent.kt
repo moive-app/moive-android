@@ -99,7 +99,9 @@ fun ConditionPlaceSearchContent(
             }
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
                 contentPadding = PaddingValues(20.dp)
             ) {
                 itemsIndexed(
