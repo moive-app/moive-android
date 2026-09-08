@@ -79,7 +79,7 @@ fun ConditionInputContent(
 
             ConditionTextBox(
                 placeholder = "위치를 설정해주세요",
-                text = state.selectedPlaceName,
+                text = state.selectedPlaceText,
                 leadingIcon = R.drawable.ic_search_20,
                 onClick = onPlaceBoxClick,
             )

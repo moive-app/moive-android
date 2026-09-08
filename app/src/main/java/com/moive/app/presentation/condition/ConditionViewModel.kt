@@ -64,18 +64,9 @@ class ConditionViewModel @Inject constructor(
 
     fun onDateSaveClick() {
         _uiState.update {
-            val entries = it.selectedDateTimes
-            val summary = entries.firstOrNull()?.let { first ->
-                if (entries.size > 1) {
-                    "${first.selectedDate} ${first.selectedTime} 외 ${entries.size - 1}개"
-                } else {
-                    "${first.selectedDate} ${first.selectedTime}"
-                }
-            }
             it.copy(
                 isDateBottomSheetVisible = false,
-                confirmedDateTimes = entries,
-                selectedDateText = summary ?: it.selectedDateText,
+                confirmedDateTimes = it.selectedDateTimes,
                 pendingDay = null,
                 pendingTime = null,
             )
@@ -92,11 +83,9 @@ class ConditionViewModel @Inject constructor(
 
     fun onPlaceItemClick(placeId: Long) {
         _uiState.update {
-            val place = it.placeList.find { item -> item.id == placeId }
             it.copy(
                 step = Step.INPUT,
                 selectedPlaceId = placeId,
-                selectedPlaceName = place?.name,
             )
         }
     }

@@ -14,7 +14,6 @@ interface ConditionContract {
     data class State(
         val step: Step = Step.INPUT,
         val isDateBottomSheetVisible: Boolean = false,
-        val selectedDateText: String? = null,
         val calendarYear: Int = DEFAULT_CALENDAR_YEAR,
         val calendarMonth: Int = DEFAULT_CALENDAR_MONTH,
         val pendingDay: Int? = null,
@@ -39,7 +38,6 @@ interface ConditionContract {
             ),
         ),
         val selectedPlaceId: Long? = null,
-        val selectedPlaceName: String? = null,
         val selectedTravelTime: String? = null,
         val selectedPreferences: PersistentList<String> = persistentListOf(),
     ) {
@@ -79,6 +77,21 @@ interface ConditionContract {
                     .sortedWith(compareBy({ it.year }, { it.month }, { it.day }, { it.time }))
                     .toPersistentList()
             }
+
+        val selectedDateText: String?
+            get() = confirmedDateTimes.firstOrNull()?.let { first ->
+                if (confirmedDateTimes.size > 1) {
+                    "${first.selectedDate} ${first.selectedTime} 외 ${confirmedDateTimes.size - 1}개"
+                } else {
+                    "${first.selectedDate} ${first.selectedTime}"
+                }
+            }
+
+        val selectedPlace: PlaceSearchItemModel?
+            get() = placeList.find { it.id == selectedPlaceId }
+
+        val selectedPlaceText: String?
+            get() = selectedPlace?.address
 
         val isNextButtonEnabled: Boolean
             get() = selectedPlaceId != null &&

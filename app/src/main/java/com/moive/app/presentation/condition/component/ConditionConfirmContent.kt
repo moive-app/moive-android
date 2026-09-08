@@ -84,19 +84,24 @@ fun ConditionConfirmContent(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     ConfirmInfoRow(
+                        label = "모임 일시 후보",
+                        value = state.selectedDateText ?: ""
+                    )
+
+                    ConfirmInfoRow(
                         label = "출발 위치",
-                        value = state.selectedPlaceName ?: ""
+                        value = state.selectedPlaceText ?: ""
                     )
 
 
                     ConfirmInfoRow(
-                        label = "선호 거리",
+                        label = "선호 이동 거리",
                         value = state.selectedTravelTime ?: ""
                     )
 
 
                     ConfirmInfoRow(
-                        label = "모임 테마",
+                        label = "취향",
                         value = state.selectedPreferences.joinToString(separator = ", "),
                     )
                 }
@@ -118,7 +123,7 @@ private fun ConditionConfirmContentPreview() {
     MoiveTheme {
         ConditionConfirmContent(
             state = ConditionContract.State(
-                selectedPlaceName = "진흥아파트",
+                selectedPlaceId = 1L,
                 selectedTravelTime = "30분 이내",
                 selectedPreferences = persistentListOf("맛집"),
             ),
