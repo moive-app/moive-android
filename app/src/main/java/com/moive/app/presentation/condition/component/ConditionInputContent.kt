@@ -31,6 +31,10 @@ fun ConditionInputContent(
     onBackClick: () -> Unit,
     onDateBoxClick: () -> Unit,
     onDateBottomSheetDismiss: () -> Unit,
+    onCalendarPrevMonthClick: () -> Unit,
+    onCalendarNextMonthClick: () -> Unit,
+    onCalendarDayClick: (Int) -> Unit,
+    onCalendarTimeClick: (String) -> Unit,
     onSaveDateClick: () -> Unit,
     onNextDateClick: () -> Unit,
     onPlaceBoxClick: () -> Unit,
@@ -123,7 +127,12 @@ fun ConditionInputContent(
 
     if (state.isDateBottomSheetVisible) {
         DateBottomSheet(
+            state = state,
             onDateBottomSheetDismiss = onDateBottomSheetDismiss,
+            onPrevMonthClick = onCalendarPrevMonthClick,
+            onNextMonthClick = onCalendarNextMonthClick,
+            onDayClick = onCalendarDayClick,
+            onTimeClick = onCalendarTimeClick,
             onSaveDateClick = onSaveDateClick,
             onNextDateClick = onNextDateClick,
         )
@@ -139,6 +148,10 @@ private fun ConditionInputContentPreview() {
             onBackClick = {},
             onDateBoxClick = {},
             onDateBottomSheetDismiss = {},
+            onCalendarPrevMonthClick = {},
+            onCalendarNextMonthClick = {},
+            onCalendarDayClick = {},
+            onCalendarTimeClick = {},
             onSaveDateClick = {},
             onNextDateClick = {},
             onPlaceBoxClick = {},
