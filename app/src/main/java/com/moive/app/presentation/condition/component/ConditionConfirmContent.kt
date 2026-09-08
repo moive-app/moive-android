@@ -37,6 +37,7 @@ fun ConditionConfirmContent(
     onBackClick: () -> Unit,
     onConfirmButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
+    innerPadding: PaddingValues = PaddingValues(),
 ) {
     val lazyListState = rememberLazyListState()
     val isContentScrollable by remember {
@@ -48,7 +49,8 @@ fun ConditionConfirmContent(
             .fillMaxSize()
             .background(
                 color = colors.fill.default08,
-            ),
+            )
+            .padding(innerPadding),
     ) {
         MoiveSubTitleTopBar(
             title = "조건 확인",

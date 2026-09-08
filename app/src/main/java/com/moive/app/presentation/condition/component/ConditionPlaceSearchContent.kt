@@ -42,6 +42,7 @@ fun ConditionPlaceSearchContent(
     onSearchClick: () -> Unit,
     onPlaceItemClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
+    innerPadding: PaddingValues = PaddingValues(),
 ) {
 
     Column(
@@ -49,7 +50,8 @@ fun ConditionPlaceSearchContent(
             .fillMaxSize()
             .background(
                 color = colors.fill.default08
-            ),
+            )
+            .padding(innerPadding),
     ) {
         MoiveSubTitleTopBar(
             title = "위치",

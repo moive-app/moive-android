@@ -2,6 +2,7 @@ package com.moive.app.presentation.condition.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -42,9 +43,15 @@ fun ConditionInputContent(
     onPreferenceClick: (String) -> Unit,
     onNextButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
+    innerPadding: PaddingValues = PaddingValues(),
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                color = colors.background.default00,
+            )
+            .padding(innerPadding),
     ) {
         MoiveSubTitleTopBar(
             title = "조건 입력",
@@ -54,9 +61,6 @@ fun ConditionInputContent(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .background(
-                    color = colors.background.default00,
-                )
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 24.dp),
         ) {

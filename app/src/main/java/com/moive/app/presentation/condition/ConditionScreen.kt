@@ -2,7 +2,6 @@ package com.moive.app.presentation.condition
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -92,7 +91,8 @@ private fun ConditionScreen(
             onTimeClick = onTravelTimeClick,
             onPreferenceClick = onPreferenceClick,
             onNextButtonClick = onNextButtonClick,
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier,
+            innerPadding = innerPadding,
         )
 
         Step.SEARCH -> ConditionPlaceSearchContent(
@@ -101,14 +101,16 @@ private fun ConditionScreen(
             onBackClick = onPlaceBackClick,
             onSearchClick = onPlaceSearchSubmit,
             onPlaceItemClick = onPlaceItemClick,
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier,
+            innerPadding = innerPadding,
         )
 
         Step.CONFIRM -> ConditionConfirmContent(
             state = state,
             onBackClick = onPlaceBackClick,
             onConfirmButtonClick = onConfirmButtonClick,
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier,
+            innerPadding = innerPadding,
         )
     }
 }
