@@ -10,21 +10,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
+import com.moive.app.core.extensions.isNotificationEnabled
+import com.moive.app.core.extensions.navigateToAppNotificationSettings
 import com.moive.app.data.notification.model.NotificationItemModel
 import com.moive.app.presentation.notification.component.EmptyNotificationContent
 import com.moive.app.presentation.notification.component.NotificationListItem
 import com.moive.app.presentation.notification.component.NotificationSettingButton
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun NotificationRoute(
@@ -34,7 +40,15 @@ fun NotificationRoute(
     modifier: Modifier = Modifier,
     viewModel: NotificationViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.onNotificationPermissionChanged(context.isNotificationEnabled())
+        }
+    }
 
     NotificationScreen(
         innerPadding = innerPadding,
@@ -42,7 +56,7 @@ fun NotificationRoute(
         isNotificationPermissionGranted = uiState.isNotificationPermissionGranted,
         onBackClick = navigateBack,
         onNotificationItemClick = { navigateToMeetingDetail() },
-        onNotificationSettingClick = {},
+        onNotificationSettingClick = { context.navigateToAppNotificationSettings() },
         modifier = modifier,
     )
 }
