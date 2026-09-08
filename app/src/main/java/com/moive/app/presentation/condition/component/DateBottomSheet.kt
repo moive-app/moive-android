@@ -117,7 +117,9 @@ private fun DateBottomSheetContent(
         modifier = modifier,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -146,7 +148,9 @@ private fun DateBottomSheetContent(
         Spacer(modifier = Modifier.height(36.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
         ) {
             WEEKDAY_LABELS.forEach { label ->
                 Text(
@@ -165,10 +169,15 @@ private fun DateBottomSheetContent(
             text = "${uiState.calendarYear}년 ${uiState.calendarMonth}월",
             color = colors.text.default,
             style = typography.label.smM,
+            modifier = Modifier.padding(horizontal = 20.dp)
         )
 
         uiState.calendarDays.chunked(7).forEach { week ->
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            ) {
                 week.forEach { calendarDay ->
                     CalendarDayCell(
                         calendarDay = calendarDay,
@@ -190,19 +199,19 @@ private fun DateBottomSheetContent(
                     color = colors.fill.default06
                 )
                 .padding(vertical = 12.dp)
-        ){
+        ) {
             Text(
                 text = "가능한 시간",
                 color = colors.text.default,
                 style = typography.title.xsSb,
+                modifier = Modifier.padding(horizontal = 20.dp),
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             LazyRow(
-                modifier = Modifier.padding(horizontal =  (-20).dp),
+                contentPadding = PaddingValues(horizontal = 20.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                contentPadding = PaddingValues(horizontal = 20.dp)
             ) {
                 items(
                     items = uiState.timeOptions,
@@ -218,17 +227,21 @@ private fun DateBottomSheetContent(
             }
 
             if (uiState.selectedDateTimes.isNotEmpty()) {
-
                 Text(
                     text = "일시 확인",
                     color = colors.text.default,
                     style = typography.title.smSb,
-                    modifier = Modifier.padding(top = 24.dp, bottom = 12.dp),
+                    modifier = Modifier.padding(
+                        start = 20.dp,
+                        top = 24.dp,
+                        end = 20.dp,
+                        bottom = 12.dp
+                    ),
                 )
 
                 LazyRow(
-                    modifier = Modifier.padding(horizontal = (-20).dp),
                     contentPadding = PaddingValues(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     items(
                         items = uiState.selectedDateTimes,
@@ -290,7 +303,7 @@ private fun DateTimeChip(
     entry: DateTimeSelection,
     modifier: Modifier = Modifier,
 ) {
-    Column (
+    Column(
         modifier = modifier
             .border(
                 width = 2.dp,
@@ -327,7 +340,6 @@ private fun DateBottomSheetContentPreview() {
             onNextMonthClick = {},
             onDayClick = {},
             onTimeClick = {},
-            modifier = Modifier.padding(20.dp),
         )
     }
 }
