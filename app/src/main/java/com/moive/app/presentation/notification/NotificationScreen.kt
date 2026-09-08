@@ -80,6 +80,7 @@ private fun NotificationScreen(
         MoiveSubTitleTopBar(
             title = "알림함",
             onBackClick = onBackClick,
+            backgroundColor = colors.background.default02,
         )
 
         LazyColumn(
