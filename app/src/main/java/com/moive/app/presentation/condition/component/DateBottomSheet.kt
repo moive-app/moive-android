@@ -82,6 +82,7 @@ fun DateBottomSheet(
         },
         buttonContent = {
             Row(
+                modifier = Modifier.padding(horizontal = 20.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 MoiveButton(
@@ -290,6 +291,7 @@ private fun CalendarDayCell(
                         color = colors.primary.default,
                         shape = RoundedCornerShape(radius.circular),
                     )
+                    .padding(vertical = 8.dp)
                     .wrapContentSize(Alignment.Center)
             } else {
                 Modifier
@@ -315,6 +317,7 @@ private fun DateTimeChip(
                 shape = RoundedCornerShape(radius.sm),
             )
             .padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = entry.selectedDate,
