@@ -2,7 +2,6 @@ package com.moive.app.presentation.condition
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,6 +17,7 @@ import com.moive.app.presentation.condition.component.ConditionPlaceSearchConten
 @Composable
 fun ConditionRoute(
     innerPadding: PaddingValues,
+    navigateBack: () -> Unit,
     navigateToMeetingDetail: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConditionViewModel = hiltViewModel(),
@@ -31,10 +31,23 @@ fun ConditionRoute(
     ConditionScreen(
         innerPadding = innerPadding,
         state = uiState,
-        onSearchClick = viewModel::onPlaceSearchBoxClick,
+        onBackClick = navigateBack,
+        onDateBoxClick = viewModel::onDateBoxClick,
+        onDateBottomSheetDismiss = viewModel::dismissDateBottomSheet,
+        onCalendarPrevMonthClick = viewModel::onCalendarPrevMonthClick,
+        onCalendarNextMonthClick = viewModel::onCalendarNextMonthClick,
+        onCalendarDayClick = viewModel::onCalendarDayClick,
+        onCalendarTimeClick = viewModel::onCalendarTimeClick,
+        onSaveDateClick = viewModel::onDateSaveClick,
+        onNextDateClick = viewModel::onDateNextClick,
+        onPlaceBoxClick = viewModel::onPlaceSearchBoxClick,
+        onPlaceBackClick = viewModel::backToInputStep,
+        onPlaceSearchSubmit = viewModel::postPlaceSearch,
         onPlaceItemClick = viewModel::onPlaceItemClick,
+        onTravelTimeClick = viewModel::onTravelTimeClick,
+        onPreferenceClick = viewModel::onPreferenceClick,
         onNextButtonClick = viewModel::onNextButtonClick,
-        onCompleteButtonClick = navigateToMeetingDetail,
+        onConfirmButtonClick = navigateToMeetingDetail,
         modifier = modifier,
     )
 }
@@ -43,29 +56,61 @@ fun ConditionRoute(
 private fun ConditionScreen(
     innerPadding: PaddingValues,
     state: ConditionContract.State,
-    onSearchClick: () -> Unit,
-    onPlaceItemClick: (String) -> Unit,
+    onBackClick: () -> Unit,
+    onDateBoxClick: () -> Unit,
+    onDateBottomSheetDismiss: () -> Unit,
+    onCalendarPrevMonthClick: () -> Unit,
+    onCalendarNextMonthClick: () -> Unit,
+    onCalendarDayClick: (Int) -> Unit,
+    onCalendarTimeClick: (String) -> Unit,
+    onSaveDateClick: () -> Unit,
+    onNextDateClick: () -> Unit,
+    onPlaceBoxClick: () -> Unit,
+    onPlaceBackClick: () -> Unit,
+    onPlaceSearchSubmit: () -> Unit,
+    onPlaceItemClick: (Long) -> Unit,
+    onTravelTimeClick: (String) -> Unit,
+    onPreferenceClick: (String) -> Unit,
     onNextButtonClick: () -> Unit,
-    onCompleteButtonClick: () -> Unit,
+    onConfirmButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (state.step) {
         Step.INPUT -> ConditionInputContent(
-            selectedPlace = state.selectedPlace,
-            onSearchClick = onSearchClick,
+            state = state,
+            onBackClick = onBackClick,
+            onDateBoxClick = onDateBoxClick,
+            onDateBottomSheetDismiss = onDateBottomSheetDismiss,
+            onCalendarPrevMonthClick = onCalendarPrevMonthClick,
+            onCalendarNextMonthClick = onCalendarNextMonthClick,
+            onCalendarDayClick = onCalendarDayClick,
+            onCalendarTimeClick = onCalendarTimeClick,
+            onSaveDateClick = onSaveDateClick,
+            onNextDateClick = onNextDateClick,
+            onPlaceBoxClick = onPlaceBoxClick,
+            onTimeClick = onTravelTimeClick,
+            onPreferenceClick = onPreferenceClick,
             onNextButtonClick = onNextButtonClick,
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier,
+            innerPadding = innerPadding,
         )
 
         Step.SEARCH -> ConditionPlaceSearchContent(
+            searchState = state.searchFieldState,
+            placeList = state.placeList,
+            onBackClick = onPlaceBackClick,
+            onSearchClick = onPlaceSearchSubmit,
             onPlaceItemClick = onPlaceItemClick,
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier,
+            innerPadding = innerPadding,
         )
 
         Step.CONFIRM -> ConditionConfirmContent(
-            selectedPlace = state.selectedPlace,
-            onCompleteButtonClick = onCompleteButtonClick,
-            modifier = modifier.padding(innerPadding),
+            state = state,
+            onBackClick = onPlaceBackClick,
+            onConfirmButtonClick = onConfirmButtonClick,
+            modifier = modifier,
+            innerPadding = innerPadding,
         )
     }
 }
@@ -77,10 +122,23 @@ private fun ConditionScreenPreview() {
         ConditionScreen(
             innerPadding = PaddingValues(),
             state = ConditionContract.State(),
-            onSearchClick = {},
+            onBackClick = {},
+            onDateBoxClick = {},
+            onDateBottomSheetDismiss = {},
+            onCalendarPrevMonthClick = {},
+            onCalendarNextMonthClick = {},
+            onCalendarDayClick = {},
+            onCalendarTimeClick = {},
+            onSaveDateClick = {},
+            onNextDateClick = {},
+            onPlaceBoxClick = {},
+            onPlaceBackClick = {},
+            onPlaceSearchSubmit = {},
             onPlaceItemClick = {},
+            onTravelTimeClick = {},
+            onPreferenceClick = {},
             onNextButtonClick = {},
-            onCompleteButtonClick = {},
+            onConfirmButtonClick = {},
         )
     }
 }

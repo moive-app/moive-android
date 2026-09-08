@@ -47,9 +47,6 @@ fun MoiveBottomSheet(
     onDismissRequest: () -> Unit = { },
     bottomSheetState: SheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
-        confirmValueChange = { targetValue ->
-            targetValue != SheetValue.Hidden
-        }
     ),
     showScrim: Boolean = true,
     content: @Composable () -> Unit,
@@ -88,12 +85,12 @@ private fun BottomSheetContent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
             .padding(top = 20.dp, bottom = 10.dp),
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {

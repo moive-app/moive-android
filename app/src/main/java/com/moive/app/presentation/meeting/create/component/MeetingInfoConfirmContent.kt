@@ -24,6 +24,7 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.presentation.common.component.ConfirmInfoRow
 import com.moive.app.presentation.common.component.ShadowButton
 
 @Composable
@@ -80,19 +81,19 @@ fun MeetingInfoConfirmContent(
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    MeetingInfoRow(
+                    ConfirmInfoRow(
                         label = "모임 이름",
                         value = meetingName
                     )
 
                     if (schedule.isNotEmpty()) {
-                        MeetingInfoRow(
+                        ConfirmInfoRow(
                             label = "일정",
-                            value = schedule.ifEmpty { "미정" }
+                            value = schedule
                         )
                     }
 
-                    MeetingInfoRow(
+                    ConfirmInfoRow(
                         label = "모임 목적",
                         value = purpose,
                     )
@@ -105,29 +106,6 @@ fun MeetingInfoConfirmContent(
             isEnabled = true,
             onClick = onConfirmButtonClick,
             showShadow = isContentScrollable,
-        )
-    }
-}
-
-@Composable
-private fun MeetingInfoRow(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-    ) {
-        Text(
-            text = label,
-            color = colors.text.tertiary,
-            style = typography.label.xsM,
-        )
-
-        Text(
-            text = value,
-            color = colors.text.default,
-            style = typography.label.smM,
         )
     }
 }

@@ -50,7 +50,7 @@ class MainAppState(
         .map { destination ->
             MainTab.contains { tab ->
                 destination?.hasRoute(tab::class) == true
-            } || destination?.hasRoute(MeetingList::class) == true
+            }
         }
         .stateIn(
             scope = coroutineScope,

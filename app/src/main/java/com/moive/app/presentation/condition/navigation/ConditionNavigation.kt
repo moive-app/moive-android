@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.moive.app.core.extensions.safePopBackStack
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.condition.ConditionRoute
 import com.moive.app.presentation.meeting.detail.navigation.MeetingDetail
@@ -20,6 +21,7 @@ fun NavGraphBuilder.conditionGraph(
 ) {
     composable<Condition> {
         ConditionRoute(
+            navigateBack = navController.safePopBackStack(),
             navigateToMeetingDetail = {
                 navController.popBackStack<MeetingDetail>(inclusive = false)
             },

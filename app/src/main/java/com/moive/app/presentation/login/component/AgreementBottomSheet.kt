@@ -70,7 +70,7 @@ fun AgreementBottomSheet(
         modifier = modifier,
         content = {
             Column (
-                modifier = Modifier.padding(top = 20.dp)
+                modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 20.dp)
             ){
                 AllAgreementButton(
                     isChecked = isAllAgreed,
@@ -114,6 +114,7 @@ fun AgreementBottomSheet(
                 size = MoiveButtonSize.LARGE,
                 enabled = isConfirmEnabled,
                 onClick = onConfirmClick,
+                modifier = Modifier.padding(horizontal = 20.dp)
             )
         },
     )

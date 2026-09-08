@@ -16,12 +16,95 @@ class ConditionViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ConditionContract.State())
     val uiState = _uiState.asStateFlow()
 
+    fun onDateBoxClick() {
+        _uiState.update { it.copy(isDateBottomSheetVisible = true) }
+    }
+
+    fun dismissDateBottomSheet() {
+        _uiState.update {
+            it.copy(
+                isDateBottomSheetVisible = false,
+                pendingDay = null,
+                pendingTime = null,
+            )
+        }
+    }
+
+    fun onCalendarPrevMonthClick() {
+        _uiState.update {
+            val (year, month) = previousMonth(it.calendarYear, it.calendarMonth)
+            it.copy(calendarYear = year, calendarMonth = month, pendingDay = null)
+        }
+    }
+
+    fun onCalendarNextMonthClick() {
+        _uiState.update {
+            val (year, month) = nextMonth(it.calendarYear, it.calendarMonth)
+            it.copy(calendarYear = year, calendarMonth = month, pendingDay = null)
+        }
+    }
+
+    fun onCalendarDayClick(day: Int) {
+        _uiState.update { it.copy(pendingDay = day) }
+    }
+
+    fun onCalendarTimeClick(time: String) {
+        _uiState.update { it.copy(pendingTime = time) }
+    }
+
+    fun onDateNextClick() {
+        _uiState.update {
+            it.copy(
+                confirmedDateTimes = it.selectedDateTimes,
+                pendingDay = null,
+                pendingTime = null,
+            )
+        }
+    }
+
+    fun onDateSaveClick() {
+        _uiState.update {
+            it.copy(
+                isDateBottomSheetVisible = false,
+                confirmedDateTimes = it.selectedDateTimes,
+                pendingDay = null,
+                pendingTime = null,
+            )
+        }
+    }
+
     fun onPlaceSearchBoxClick() {
         _uiState.update { it.copy(step = Step.SEARCH) }
     }
 
-    fun onPlaceItemClick(place: String) {
-        _uiState.update { it.copy(step = Step.INPUT, selectedPlace = place) }
+    fun postPlaceSearch() {
+        // TODO: 위치 검색 API 연동
+    }
+
+    fun onPlaceItemClick(placeId: Long) {
+        _uiState.update {
+            it.copy(
+                step = Step.INPUT,
+                selectedPlaceId = placeId,
+            )
+        }
+    }
+
+    fun onTravelTimeClick(travelTime: String) {
+        _uiState.update { it.copy(selectedTravelTime = travelTime) }
+    }
+
+    fun onPreferenceClick(preference: String) {
+        _uiState.update {
+            val selected = it.selectedPreferences
+            it.copy(
+                selectedPreferences = if (preference in selected) {
+                    selected.remove(preference)
+                } else {
+                    selected.add(preference)
+                },
+            )
+        }
     }
 
     fun onNextButtonClick() {
