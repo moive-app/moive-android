@@ -14,8 +14,8 @@ interface ConditionContract {
     data class State(
         val step: Step = Step.INPUT,
         val isDateBottomSheetVisible: Boolean = false,
-        val calendarYear: Int = DEFAULT_CALENDAR_YEAR,
-        val calendarMonth: Int = DEFAULT_CALENDAR_MONTH,
+        val calendarYear: Int = Calendar.getInstance().get(Calendar.YEAR),
+        val calendarMonth: Int = Calendar.getInstance().get(Calendar.MONTH) + 1,
         val pendingDay: Int? = null,
         val pendingTime: String? = null,
         val confirmedDateTimes: PersistentList<DateTimeSelection> = persistentListOf(),
@@ -100,9 +100,6 @@ interface ConditionContract {
                 selectedPreferences.isNotEmpty()
 
         companion object {
-            private val CALENDAR_NOW = Calendar.getInstance()
-            private val DEFAULT_CALENDAR_YEAR = CALENDAR_NOW.get(Calendar.YEAR)
-            private val DEFAULT_CALENDAR_MONTH = CALENDAR_NOW.get(Calendar.MONTH) + 1
             private val TIME_OPTIONS = buildTimeOptions()
 
             private val TRAVEL_TIME_OPTIONS = persistentListOf(
