@@ -6,6 +6,8 @@ import com.moive.app.data.condition.model.PlaceSearchItemModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
+import java.util.Calendar
 
 interface ConditionContract {
     @Immutable
@@ -13,6 +15,11 @@ interface ConditionContract {
         val step: Step = Step.INPUT,
         val isDateBottomSheetVisible: Boolean = false,
         val selectedDateText: String? = null,
+        val calendarYear: Int = DEFAULT_CALENDAR_YEAR,
+        val calendarMonth: Int = DEFAULT_CALENDAR_MONTH,
+        val pendingDay: Int? = null,
+        val pendingTime: String? = null,
+        val confirmedDateTimes: PersistentList<DateTimeSelection> = persistentListOf(),
         val searchFieldState: TextFieldState = TextFieldState(initialText = ""),
         val placeList: ImmutableList<PlaceSearchItemModel> = persistentListOf(
             PlaceSearchItemModel(
@@ -42,12 +49,48 @@ interface ConditionContract {
         val preferenceCategories: ImmutableList<PreferenceCategory>
             get() = PREFERENCE_CATEGORIES
 
+        val calendarDays: ImmutableList<CalendarDay>
+            get() = buildCalendarDays(calendarYear, calendarMonth)
+
+        val timeOptions: ImmutableList<String>
+            get() = TIME_OPTIONS
+
+        val pendingDateTime: DateTimeSelection?
+            get() = if (pendingDay != null && pendingTime != null) {
+                DateTimeSelection(
+                    year = calendarYear,
+                    month = calendarMonth,
+                    day = pendingDay,
+                    time = pendingTime,
+                )
+            } else {
+                null
+            }
+
+        val selectedDateTimes: PersistentList<DateTimeSelection>
+            get() {
+                val pending = pendingDateTime
+                val entries = if (pending == null || pending in confirmedDateTimes) {
+                    confirmedDateTimes
+                } else {
+                    confirmedDateTimes.add(pending)
+                }
+                return entries
+                    .sortedWith(compareBy({ it.year }, { it.month }, { it.day }, { it.time }))
+                    .toPersistentList()
+            }
+
         val isNextButtonEnabled: Boolean
             get() = selectedPlaceId != null &&
                 selectedTravelTime != null &&
                 selectedPreferences.isNotEmpty()
 
         companion object {
+            private val CALENDAR_NOW = Calendar.getInstance()
+            private val DEFAULT_CALENDAR_YEAR = CALENDAR_NOW.get(Calendar.YEAR)
+            private val DEFAULT_CALENDAR_MONTH = CALENDAR_NOW.get(Calendar.MONTH) + 1
+            private val TIME_OPTIONS = buildTimeOptions()
+
             private val TRAVEL_TIME_OPTIONS = persistentListOf(
                 "30분 이내",
                 "1시간 이내",
@@ -88,3 +131,17 @@ data class PreferenceCategory(
     val title: String,
     val items: ImmutableList<String>,
 )
+
+@Immutable
+data class DateTimeSelection(
+    val year: Int,
+    val month: Int,
+    val day: Int,
+    val time: String,
+) {
+    val selectedDate: String
+        get() = "${month}월 ${day}일"
+
+    val selectedTime: String
+        get() = time
+}

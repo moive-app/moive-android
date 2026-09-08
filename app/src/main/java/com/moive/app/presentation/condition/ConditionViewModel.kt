@@ -21,7 +21,65 @@ class ConditionViewModel @Inject constructor(
     }
 
     fun dismissDateBottomSheet() {
-        _uiState.update { it.copy(isDateBottomSheetVisible = false) }
+        _uiState.update {
+            it.copy(
+                isDateBottomSheetVisible = false,
+                pendingDay = null,
+                pendingTime = null,
+            )
+        }
+    }
+
+    fun onCalendarPrevMonthClick() {
+        _uiState.update {
+            val (year, month) = previousMonth(it.calendarYear, it.calendarMonth)
+            it.copy(calendarYear = year, calendarMonth = month, pendingDay = null)
+        }
+    }
+
+    fun onCalendarNextMonthClick() {
+        _uiState.update {
+            val (year, month) = nextMonth(it.calendarYear, it.calendarMonth)
+            it.copy(calendarYear = year, calendarMonth = month, pendingDay = null)
+        }
+    }
+
+    fun onCalendarDayClick(day: Int) {
+        _uiState.update { it.copy(pendingDay = day) }
+    }
+
+    fun onCalendarTimeClick(time: String) {
+        _uiState.update { it.copy(pendingTime = time) }
+    }
+
+    fun onDateNextClick() {
+        _uiState.update {
+            it.copy(
+                confirmedDateTimes = it.selectedDateTimes,
+                pendingDay = null,
+                pendingTime = null,
+            )
+        }
+    }
+
+    fun onDateSaveClick() {
+        _uiState.update {
+            val entries = it.selectedDateTimes
+            val summary = entries.firstOrNull()?.let { first ->
+                if (entries.size > 1) {
+                    "${first.selectedDate} ${first.selectedTime} 외 ${entries.size - 1}개"
+                } else {
+                    "${first.selectedDate} ${first.selectedTime}"
+                }
+            }
+            it.copy(
+                isDateBottomSheetVisible = false,
+                confirmedDateTimes = entries,
+                selectedDateText = summary ?: it.selectedDateText,
+                pendingDay = null,
+                pendingTime = null,
+            )
+        }
     }
 
     fun onPlaceSearchBoxClick() {
