@@ -286,11 +286,11 @@ private fun CalendarDayCell(
             style = typography.label.mdM,
             modifier = if (isSelected) {
                 Modifier
-                    .size(28.dp)
                     .background(
                         color = colors.primary.default,
                         shape = RoundedCornerShape(radius.circular),
                     )
+                    .aspectRatio(1f)
                     .padding(vertical = 8.dp)
                     .wrapContentSize(Alignment.Center)
             } else {
@@ -316,7 +316,7 @@ private fun DateTimeChip(
                 color = colors.primary.sub03,
                 shape = RoundedCornerShape(radius.sm),
             )
-            .padding(8.dp),
+            .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
