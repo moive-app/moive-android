@@ -1,9 +1,7 @@
 package com.moive.app.presentation.condition.component
 
-import android.R.attr.thickness
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -22,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moive.app.core.designsystem.component.chip.LabelType
@@ -71,25 +69,53 @@ fun ConditionPlaceSearchContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(20.dp)
-        ) {
-            itemsIndexed(
-                items = placeList,
-                key = { _, place -> place.id }
-            ) { index, place ->
-                PlaceSearchItem(
-                    place = place,
-                    onItemClick = { onPlaceItemClick(place.id) },
+        if (placeList.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(
+                        color = colors.fill.default06
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "검색결과가 없습니다",
+                    color = colors.text.default,
+                    style = typography.label.smM,
                 )
 
-                if (index != placeList.lastIndex) {
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth(),
-                        thickness = 1.dp,
-                        color = colors.stroke.default04,
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "도로명, 지번, 건물명, 아파트명으로\n다시 검색해주세요",
+                    color = colors.text.tertiary,
+                    style = typography.label.xsM,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(20.dp)
+            ) {
+                itemsIndexed(
+                    items = placeList,
+                    key = { _, place -> place.id }
+                ) { index, place ->
+                    PlaceSearchItem(
+                        place = place,
+                        onItemClick = { onPlaceItemClick(place.id) },
                     )
+
+                    if (index != placeList.lastIndex) {
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth(),
+                            thickness = 1.dp,
+                            color = colors.stroke.default04,
+                        )
+                    }
                 }
             }
         }
@@ -109,7 +135,7 @@ private fun PlaceSearchItem(
             .padding(vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-                Text(
+        Text(
             text = place.name,
             color = colors.text.default,
             style = typography.label.mdM,
@@ -118,7 +144,7 @@ private fun PlaceSearchItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ){
+        ) {
             MoiveLabelChip(
                 style = LabelType.CATEGORY.getStyle(),
                 text = "도로명",
