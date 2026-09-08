@@ -1,32 +1,48 @@
 package com.moive.app.presentation.notification
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
-
-private val notifications = listOf(
-    "모임 '모임1'의 조건 입력이 마감됐어요",
-    "모임 '모임2'에서 투표가 시작됐어요",
-    "모임 '모임3'의 장소가 확정됐어요",
-)
+import com.moive.app.core.designsystem.theme.MoiveTheme.colors
+import com.moive.app.data.notification.model.NotificationItemModel
+import com.moive.app.presentation.notification.component.EmptyNotificationContent
+import com.moive.app.presentation.notification.component.NotificationListItem
+import com.moive.app.presentation.notification.component.NotificationSettingButton
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun NotificationRoute(
     innerPadding: PaddingValues,
+    navigateBack: () -> Unit,
     navigateToMeetingDetail: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: NotificationViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     NotificationScreen(
         innerPadding = innerPadding,
-        onNotificationItemClick = navigateToMeetingDetail,
+        notifications = uiState.notifications,
+        isNotificationPermissionGranted = uiState.isNotificationPermissionGranted,
+        onBackClick = navigateBack,
+        onNotificationItemClick = { navigateToMeetingDetail() },
+        onNotificationSettingClick = {},
         modifier = modifier,
     )
 }
@@ -34,35 +50,73 @@ fun NotificationRoute(
 @Composable
 private fun NotificationScreen(
     innerPadding: PaddingValues,
-    onNotificationItemClick: () -> Unit,
+    notifications: ImmutableList<NotificationItemModel>,
+    isNotificationPermissionGranted: Boolean,
+    onBackClick: () -> Unit,
+    onNotificationItemClick: (Long) -> Unit,
+    onNotificationSettingClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(innerPadding)
-            .padding(16.dp),
+            .background(color = colors.background.default02)
+            .padding(innerPadding),
     ) {
-        Text(text = "알림")
+        MoiveSubTitleTopBar(
+            title = "알림함",
+            onBackClick = onBackClick,
+        )
 
-        notifications.forEach { notification ->
-            Text(
-                text = notification,
-                modifier = Modifier
-                    .clickable(onClick = onNotificationItemClick)
-                    .padding(vertical = 12.dp),
-            )
+        LazyColumn(
+            modifier = Modifier,
+            contentPadding = PaddingValues(vertical = 24.dp, horizontal = 20.dp),
+        ) {
+            item {
+                NotificationSettingButton(
+                    isNotificationPermissionGranted = isNotificationPermissionGranted,
+                    onSettingClick = onNotificationSettingClick,
+                )
+            }
+
+            if (notifications.isEmpty()) {
+                item {
+                    EmptyNotificationContent(
+                        modifier = Modifier.fillParentMaxHeight(),
+                    )
+                }
+            } else {
+                item {
+                    Spacer(modifier = modifier.height(28.dp))
+                }
+
+                items(
+                    items = notifications,
+                    key = { it.id },
+                ) { item ->
+                    NotificationListItem(
+                        item = item,
+                        onItemClick = { onNotificationItemClick(item.id) },
+                    )
+
+                    Spacer(modifier.height(12.dp))
+                }
+            }
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun NotificationScreenPreview() {
+private fun NotificationScreenListPreview() {
     MoiveTheme {
         NotificationScreen(
             innerPadding = PaddingValues(),
+            notifications = NotificationContract.State().notifications,
+            isNotificationPermissionGranted = true,
+            onBackClick = {},
             onNotificationItemClick = {},
+            onNotificationSettingClick = {},
         )
     }
 }
