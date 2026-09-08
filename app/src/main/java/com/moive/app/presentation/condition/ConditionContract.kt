@@ -94,7 +94,8 @@ interface ConditionContract {
             get() = selectedPlace?.address
 
         val isNextButtonEnabled: Boolean
-            get() = selectedPlaceId != null &&
+            get() = confirmedDateTimes.isNotEmpty() &&
+                selectedPlaceId != null &&
                 selectedTravelTime != null &&
                 selectedPreferences.isNotEmpty()
 
