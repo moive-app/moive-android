@@ -47,9 +47,6 @@ fun MoiveBottomSheet(
     onDismissRequest: () -> Unit = { },
     bottomSheetState: SheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
-        confirmValueChange = { targetValue ->
-            targetValue != SheetValue.Hidden
-        }
     ),
     showScrim: Boolean = true,
     content: @Composable () -> Unit,
