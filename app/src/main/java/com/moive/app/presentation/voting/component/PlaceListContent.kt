@@ -101,6 +101,7 @@ fun PlaceListContent(
                     isBottomSheetExpanded = false
                     onBottomSheetDismiss()
                 },
+                showScrim = false,
                 content = {
                     LazyColumn (
                         contentPadding = PaddingValues(vertical = 12.dp),
