@@ -35,6 +35,8 @@ import com.moive.app.core.designsystem.component.button.MoiveIconButtonSize
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.extensions.addBitmapMarker
 import com.moive.app.data.voting.model.PlaceRecommendationCardItemModel
+import com.moive.app.presentation.voting.util.rememberMapViewWithLifecycle
+import com.moive.app.presentation.voting.util.rememberRegionMarkerBitmap
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf

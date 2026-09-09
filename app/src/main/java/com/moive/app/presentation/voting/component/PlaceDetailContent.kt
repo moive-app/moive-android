@@ -26,11 +26,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,13 +34,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.label.Label
 import com.moive.app.R
 import com.moive.app.core.designsystem.component.button.MoiveButton
 import com.moive.app.core.designsystem.component.button.MoiveButtonSize
@@ -58,11 +49,12 @@ import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
-import com.moive.app.core.extensions.addBitmapMarker
 import com.moive.app.core.extensions.customShadow
 import com.moive.app.data.voting.model.PlaceDetailImageItemModel
 import com.moive.app.data.voting.model.PlaceDetailModel
+import com.moive.app.data.voting.model.PlaceDetailPinLatLang
 import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
+import com.moive.app.presentation.voting.util.rememberPlaceRouteMapView
 
 @Composable
 fun PlaceDetailContent(
@@ -73,6 +65,7 @@ fun PlaceDetailContent(
     onSelectButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val mapView = rememberPlaceRouteMapView(place)
 
     Column(
         modifier = modifier
@@ -195,13 +188,10 @@ fun PlaceDetailContent(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // TODO: 실제 카카오맵 경로(폴리라인/마커) 렌더링으로 교체
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(180.dp)
-                            .background(
-                                color = colors.fill.default06,
                             .clip(
                                 shape = RoundedCornerShape(radius.lg),
                             )
@@ -240,23 +230,21 @@ fun PlaceDetailContent(
                                 modifier = Modifier.weight(1f),
                             )
 
-                            Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "모두가 평균적으로 ${place.avgTravelMinutes}분 소요돼요.",
                                 text = "${place.travelFare}원",
                                 color = colors.text.tertiary,
                                 style = typography.label.smM,
                             )
-
                         }
+
                         Spacer(modifier = Modifier.height(4.dp))
 
                         Text(
-                            text = "${place.travelFare}원",
                             text = "모두가 평균적으로 ${place.avgTravelMinutes}분 소요돼요.",
                             color = colors.secondary.default,
                             style = typography.label.xsR,
                         )
+
                         Spacer(modifier = Modifier.height(12.dp))
 
                         Row(
@@ -359,9 +347,23 @@ private fun PlaceDetailContentPreview() {
                     PlaceDetailImageItemModel(id = 1L, imageUrl = ""),
                     PlaceDetailImageItemModel(id = 2L, imageUrl = ""),
                 ),
+                startPinLatLang = PlaceDetailPinLatLang(
+                    latitude = 37.5044,
+                    longitude = 127.0246,
+                ),
+                endPinLatLang = PlaceDetailPinLatLang(
+                    latitude = 37.5089,
+                    longitude = 127.0632,
+                ),
                 routeLatLang = PlaceDetailRouteLatLang(
-                    latitude = listOf(37.500, 37.501),
-                    longitude = listOf(127.036, 127.037),
+                    latitude = listOf(
+                        37.5044, 37.5054217, 37.505525, 37.5049788, 37.50665,
+                        37.5083212, 37.507775, 37.5078783, 37.5089,
+                    ),
+                    longitude = listOf(
+                        127.0246, 127.0291954, 127.03425, 127.0396293, 127.0439,
+                        127.0481707, 127.05355, 127.0586046, 127.0632,
+                    ),
                 ),
                 totalTravelMinutes = 34,
                 avgTravelMinutes = 36,
