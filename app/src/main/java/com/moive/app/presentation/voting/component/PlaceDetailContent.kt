@@ -122,6 +122,9 @@ fun PlaceDetailContent(
                             style = typography.label.xsR,
                         )
                     }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
                     Text(
                         text = "${place.totalMemberCount}명 중 ${place.matchMemberCount}명의 취향과 일치해요.",
                         color = colors.primary.default,
@@ -195,14 +198,19 @@ fun PlaceDetailContent(
                             .height(180.dp)
                             .background(
                                 color = colors.fill.default06,
+                            .clip(
                                 shape = RoundedCornerShape(radius.lg),
                             ),
                     ) {
+                        AndroidView(
+                            factory = { mapView },
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Column(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
@@ -274,29 +282,38 @@ fun PlaceDetailContent(
                 color = colors.shadowBlack8,
                 blur = 12.dp,
                 offsetY = (-2).dp,
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .customShadow(
+                    shape = RectangleShape,
+                    color = colors.shadowBlack8,
+                    blur = 12.dp,
+                    offsetY = (-2).dp,
+                )
+                .background(
+                    color = colors.background.default00,
+                    shape = RectangleShape,
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            MoiveButton(
+                text = "카카오맵",
+                type = MoiveButtonType.TERTIARY,
+                size = MoiveButtonSize.LARGE,
+                onClick = onKakaoMapClick,
+                modifier = Modifier.weight(1f),
             )
-            .background(
-                color = colors.background.default00,
-                shape = RectangleShape,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        MoiveButton(
-            text = "카카오맵",
-            type = MoiveButtonType.TERTIARY,
-            size = MoiveButtonSize.LARGE,
-            onClick = onKakaoMapClick,
-            modifier = Modifier.weight(1f),
-        )
 
-        MoiveButton(
-            text = "선택하기",
-            type = MoiveButtonType.PRIMARY,
-            size = MoiveButtonSize.LARGE,
-            onClick = onSelectButtonClick,
-            modifier = Modifier.weight(1f),
-        )
+            MoiveButton(
+                text = "선택하기",
+                type = MoiveButtonType.PRIMARY,
+                size = MoiveButtonSize.LARGE,
+                onClick = onSelectButtonClick,
+                modifier = Modifier.weight(1f),
+            )
+        }
     }
 }
 
