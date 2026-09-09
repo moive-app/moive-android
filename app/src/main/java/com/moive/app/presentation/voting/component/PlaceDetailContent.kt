@@ -3,6 +3,8 @@ package com.moive.app.presentation.voting.component
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
@@ -201,7 +204,13 @@ fun PlaceDetailContent(
                                 color = colors.fill.default06,
                             .clip(
                                 shape = RoundedCornerShape(radius.lg),
-                            ),
+                            )
+                            .pointerInput(mapView) {
+                                awaitEachGesture {
+                                    awaitFirstDown(requireUnconsumed = false)
+                                    mapView.parent?.requestDisallowInterceptTouchEvent(true)
+                                }
+                            },
                     ) {
                         AndroidView(
                             factory = { mapView },
