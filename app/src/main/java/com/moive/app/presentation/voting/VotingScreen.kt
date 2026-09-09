@@ -2,7 +2,6 @@ package com.moive.app.presentation.voting
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -64,6 +63,7 @@ private fun VotingScreen(
 ) {
     when (uiState.step) {
         Step.RECOMMENDATION -> PlaceListContent(
+            innerPadding = innerPadding,
             regionList = uiState.regionList,
             selectedRegionName = uiState.selectedRegionName,
             places = uiState.placeList,
@@ -76,16 +76,17 @@ private fun VotingScreen(
             onResetClick = onResetClick,
             onBackClick = onBackClick,
             onCompleteButtonClick = onCompleteButtonClick,
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier,
         )
 
         Step.DETAIL -> PlaceDetailContent(
+            innerPadding = innerPadding,
             place = uiState.currentPlaceDetail,
             regionName = uiState.selectedRegionName ?: "추천 지역",
             onBackClick = onDetailBackClick,
             onKakaoMapClick = onKakaoMapClick,
             onSelectButtonClick = onSelectButtonClick,
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier,
         )
     }
 }

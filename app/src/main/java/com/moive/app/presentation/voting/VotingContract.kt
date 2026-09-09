@@ -78,6 +78,7 @@ interface VotingContract {
             imageList = listOf(
                 PlaceDetailImageItemModel(id = 1L, imageUrl = ""),
                 PlaceDetailImageItemModel(id = 2L, imageUrl = ""),
+                PlaceDetailImageItemModel(id = 3L, imageUrl = ""),
             ),
             startPinLatLang = PlaceDetailPinLatLang(
                 latitude = 37.5044,

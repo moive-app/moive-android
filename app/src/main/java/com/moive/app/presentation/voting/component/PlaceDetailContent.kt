@@ -58,6 +58,7 @@ import com.moive.app.presentation.voting.util.rememberPlaceRouteMapView
 
 @Composable
 fun PlaceDetailContent(
+    innerPadding: PaddingValues,
     place: PlaceDetailModel,
     regionName: String,
     onBackClick: () -> Unit,
@@ -70,7 +71,8 @@ fun PlaceDetailContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = colors.background.default00),
+            .background(color = colors.background.default00)
+            .padding(innerPadding),
     ) {
         MoiveSubTitleTopBar(
             title = regionName,
@@ -335,6 +337,7 @@ private fun TransitTimeRow(
 private fun PlaceDetailContentPreview() {
     MoiveTheme {
         PlaceDetailContent(
+            innerPadding = PaddingValues(),
             place = PlaceDetailModel(
                 id = 1L,
                 userName = "모이브",

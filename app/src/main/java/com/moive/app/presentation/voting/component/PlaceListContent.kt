@@ -1,5 +1,6 @@
 package com.moive.app.presentation.voting.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +38,7 @@ import com.moive.app.core.designsystem.component.button.MoiveIconButton
 import com.moive.app.core.designsystem.component.button.MoiveIconButtonSize
 import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
+import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.extensions.addBitmapMarker
 import com.moive.app.data.voting.model.PlaceRecommendationCardItemModel
 import com.moive.app.data.voting.model.RegionPinModel
@@ -51,6 +53,7 @@ import kotlinx.collections.immutable.persistentSetOf
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaceListContent(
+    innerPadding: PaddingValues,
     regionList: ImmutableList<RegionPinModel>,
     selectedRegionName: String?,
     places: PersistentList<PlaceRecommendationCardItemModel>,
@@ -109,7 +112,12 @@ fun PlaceListContent(
     }
 
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                color = colors.background.default00,
+            )
+            .padding(innerPadding),
     ) {
         AndroidView(
             factory = { mapView },
@@ -118,7 +126,8 @@ fun PlaceListContent(
         MoiveSubTitleTopBar(
             title = selectedRegionName ?: "추천 지역",
             onBackClick = onBackClick,
-            modifier = Modifier.align(Alignment.TopStart),
+            modifier = Modifier
+                .align(Alignment.TopStart)
         )
 
         if (isPlaceListVisible) {
@@ -178,6 +187,7 @@ private const val DEFAULT_LOCATION_Y = 37.5044 // 신논현역
 private fun PlaceListContentPreview() {
     MoiveTheme {
         PlaceListContent(
+            innerPadding = PaddingValues(),
             regionList = persistentListOf(
                 RegionPinModel(id = 1L, name = "신논현동", locationX = 127.0246, locationY = 37.5044),
                 RegionPinModel(id = 2L, name = "논현동", locationX = 127.0219, locationY = 37.5107),
