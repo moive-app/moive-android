@@ -52,10 +52,11 @@ import kotlinx.collections.immutable.persistentSetOf
 @Composable
 fun PlaceListContent(
     regionList: ImmutableList<RegionPinModel>,
+    selectedRegionName: String?,
     places: PersistentList<PlaceRecommendationCardItemModel>,
     selectedPlaceIds: PersistentSet<Long>,
     isPlaceListVisible: Boolean,
-    onRegionPinClick: () -> Unit,
+    onRegionPinClick: (String) -> Unit,
     onPlaceItemClick: (Long) -> Unit,
     onCheckboxClick: (Long) -> Unit,
     onBottomSheetDismiss: () -> Unit,
@@ -69,14 +70,21 @@ fun PlaceListContent(
 
     val regionPinBitmaps = List(regionList.size) { index -> rememberRegionPinBitmap(rank = index) }
 
+    val mapCenterX = if (regionList.isEmpty()) DEFAULT_LOCATION_X else regionList.map { it.locationX }.average()
+    val mapCenterY = if (regionList.isEmpty()) DEFAULT_LOCATION_Y else regionList.map { it.locationY }.average()
 
     val mapView = rememberMapViewWithLifecycle(
-        locationX = locationX,
-        locationY = locationY,
+        locationX = mapCenterX,
+        locationY = mapCenterY,
         onMapReady = { kakaoMap ->
-            kakaoMap.setOnLabelClickListener { _, _, _ ->
-                isBottomSheetExpanded = !isBottomSheetExpanded
-                onRegionPinClick()
+            kakaoMap.setOnLabelClickListener { map, _, label ->
+                val clickedRegion = regionPinEntries.firstOrNull { it.first == label }?.second
+
+                map.moveCamera(
+                    CameraUpdateFactory.newCenterPosition(label.position, 16),
+                    CameraAnimation.from(300),
+                )
+                clickedRegion?.let { onRegionPinClick(it.name) }
                 true
             }
             kakaoMapState = kakaoMap
@@ -105,6 +113,12 @@ fun PlaceListContent(
     ) {
         AndroidView(
             factory = { mapView },
+        )
+
+        MoiveSubTitleTopBar(
+            title = selectedRegionName ?: "추천 지역",
+            onBackClick = onBackClick,
+            modifier = Modifier.align(Alignment.TopStart),
         )
 
         if (isPlaceListVisible) {
