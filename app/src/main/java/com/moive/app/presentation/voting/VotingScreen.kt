@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.theme.MoiveTheme
+import com.moive.app.core.extensions.openKakaoMapRoute
 import com.moive.app.presentation.voting.VotingContract.Step
 import com.moive.app.presentation.voting.component.PlaceDetailContent
 import com.moive.app.presentation.voting.component.PlaceListContent
@@ -23,6 +25,7 @@ fun VotingRoute(
     viewModel: VotingViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     BackHandler(enabled = uiState.step != Step.RECOMMENDATION) {
         viewModel.backToPlaceList()
@@ -38,7 +41,15 @@ fun VotingRoute(
         onResetClick = viewModel::onResetSelectionClick,
         onBackClick = navigateBack,
         onDetailBackClick = viewModel::backToPlaceList,
-        onKakaoMapClick = {},
+        onKakaoMapClick = {
+            val place = uiState.currentPlaceDetail
+            context.openKakaoMapRoute(
+                startLatitude = place.startPinLatLang.latitude,
+                startLongitude = place.startPinLatLang.longitude,
+                endLatitude = place.endPinLatLang.latitude,
+                endLongitude = place.endPinLatLang.longitude,
+            )
+        },
         onSelectButtonClick = viewModel::onSelectButtonClick,
         onCompleteButtonClick = navigateToVoteStatus,
         modifier = modifier,
