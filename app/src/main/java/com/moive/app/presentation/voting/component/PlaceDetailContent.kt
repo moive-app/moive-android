@@ -63,6 +63,7 @@ import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
 @Composable
 fun PlaceDetailContent(
     place: PlaceDetailModel,
+    regionName: String,
     onBackClick: () -> Unit,
     onKakaoMapClick: () -> Unit,
     onSelectButtonClick: () -> Unit,
@@ -75,7 +76,7 @@ fun PlaceDetailContent(
             .background(color = colors.background.default00),
     ) {
         MoiveSubTitleTopBar(
-            title = place.region,
+            title = regionName,
             onBackClick = onBackClick,
         )
 
@@ -333,7 +334,6 @@ private fun PlaceDetailContentPreview() {
         PlaceDetailContent(
             place = PlaceDetailModel(
                 id = 1L,
-                region = "역삼동",
                 userName = "모이브",
                 placeName = "장소명(상호명)",
                 category = "카페",
@@ -355,6 +355,7 @@ private fun PlaceDetailContentPreview() {
                 subwayMinutes = 9,
                 travelFare = 1_650,
             ),
+            regionName = "신논현동",
             onBackClick = {},
             onKakaoMapClick = {},
             onSelectButtonClick = {},

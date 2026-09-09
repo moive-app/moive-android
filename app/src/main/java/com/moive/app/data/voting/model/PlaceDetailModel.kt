@@ -5,7 +5,6 @@ import androidx.compose.runtime.Immutable
 @Immutable
 data class PlaceDetailModel(
     val id: Long,
-    val region: String,
     val userName: String,
     val placeName: String,
     val category: String,
