@@ -14,6 +14,19 @@ fun Context.openUrl(url: String?): Boolean {
     }.isSuccess
 }
 
+fun Context.openKakaoMapRoute(
+    startLatitude: Double,
+    startLongitude: Double,
+    endLatitude: Double,
+    endLongitude: Double,
+): Boolean {
+    val query = "sp=$startLatitude,$startLongitude&ep=$endLatitude,$endLongitude&by=publictransit"
+    val appUrl = "kakaomap://route?$query"
+    val webUrl = "https://m.map.kakao.com/scheme/route?$query"
+
+    return openUrl(appUrl) || openUrl(webUrl)
+}
+
 fun Context.isNotificationEnabled(): Boolean =
     NotificationManagerCompat.from(this).areNotificationsEnabled()
 

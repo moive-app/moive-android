@@ -3,9 +3,11 @@ package com.moive.app.presentation.voting
 import androidx.lifecycle.ViewModel
 import com.moive.app.presentation.voting.VotingContract.Step
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,8 +18,21 @@ class VotingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(VotingContract.State())
     val uiState = _uiState.asStateFlow()
 
-    fun onRegionPinClick() {
-        _uiState.update { it.copy(isPlaceListVisible = true) }
+    fun onRegionPinClick(regionName: String) {
+        _uiState.update {
+            it.copy(
+                isPlaceListVisible = true,
+                selectedRegionName = regionName,
+            )
+        }
+    }
+
+    fun onBottomSheetDismiss() {
+        _uiState.update { it.copy(isPlaceListVisible = false) }
+    }
+
+    fun onResetSelectionClick() {
+        _uiState.update { it.copy(selectedPlaceList = persistentSetOf()) }
     }
 
     fun onCheckboxClick(placeId: Long) {
@@ -47,5 +62,10 @@ class VotingViewModel @Inject constructor(
 
     fun backToPlaceList() {
         _uiState.update { it.copy(step = Step.RECOMMENDATION) }
+    }
+
+    fun onKakaoMapRouteOpened(opened: Boolean) {
+        if (opened) return
+        Timber.tag("Voting").e("카카오 맵을 열 수 없습니다.")
     }
 }

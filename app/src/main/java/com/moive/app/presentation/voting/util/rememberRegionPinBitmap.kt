@@ -1,11 +1,10 @@
-package com.moive.app.presentation.voting.component
+package com.moive.app.presentation.voting.util
 
 import android.graphics.Bitmap
 import android.os.Build
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -13,64 +12,64 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.annotation.DrawableRes
 import com.moive.app.R
-import com.moive.app.core.designsystem.component.chip.LabelType
-import com.moive.app.core.designsystem.component.chip.MoiveLabelChip
+import com.moive.app.presentation.voting.component.RoutePinBitmap
+
+private val regionPinImgRes = listOf(
+    R.drawable.img_pin_marker_1,
+    R.drawable.img_pin_marker_2,
+    R.drawable.img_pin_marker_3,
+)
+
+private const val REGION_PIN_ANCHOR_X = 0.5f
+private const val REGION_PIN_ANCHOR_Y = 0.99f
 
 @Composable
-fun rememberRegionMarkerBitmap(
-    regionName: String,
-    isExpanded: Boolean,
-): Bitmap? {
-    val graphicsLayer = rememberGraphicsLayer()
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+fun rememberRegionPinBitmap(rank: Int): RoutePinBitmap? {
+    @DrawableRes val drawableRes = regionPinImgRes.getOrElse(rank) { regionPinImgRes.last() }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    val graphicsLayer = rememberGraphicsLayer()
+    var pinResult by remember { mutableStateOf<RoutePinBitmap?>(null) }
+
+    Image(
+        painter = painterResource(drawableRes),
+        contentDescription = null,
         modifier = Modifier
             .offset(x = 10_000.dp)
+            .size(width = 26.dp, height = 36.dp)
             .drawWithContent {
                 graphicsLayer.record {
                     this@drawWithContent.drawContent()
                 }
                 drawLayer(graphicsLayer)
             },
-    ) {
-        if (isExpanded) {
-            MoiveLabelChip(
-                style = LabelType.VOTING.getStyle(),
-                text = regionName,
-            )
-        }
+    )
 
-        Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_profile_28),
-            contentDescription = null,
-            modifier = Modifier.size(28.dp),
-        )
-
-    }
-
-    LaunchedEffect(regionName, isExpanded) {
+    LaunchedEffect(drawableRes) {
         withFrameNanos {}
         withFrameNanos {}
 
         val captured = graphicsLayer.toImageBitmap().asAndroidBitmap()
-
-        bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && captured.config == Bitmap.Config.HARDWARE) {
+        val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && captured.config == Bitmap.Config.HARDWARE) {
             captured.copy(Bitmap.Config.ARGB_8888, false)
         } else {
             captured
         }
+
+        pinResult = RoutePinBitmap(
+            bitmap = bitmap,
+            anchorX = REGION_PIN_ANCHOR_X,
+            anchorY = REGION_PIN_ANCHOR_Y,
+        )
     }
-    return bitmap
+
+    return pinResult
 }
