@@ -121,6 +121,7 @@ fun PlaceListContent(
     ) {
         AndroidView(
             factory = { mapView },
+            modifier = Modifier.fillMaxSize(),
         )
 
         MoiveSubTitleTopBar(

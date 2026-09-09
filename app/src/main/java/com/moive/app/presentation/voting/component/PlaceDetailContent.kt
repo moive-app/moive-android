@@ -206,6 +206,7 @@ fun PlaceDetailContent(
                     ) {
                         AndroidView(
                             factory = { mapView },
+                            modifier = Modifier.fillMaxSize(),
                         )
                     }
 
@@ -270,7 +271,7 @@ fun PlaceDetailContent(
             }
         }
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .customShadow(
                     shape = RectangleShape,
