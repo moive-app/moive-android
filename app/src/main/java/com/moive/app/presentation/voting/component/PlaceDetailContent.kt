@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -210,7 +211,6 @@ fun PlaceDetailContent(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Column(
-                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
@@ -218,9 +218,11 @@ fun PlaceDetailContent(
                                 shape = RoundedCornerShape(radius.xl),
                             )
                             .padding(16.dp),
+                        verticalArrangement = Arrangement.Top,
                     ) {
-                        Column(
-                            modifier = Modifier,
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.Top,
                         ) {
                             Text(
                                 text = "총 ${place.totalTravelMinutes}분",
@@ -230,58 +232,44 @@ fun PlaceDetailContent(
                             )
 
                             Spacer(modifier = Modifier.height(4.dp))
-
                             Text(
                                 text = "모두가 평균적으로 ${place.avgTravelMinutes}분 소요돼요.",
-                                color = colors.secondary.default,
-                                style = typography.label.xsR,
+                                text = "${place.travelFare}원",
+                                color = colors.text.tertiary,
+                                style = typography.label.smM,
                             )
 
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                TransitTimeRow(
-                                    iconRes = R.drawable.ic_walking_person_16,
-                                    time = place.walkMinutes
-                                )
-                                TransitTimeRow(
-                                    iconRes = R.drawable.ic_bus_16,
-                                    time = place.busMinutes
-                                )
-                                TransitTimeRow(
-                                    iconRes = R.drawable.ic_subway_16,
-                                    time = place.subwayMinutes
-                                )
-                            }
                         }
+                        Spacer(modifier = Modifier.height(4.dp))
+
                         Text(
                             text = "${place.travelFare}원",
-                            color = colors.text.tertiary,
-                            style = typography.label.smM,
+                            text = "모두가 평균적으로 ${place.avgTravelMinutes}분 소요돼요.",
+                            color = colors.secondary.default,
+                            style = typography.label.xsR,
                         )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            TransitTimeRow(
+                                iconRes = R.drawable.ic_walking_person_16,
+                                time = place.walkMinutes
+                            )
+                            TransitTimeRow(
+                                iconRes = R.drawable.ic_bus_16,
+                                time = place.busMinutes
+                            )
+                            TransitTimeRow(
+                                iconRes = R.drawable.ic_subway_16,
+                                time = place.subwayMinutes
+                            )
+                        }
                     }
                 }
             }
         }
-    }
-
-    Row(
-        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-
-    }
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .customShadow(
-                shape = RectangleShape,
-                color = colors.shadowBlack8,
-                blur = 12.dp,
-                offsetY = (-2).dp,
         Row(
             modifier = modifier
                 .fillMaxWidth()
@@ -294,7 +282,8 @@ fun PlaceDetailContent(
                 .background(
                     color = colors.background.default00,
                     shape = RectangleShape,
-                ),
+                )
+                .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {

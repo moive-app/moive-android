@@ -97,7 +97,6 @@ fun PlaceListContent(
         if (isPlaceListVisible) {
             MoiveBottomSheet(
                 title = "추천 장소",
-                modifier = Modifier.heightIn(max = 360.dp),
                 onDismissRequest = {
                     isBottomSheetExpanded = false
                     onBottomSheetDismiss()
@@ -106,6 +105,7 @@ fun PlaceListContent(
                     LazyColumn (
                         contentPadding = PaddingValues(vertical = 12.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.heightIn(max = 360.dp),
                     ) {
                         items(
                             items = places,
