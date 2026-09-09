@@ -43,12 +43,13 @@ fun VotingRoute(
         onDetailBackClick = viewModel::backToPlaceList,
         onKakaoMapClick = {
             val place = uiState.currentPlaceDetail
-            context.openKakaoMapRoute(
+            val opened = context.openKakaoMapRoute(
                 startLatitude = place.startPinLatLang.latitude,
                 startLongitude = place.startPinLatLang.longitude,
                 endLatitude = place.endPinLatLang.latitude,
                 endLongitude = place.endPinLatLang.longitude,
             )
+            viewModel.onKakaoMapRouteOpened(opened)
         },
         onSelectButtonClick = viewModel::onSelectButtonClick,
         onCompleteButtonClick = navigateToVoteStatus,

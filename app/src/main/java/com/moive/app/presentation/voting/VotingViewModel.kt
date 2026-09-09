@@ -3,10 +3,11 @@ package com.moive.app.presentation.voting
 import androidx.lifecycle.ViewModel
 import com.moive.app.presentation.voting.VotingContract.Step
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.collections.immutable.persistentSetOf
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,5 +62,10 @@ class VotingViewModel @Inject constructor(
 
     fun backToPlaceList() {
         _uiState.update { it.copy(step = Step.RECOMMENDATION) }
+    }
+
+    fun onKakaoMapRouteOpened(opened: Boolean) {
+        if (opened) return
+        Timber.tag("Voting").e("카카오 맵을 열 수 없습니다.")
     }
 }
