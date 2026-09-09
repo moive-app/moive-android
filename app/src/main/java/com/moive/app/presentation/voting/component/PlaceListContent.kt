@@ -170,6 +170,7 @@ fun PlaceListContent(
                             type = MoiveButtonType.PRIMARY,
                             size = MoiveButtonSize.LARGE,
                             onClick = onCompleteButtonClick,
+                            enabled = selectedPlaceIds.isNotEmpty(),
                             modifier = Modifier.weight(1f),
                         )
                     }
