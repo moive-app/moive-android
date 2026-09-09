@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.collections.immutable.persistentSetOf
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,8 +17,21 @@ class VotingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(VotingContract.State())
     val uiState = _uiState.asStateFlow()
 
-    fun onRegionPinClick() {
-        _uiState.update { it.copy(isPlaceListVisible = true) }
+    fun onRegionPinClick(regionName: String) {
+        _uiState.update {
+            it.copy(
+                isPlaceListVisible = true,
+                selectedRegionName = regionName,
+            )
+        }
+    }
+
+    fun onBottomSheetDismiss() {
+        _uiState.update { it.copy(isPlaceListVisible = false) }
+    }
+
+    fun onResetSelectionClick() {
+        _uiState.update { it.copy(selectedPlaceList = persistentSetOf()) }
     }
 
     fun onCheckboxClick(placeId: Long) {

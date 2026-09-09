@@ -18,6 +18,7 @@ import kotlinx.collections.immutable.persistentSetOf
 @Composable
 fun VotingRoute(
     innerPadding: PaddingValues,
+    navigateBack: () -> Unit,
     navigateToVoteStatus: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: VotingViewModel = hiltViewModel(),
@@ -30,10 +31,15 @@ fun VotingRoute(
 
     VotingScreen(
         innerPadding = innerPadding,
-        state = uiState,
+        uiState = uiState,
         onRegionPinClick = viewModel::onRegionPinClick,
         onPlaceItemClick = viewModel::onPlaceItemClick,
         onCheckboxClick = viewModel::onCheckboxClick,
+        onBottomSheetDismiss = viewModel::onBottomSheetDismiss,
+        onResetClick = viewModel::onResetSelectionClick,
+        onBackClick = navigateBack,
+        onDetailBackClick = viewModel::backToPlaceList,
+        onKakaoMapClick = {},
         onSelectButtonClick = viewModel::onSelectButtonClick,
         onCompleteButtonClick = navigateToVoteStatus,
         modifier = modifier,
@@ -43,31 +49,41 @@ fun VotingRoute(
 @Composable
 private fun VotingScreen(
     innerPadding: PaddingValues,
-    state: VotingContract.State,
-    onRegionPinClick: () -> Unit,
+    uiState: VotingContract.State,
+    onRegionPinClick: (String) -> Unit,
     onPlaceItemClick: (Long) -> Unit,
     onCheckboxClick: (Long) -> Unit,
+    onBottomSheetDismiss: () -> Unit,
+    onResetClick: () -> Unit,
+    onBackClick: () -> Unit,
+    onDetailBackClick: () -> Unit,
+    onKakaoMapClick: () -> Unit,
     onSelectButtonClick: () -> Unit,
     onCompleteButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (state.step) {
+    when (uiState.step) {
         Step.RECOMMENDATION -> PlaceListContent(
-            locationX = state.locationX,
-            locationY = state.locationY,
-            regionName = state.regionName,
-            places = state.placeList,
-            selectedPlaceIds = state.selectedPlaceList,
-            isPlaceListVisible = state.isPlaceListVisible,
+            regionList = uiState.regionList,
+            selectedRegionName = uiState.selectedRegionName,
+            places = uiState.placeList,
+            selectedPlaceIds = uiState.selectedPlaceList,
+            isPlaceListVisible = uiState.isPlaceListVisible,
             onRegionPinClick = onRegionPinClick,
             onPlaceItemClick = onPlaceItemClick,
             onCheckboxClick = onCheckboxClick,
+            onBottomSheetDismiss = onBottomSheetDismiss,
+            onResetClick = onResetClick,
+            onBackClick = onBackClick,
             onCompleteButtonClick = onCompleteButtonClick,
             modifier = modifier.padding(innerPadding),
         )
 
         Step.DETAIL -> PlaceDetailContent(
-            placeId = state.currentPlaceId,
+            place = uiState.currentPlaceDetail,
+            regionName = uiState.selectedRegionName ?: "추천 지역",
+            onBackClick = onDetailBackClick,
+            onKakaoMapClick = onKakaoMapClick,
             onSelectButtonClick = onSelectButtonClick,
             modifier = modifier.padding(innerPadding),
         )
@@ -80,13 +96,18 @@ private fun VotingScreenPreview() {
     MoiveTheme {
         VotingScreen(
             innerPadding = PaddingValues(),
-            state = VotingContract.State(
+            uiState = VotingContract.State(
                 isPlaceListVisible = true,
                 selectedPlaceList = persistentSetOf(1L),
             ),
             onRegionPinClick = {},
             onPlaceItemClick = {},
             onCheckboxClick = {},
+            onBottomSheetDismiss = {},
+            onResetClick = {},
+            onBackClick = {},
+            onDetailBackClick = {},
+            onKakaoMapClick = {},
             onSelectButtonClick = {},
             onCompleteButtonClick = {},
         )

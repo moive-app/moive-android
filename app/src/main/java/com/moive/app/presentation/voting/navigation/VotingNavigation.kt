@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
+import com.moive.app.core.extensions.safePopBackStack
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.meeting.detail.navigation.MeetingDetail
 import com.moive.app.presentation.voting.VotingRoute
@@ -22,6 +23,7 @@ fun NavGraphBuilder.votingGraph(
 ) {
     composable<Voting> {
         VotingRoute(
+            navigateBack = navController.safePopBackStack(),
             navigateToVoteStatus = {
                 navController.navigateToVoteStatus(
                     navOptions = navOptions {
