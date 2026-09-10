@@ -53,7 +53,7 @@ private fun VoteStatusScreen(
             .padding(innerPadding),
     ) {
         MoiveSubTitleTopBar(
-            title = "투표하기",
+            title = "투표 현황",
             onBackClick = onBackClick,
             backgroundColor = colors.background.default02,
         )

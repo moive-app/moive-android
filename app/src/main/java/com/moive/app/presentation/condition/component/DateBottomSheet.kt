@@ -204,7 +204,7 @@ private fun DateBottomSheetContent(
                 .padding(vertical = 12.dp)
         ) {
             Text(
-                text = "가능한 시간",
+                text = "모임 가능 시작 시간",
                 color = colors.text.default,
                 style = typography.title.xsSb,
                 modifier = Modifier.padding(horizontal = 20.dp),

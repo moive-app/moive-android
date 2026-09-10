@@ -68,10 +68,13 @@ interface ConditionContract {
         val selectedDateTimes: PersistentList<DateTimeSelection>
             get() {
                 val pending = pendingDateTime
-                val entries = if (pending == null || pending in confirmedDateTimes) {
+                val entries = if (pending == null) {
                     confirmedDateTimes
                 } else {
-                    confirmedDateTimes.add(pending)
+                    confirmedDateTimes
+                        .filterNot { it.year == pending.year && it.month == pending.month && it.day == pending.day }
+                        .toPersistentList()
+                        .add(pending)
                 }
                 return entries
                     .sortedWith(compareBy({ it.year }, { it.month }, { it.day }, { it.time }))
