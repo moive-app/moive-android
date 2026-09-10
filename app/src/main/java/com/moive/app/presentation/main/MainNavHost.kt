@@ -99,6 +99,7 @@ fun MainNavHost(
         )
 
         voteStatusGraph(
+            navController = navController,
             innerPadding = innerPadding,
         )
 
