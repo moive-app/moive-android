@@ -1,23 +1,40 @@
 package com.moive.app.presentation.votestatus
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
+import com.moive.app.core.designsystem.theme.MoiveTheme.colors
+import com.moive.app.data.votingstatus.model.ScheduleVoteCandidateModel
+import com.moive.app.presentation.votestatus.component.PlaceVoteSection
+import com.moive.app.presentation.votestatus.component.ScheduleVoteSection
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun VoteStatusRoute(
     innerPadding: PaddingValues,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: VoteStatusViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     VoteStatusScreen(
         innerPadding = innerPadding,
+        uiState = uiState,
+        onBackClick = navigateBack,
         modifier = modifier,
     )
 }
@@ -25,15 +42,47 @@ fun VoteStatusRoute(
 @Composable
 private fun VoteStatusScreen(
     innerPadding: PaddingValues,
+    uiState: VoteStatusContract.State,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
+    Column(
         modifier = modifier
             .fillMaxSize()
+            .background(colors.background.default02)
             .padding(innerPadding),
-        contentAlignment = Alignment.Center,
     ) {
-        Text(text = "투표 현황")
+        MoiveSubTitleTopBar(
+            title = "투표하기",
+            onBackClick = onBackClick,
+            backgroundColor = colors.background.default02,
+        )
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            contentPadding = PaddingValues(top = 24.dp, bottom = 50.dp),
+            verticalArrangement = Arrangement.spacedBy(34.dp),
+        ) {
+            item {
+                ScheduleVoteSection(
+                    isVoteSkipped = uiState.isScheduleVoteSkipped,
+                    totalVoterCount = uiState.scheduleTotalVoterCount,
+                    candidates = uiState.scheduleCandidates,
+                    topVoterCount = uiState.scheduleTopVoterCount,
+                    confirmedCandidate = uiState.confirmedScheduleCandidate,
+                )
+            }
+
+            item {
+                PlaceVoteSection(
+                    totalVoterCount = uiState.placeTotalVoterCount,
+                    candidates = uiState.placeCandidates,
+                    topVoterCount = uiState.placeTopVoterCount,
+                )
+            }
+        }
     }
 }
 
@@ -41,6 +90,28 @@ private fun VoteStatusScreen(
 @Composable
 private fun VoteStatusScreenPreview() {
     MoiveTheme {
-        VoteStatusScreen(innerPadding = PaddingValues())
+        VoteStatusScreen(
+            innerPadding = PaddingValues(),
+            uiState = VoteStatusContract.State(),
+            onBackClick = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun VoteStatusScreenScheduleConfirmedPreview() {
+    MoiveTheme {
+        VoteStatusScreen(
+            innerPadding = PaddingValues(),
+            uiState = VoteStatusContract.State(
+                isScheduleVoteSkipped = true,
+                scheduleTotalVoterCount = null,
+                scheduleCandidates = persistentListOf(
+                    ScheduleVoteCandidateModel(meetingDate = "2026-09-12", meetingTime = "18:00", voterCount = null, isVotedByMe = true),
+                ),
+            ),
+            onBackClick = {},
+        )
     }
 }
