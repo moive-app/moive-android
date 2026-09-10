@@ -11,8 +11,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.extensions.openKakaoMapRoute
+import com.moive.app.presentation.common.component.placedetail.PlaceDetailContent
 import com.moive.app.presentation.voting.VotingContract.Step
-import com.moive.app.presentation.voting.component.PlaceDetailContent
 import com.moive.app.presentation.voting.component.PlaceListContent
 import kotlinx.collections.immutable.persistentSetOf
 
@@ -94,9 +94,10 @@ private fun VotingScreen(
         Step.DETAIL -> PlaceDetailContent(
             innerPadding = innerPadding,
             place = uiState.currentPlaceDetail,
-            regionName = uiState.selectedRegionName ?: "추천 지역",
+            title = uiState.selectedRegionName ?: "추천 지역",
             onBackClick = onDetailBackClick,
             onKakaoMapClick = onKakaoMapClick,
+            showSelectButton = true,
             onSelectButtonClick = onSelectButtonClick,
             modifier = modifier,
         )

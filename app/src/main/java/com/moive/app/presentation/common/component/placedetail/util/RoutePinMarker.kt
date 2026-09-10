@@ -1,4 +1,4 @@
-package com.moive.app.presentation.voting.component
+package com.moive.app.presentation.common.component.placedetail.util
 
 import android.graphics.Bitmap
 import android.os.Build

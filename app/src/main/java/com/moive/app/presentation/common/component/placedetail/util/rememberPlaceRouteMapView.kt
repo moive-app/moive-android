@@ -1,4 +1,4 @@
-package com.moive.app.presentation.voting.util
+package com.moive.app.presentation.common.component.placedetail.util
 
 import android.view.View
 import androidx.compose.runtime.Composable
@@ -18,8 +18,7 @@ import com.moive.app.core.extensions.addRouteLine
 import com.moive.app.data.voting.model.PlaceDetailModel
 import com.moive.app.data.voting.model.PlaceDetailPinLatLang
 import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
-import com.moive.app.presentation.voting.component.RoutePinBitmap
-import com.moive.app.presentation.voting.component.rememberRoutePinBitmap
+import com.moive.app.presentation.voting.util.rememberMapViewWithLifecycle
 
 @Composable
 fun rememberPlaceRouteMapView(place: PlaceDetailModel): View {

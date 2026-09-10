@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.annotation.DrawableRes
 import com.moive.app.R
-import com.moive.app.presentation.voting.component.RoutePinBitmap
+import com.moive.app.presentation.common.component.placedetail.util.RoutePinBitmap
 
 private val regionPinImgRes = listOf(
     R.drawable.img_pin_marker_1,
