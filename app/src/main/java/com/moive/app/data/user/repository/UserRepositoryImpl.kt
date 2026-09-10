@@ -7,6 +7,7 @@ import com.moive.app.data.local.token.LocalTokenDataSource
 import com.moive.app.data.user.mapper.toModel
 import com.moive.app.data.user.model.UserModel
 import com.moive.app.data.user.remote.datasource.UserRemoteDataSource
+import timber.log.Timber
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -22,6 +23,12 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun deleteWithdraw(): Result<Unit> =
         suspendRunCatching {
             userRemoteDataSource.deleteWithdraw().checkSuccess()
-            localTokenDataSource.clearTokens()
+        }.onSuccess {
+            runCatching { localTokenDataSource.clearTokens() }
+                .onFailure { Timber.tag(USER_TAG).e(it, "탈퇴 성공, 토큰 정리 실패") }
         }
+
+    companion object {
+        private const val USER_TAG = "User"
+    }
 }
