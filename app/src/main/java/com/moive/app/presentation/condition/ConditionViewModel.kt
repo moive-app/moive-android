@@ -1,20 +1,36 @@
 package com.moive.app.presentation.condition
 
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.moive.app.data.condition.repository.PlaceRepository
 import com.moive.app.presentation.condition.ConditionContract.Step
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class ConditionViewModel @Inject constructor(
-
+    private val placeRepository: PlaceRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ConditionContract.State())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        observePlaceSearchInput()
+    }
 
     fun onDateBoxClick() {
         _uiState.update { it.copy(isDateBottomSheetVisible = true) }
@@ -82,8 +98,34 @@ class ConditionViewModel @Inject constructor(
         _uiState.update { it.copy(step = Step.SEARCH) }
     }
 
-    fun postPlaceSearch() {
-        // TODO: 위치 검색 API 연동
+    @OptIn(FlowPreview::class)
+    private fun observePlaceSearchInput() = viewModelScope.launch {
+        snapshotFlow { _uiState.value.searchFieldState.text }
+            .debounce(SEARCH_NETWORK_DEBOUNCE.milliseconds)
+            .distinctUntilChanged()
+            .collectLatest { searchInputText ->
+                val text = searchInputText.toString()
+                if (text.isBlank()) {
+                    _uiState.update {
+                        it.copy(
+                            placeList = persistentListOf(),
+                        )
+                    }
+                } else {
+                    postPlaceSearch(text)
+                }
+            }
+    }
+
+    fun postPlaceSearch(query: String) = viewModelScope.launch {
+        placeRepository.getPlaceSearch(query)
+            .onSuccess { places ->
+                _uiState.update { it.copy(placeList = places.toImmutableList()) }
+            }
+            .onFailure { throwable ->
+                Timber.tag(TAG).e(throwable, "장소 검색 실패")
+                _uiState.update { it.copy(placeList = persistentListOf()) }
+            }
     }
 
     fun onPlaceItemClick(placeId: Long) {
@@ -118,5 +160,11 @@ class ConditionViewModel @Inject constructor(
 
     fun backToInputStep() {
         _uiState.update { it.copy(step = Step.INPUT) }
+    }
+
+    companion object {
+        private const val TAG = "Condition"
+        private const val SEARCH_NETWORK_DEBOUNCE = 300L
+
     }
 }

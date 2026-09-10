@@ -20,23 +20,7 @@ interface ConditionContract {
         val pendingTime: String? = null,
         val confirmedDateTimes: PersistentList<DateTimeSelection> = persistentListOf(),
         val searchFieldState: TextFieldState = TextFieldState(initialText = ""),
-        val placeList: ImmutableList<PlaceSearchItemModel> = persistentListOf(
-            PlaceSearchItemModel(
-                id = 1L,
-                name = "꽃뫼버들마을금강KCC아파트",
-                address = "경기 수원시 팔달구 정자천로 32번길 27",
-            ),
-            PlaceSearchItemModel(
-                id = 2L,
-                name = "꽃뫼버들마을금강KCC아파트",
-                address = "경기 수원시 팔달구 정자천로 32번길 27",
-            ),
-            PlaceSearchItemModel(
-                id = 3L,
-                name = "꽃뫼버들마을금강KCC아파트",
-                address = "경기 수원시 팔달구 정자천로 32번길 27",
-            ),
-        ),
+        val placeList: ImmutableList<PlaceSearchItemModel> = persistentListOf(),
         val selectedPlaceId: Long? = null,
         val selectedTravelTime: String? = null,
         val selectedPreferences: PersistentList<String> = persistentListOf(),
