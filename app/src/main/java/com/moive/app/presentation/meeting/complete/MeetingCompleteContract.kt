@@ -12,6 +12,8 @@ interface MeetingCompleteContract {
         val placeName: String = "장소명(상호명)",
         val placeCategory: String = "카페",
         val placeAddress: String = "서울시 강남구 OO동",
+        val latitude: Double = 37.5510324090502,
+        val longitude: Double = 126.91228338125131,
         val meetingDate: String = "9월 18일",
         val meetingTime: String = "오후 6:00",
         val participants: ImmutableList<CompletedParticipantItemModel> = persistentListOf(
