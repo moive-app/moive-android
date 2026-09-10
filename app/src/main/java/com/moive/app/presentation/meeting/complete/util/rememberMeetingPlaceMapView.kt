@@ -29,7 +29,7 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.label.Label
 import com.moive.app.R
 import com.moive.app.core.extensions.addBitmapMarker
-import com.moive.app.presentation.voting.component.RoutePinBitmap
+import com.moive.app.presentation.common.component.placedetail.util.RoutePinBitmap
 import com.moive.app.presentation.voting.util.rememberMapViewWithLifecycle
 
 private const val END_PIN_ANCHOR_Y_FRACTION = 30f / 31f
