@@ -1,4 +1,4 @@
-package com.moive.app.presentation.voting.component
+package com.moive.app.presentation.common.component.placedetail
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
@@ -54,17 +54,18 @@ import com.moive.app.data.voting.model.PlaceDetailImageItemModel
 import com.moive.app.data.voting.model.PlaceDetailModel
 import com.moive.app.data.voting.model.PlaceDetailPinLatLang
 import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
-import com.moive.app.presentation.voting.util.rememberPlaceRouteMapView
+import com.moive.app.presentation.common.component.placedetail.util.rememberPlaceRouteMapView
 
 @Composable
 fun PlaceDetailContent(
     innerPadding: PaddingValues,
     place: PlaceDetailModel,
-    regionName: String,
+    title: String,
     onBackClick: () -> Unit,
     onKakaoMapClick: () -> Unit,
-    onSelectButtonClick: () -> Unit,
+    showSelectButton: Boolean,
     modifier: Modifier = Modifier,
+    onSelectButtonClick: () -> Unit = {},
 ) {
     val mapView = rememberPlaceRouteMapView(place)
 
@@ -75,7 +76,7 @@ fun PlaceDetailContent(
             .padding(innerPadding),
     ) {
         MoiveSubTitleTopBar(
-            title = regionName,
+            title = title,
             onBackClick = onBackClick,
         )
 
@@ -292,16 +293,18 @@ fun PlaceDetailContent(
                 type = MoiveButtonType.TERTIARY,
                 size = MoiveButtonSize.LARGE,
                 onClick = onKakaoMapClick,
-                modifier = Modifier.weight(1f),
+                modifier = if (showSelectButton) Modifier.weight(1f) else Modifier.fillMaxWidth(),
             )
 
-            MoiveButton(
-                text = "선택하기",
-                type = MoiveButtonType.PRIMARY,
-                size = MoiveButtonSize.LARGE,
-                onClick = onSelectButtonClick,
-                modifier = Modifier.weight(1f),
-            )
+            if (showSelectButton) {
+                MoiveButton(
+                    text = "선택하기",
+                    type = MoiveButtonType.PRIMARY,
+                    size = MoiveButtonSize.LARGE,
+                    onClick = onSelectButtonClick,
+                    modifier = Modifier.weight(1f),
+                )
+            }
         }
     }
 }
@@ -376,10 +379,11 @@ private fun PlaceDetailContentPreview() {
                 subwayMinutes = 9,
                 travelFare = 1_650,
             ),
-            regionName = "신논현동",
+            title = "신논현동",
             onBackClick = {},
             onKakaoMapClick = {},
             onSelectButtonClick = {},
+            showSelectButton = true,
         )
     }
 }
