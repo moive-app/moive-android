@@ -5,4 +5,6 @@ import com.moive.app.data.user.remote.dto.UserResponse
 
 interface UserRemoteDataSource {
     suspend fun getMyInfo(): BaseResponse<UserResponse>
+
+    suspend fun deleteWithdraw(): BaseResponse<Unit>
 }

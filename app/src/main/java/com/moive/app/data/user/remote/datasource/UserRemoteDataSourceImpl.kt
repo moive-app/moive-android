@@ -11,4 +11,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getMyInfo(): BaseResponse<UserResponse> =
         userService.getMyInfo()
+
+    override suspend fun deleteWithdraw(): BaseResponse<Unit> =
+        userService.deleteWithdraw()
 }
