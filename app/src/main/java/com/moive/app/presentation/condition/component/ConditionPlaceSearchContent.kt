@@ -102,7 +102,7 @@ fun ConditionPlaceSearchContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                contentPadding = PaddingValues(20.dp)
+                contentPadding = PaddingValues(horizontal = 20.dp),
             ) {
                 itemsIndexed(
                     items = placeList,
