@@ -104,6 +104,7 @@ fun MainNavHost(
         )
 
         meetingConfirmedGraph(
+            navController = navController,
             innerPadding = innerPadding,
         )
 

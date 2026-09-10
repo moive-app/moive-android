@@ -7,6 +7,14 @@ import android.provider.Settings
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
 
+fun Context.shareText(text: String) {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, text)
+    }
+    startActivity(Intent.createChooser(intent, null))
+}
+
 fun Context.openUrl(url: String?): Boolean {
     if (url == null) return false
     return runCatching {
