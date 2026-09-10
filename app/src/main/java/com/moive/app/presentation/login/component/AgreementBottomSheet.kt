@@ -43,10 +43,9 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.noRippleClickable
 import com.moive.app.core.extensions.openUrl
 
-//Todo: 실제 URL로 수정
-private const val SERVICE_TERMS_URL = "https://www.notion.so/서비스-이용약관"
-private const val PRIVACY_POLICY_URL = "https://www.notion.so/개인정보-처리방침"
-private const val MARKETING_URL = "https://www.notion.so/마케팅-수신동의"
+private const val SERVICE_TERMS_URL = "https://moiveterms.site/terms.html"
+private const val PRIVACY_POLICY_URL = "https://moiveterms.site/privacy.html"
+private const val MARKETING_URL = "https://moiveterms.site/marketing.html"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

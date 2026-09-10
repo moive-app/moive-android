@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -27,12 +28,16 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubIconTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.core.extensions.openUrl
 import com.moive.app.presentation.common.component.ConfirmBottomSheet
 import com.moive.app.presentation.mypage.MyPageContract.SideEffect.NavigateToLogin
 import com.moive.app.presentation.mypage.MyPageContract.SideEffect.OnShowToast
 import com.moive.app.presentation.mypage.component.MyPageInfoCard
 import com.moive.app.presentation.mypage.component.MyPageMenuItem
 import com.moive.app.presentation.mypage.component.ProfileCard
+
+private const val SERVICE_TERMS_URL = "https://moiveterms.site/terms.html"
+private const val QUESTION_URL = "https://fluffy-trader-edc.notion.site/3d35b4ba866380a99759d870d2427747"
 
 @Composable
 fun MyPageRoute(
@@ -45,6 +50,7 @@ fun MyPageRoute(
     val lifeCycleOwner = LocalLifecycleOwner.current
     val showToast = LocalToastTrigger.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(lifeCycleOwner) {
         lifeCycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -61,8 +67,8 @@ fun MyPageRoute(
         innerPadding = innerPadding,
         uiState = uiState,
         onAlarmClick = {},
-        onQuestionClick = {},
-        onTermsClick = {},
+        onQuestionClick = { context.openUrl(QUESTION_URL) },
+        onTermsClick = { context.openUrl(SERVICE_TERMS_URL) },
         onLogoutClick = viewModel::onLogoutClick,
         onDismissRequest = viewModel::dismissLogoutBottomSheet,
         onLogoutConfirmClick = viewModel::onLogoutConfirmClick,
