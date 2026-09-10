@@ -2,9 +2,11 @@ package com.moive.app.core.network.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.moive.app.BuildConfig
+import com.moive.app.BuildConfig.KAKAO_BASE_URL
 import com.moive.app.core.extensions.isJsonArray
 import com.moive.app.core.extensions.isJsonObject
 import com.moive.app.core.network.AuthInterceptor
+import com.moive.app.core.network.KakaoAuthInterceptor
 import com.moive.app.core.network.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
@@ -105,6 +107,28 @@ object NetworkModule {
         factory: Converter.Factory,
     ): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
+        .client(client)
+        .addConverterFactory(factory)
+        .build()
+
+    @Provides
+    @Singleton
+    @KakaoLocal
+    fun provideKakaoLocalOkHttpClient(
+        loggingInterceptor: Interceptor,
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(KakaoAuthInterceptor())
+        .addInterceptor(loggingInterceptor)
+        .build()
+
+    @Provides
+    @Singleton
+    @KakaoLocal
+    fun provideKakaoLocalRetrofit(
+        @KakaoLocal client: OkHttpClient,
+        factory: Converter.Factory,
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(KAKAO_BASE_URL)
         .client(client)
         .addConverterFactory(factory)
         .build()
