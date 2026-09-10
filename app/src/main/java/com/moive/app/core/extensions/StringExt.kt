@@ -14,3 +14,11 @@ fun String.checkLength(): Int {
 
     return count
 }
+
+
+fun String.parseDate(): String {
+    val (_, month, day) = split("-").takeIf { it.size == 3 } ?: return this
+    val monthNumber = month.toIntOrNull() ?: return this
+    val dayNumber = day.toIntOrNull() ?: return this
+    return "${monthNumber}월 ${dayNumber}일"
+}
