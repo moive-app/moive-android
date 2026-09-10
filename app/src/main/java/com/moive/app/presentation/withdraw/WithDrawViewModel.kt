@@ -6,6 +6,7 @@ import com.moive.app.data.user.repository.UserRepository
 import com.moive.app.presentation.withdraw.WithDrawContract.SideEffect
 import com.moive.app.presentation.withdraw.WithDrawContract.SideEffect.NavigateToLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,6 +27,8 @@ class WithDrawViewModel @Inject constructor(
     private val _sideEffect = Channel<SideEffect>(Channel.BUFFERED)
     val sideEffect = _sideEffect.receiveAsFlow()
 
+    private var job: Job? = null
+
     fun toggleAgreement() {
         _uiState.update { it.copy(isAgreed = !it.isAgreed) }
     }
@@ -43,20 +46,27 @@ class WithDrawViewModel @Inject constructor(
         postWithDraw()
     }
 
-    fun postWithDraw() = viewModelScope.launch {
-        _uiState.update { it.copy(withDrawUiState = WithDrawUiState.Loading) }
+    fun postWithDraw() {
+        if (job?.isActive == true) return
+        viewModelScope.launch {
+            _uiState.update { it.copy(withDrawUiState = WithDrawUiState.Loading) }
 
-        userRepository.deleteWithdraw()
-            .onSuccess {
-                _uiState.update { it.copy(withDrawUiState = WithDrawUiState.Success) }
-                _sideEffect.send(NavigateToLogin)
-            }
-            .onFailure { error ->
-                Timber.tag(WITH_DRAW_TAG).e(error)
-                _uiState.update {
-                    it.copy(withDrawUiState = WithDrawUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE))
+            userRepository.deleteWithdraw()
+                .onSuccess {
+                    _uiState.update { it.copy(withDrawUiState = WithDrawUiState.Success) }
+                    _sideEffect.send(NavigateToLogin)
                 }
-            }
+                .onFailure { error ->
+                    Timber.tag(WITH_DRAW_TAG).e(error)
+                    _uiState.update {
+                        it.copy(
+                            withDrawUiState = WithDrawUiState.Failure(
+                                error.message ?: UNKNOWN_ERROR_MESSAGE
+                            )
+                        )
+                    }
+                }
+        }
     }
 
     companion object {
