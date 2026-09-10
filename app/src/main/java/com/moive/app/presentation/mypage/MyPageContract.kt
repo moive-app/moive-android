@@ -7,6 +7,7 @@ interface MyPageContract {
     @Immutable
     data class State(
         val hasUnReadAlarm: Boolean = false,
+        val myInfoUiState: MyPageUiState = MyPageUiState.IDLE,
         val name: String = "",
         val email: String = "",
         val profileImage: String = "",
@@ -17,4 +18,13 @@ interface MyPageContract {
         data object NavigateToLogin : SideEffect()
         data class OnShowToast(val msg: String, val type: ToastType) : SideEffect()
     }
+}
+
+sealed interface MyPageUiState {
+    data object IDLE : MyPageUiState
+    data object Loading : MyPageUiState
+    data object Success : MyPageUiState
+    data class Failure(
+        val msg: String,
+    ) : MyPageUiState
 }
