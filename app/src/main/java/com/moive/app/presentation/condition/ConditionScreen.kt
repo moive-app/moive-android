@@ -42,7 +42,7 @@ fun ConditionRoute(
         onNextDateClick = viewModel::onDateNextClick,
         onPlaceBoxClick = viewModel::onPlaceSearchBoxClick,
         onPlaceBackClick = viewModel::backToInputStep,
-        onPlaceSearchSubmit = viewModel::postPlaceSearch,
+        onPlaceSearchSubmit = { viewModel.postPlaceSearch(uiState.searchFieldState.text.toString()) },
         onPlaceItemClick = viewModel::onPlaceItemClick,
         onTravelTimeClick = viewModel::onTravelTimeClick,
         onPreferenceClick = viewModel::onPreferenceClick,
