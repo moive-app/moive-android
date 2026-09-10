@@ -45,7 +45,12 @@ class ConditionViewModel @Inject constructor(
     }
 
     fun onCalendarDayClick(day: Int) {
-        _uiState.update { it.copy(pendingDay = day) }
+        _uiState.update { state ->
+            val existingTime = state.confirmedDateTimes.firstOrNull {
+                it.year == state.calendarYear && it.month == state.calendarMonth && it.day == day
+            }?.time
+            state.copy(pendingDay = day, pendingTime = existingTime)
+        }
     }
 
     fun onCalendarTimeClick(time: String) {
