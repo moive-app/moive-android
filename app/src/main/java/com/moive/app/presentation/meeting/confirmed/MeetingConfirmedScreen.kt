@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +31,7 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubIconTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.core.extensions.shareText
 import com.moive.app.presentation.common.component.ShadowButton
 import com.moive.app.presentation.meeting.confirmed.component.PlaceTimeRow
 import com.moive.app.presentation.meeting.confirmed.component.TravelTimeCard
@@ -42,13 +44,14 @@ fun MeetingConfirmedRoute(
     viewModel: MeetingConfirmedViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     MeetingConfirmedScreen(
         innerPadding = innerPadding,
         uiState = uiState,
         onBackClick = navigateBack,
         onPlaceClick = {},
-        onShareClick = {},
+        onShareClick = { context.shareText("모임에 참여해보세요!\n${uiState.meetingLink}") },
         modifier = modifier,
     )
 }

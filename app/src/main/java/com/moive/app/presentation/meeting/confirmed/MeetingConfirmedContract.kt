@@ -9,6 +9,7 @@ interface MeetingConfirmedContract {
     @Immutable
     data class State(
         val myProfileImageUrl: String = "",
+        val meetingLink: String = "https://moive.app/meeting/1",
         val isPlaceConfirmed: Boolean = true,
         val placeName: String = "장소명(상호명)",
         val placeCategory: String = "카페",
