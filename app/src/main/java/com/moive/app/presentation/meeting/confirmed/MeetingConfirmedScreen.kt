@@ -1,5 +1,6 @@
 package com.moive.app.presentation.meeting.confirmed
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -31,8 +32,11 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubIconTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.core.extensions.openKakaoMapRoute
 import com.moive.app.core.extensions.shareText
 import com.moive.app.presentation.common.component.ShadowButton
+import com.moive.app.presentation.common.component.placedetail.PlaceDetailContent
+import com.moive.app.presentation.meeting.confirmed.MeetingConfirmedContract.Step
 import com.moive.app.presentation.meeting.confirmed.component.PlaceTimeRow
 import com.moive.app.presentation.meeting.confirmed.component.TravelTimeCard
 
@@ -46,11 +50,26 @@ fun MeetingConfirmedRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
+    BackHandler(enabled = uiState.step != Step.MAIN) {
+        viewModel.backToMain()
+    }
+
     MeetingConfirmedScreen(
         innerPadding = innerPadding,
         uiState = uiState,
         onBackClick = navigateBack,
-        onPlaceClick = {},
+        onPlaceClick = viewModel::onPlaceClick,
+        onDetailBackClick = viewModel::backToMain,
+        onKakaoMapClick = {
+            val place = uiState.currentPlaceDetail
+            val opened = context.openKakaoMapRoute(
+                startLatitude = place.startPinLatLang.latitude,
+                startLongitude = place.startPinLatLang.longitude,
+                endLatitude = place.endPinLatLang.latitude,
+                endLongitude = place.endPinLatLang.longitude,
+            )
+            viewModel.onKakaoMapRouteOpened(opened)
+        },
         onShareClick = { context.shareText("모임에 참여해보세요!\n${uiState.meetingLink}") },
         modifier = modifier,
     )
@@ -62,9 +81,24 @@ private fun MeetingConfirmedScreen(
     uiState: MeetingConfirmedContract.State,
     onBackClick: () -> Unit,
     onPlaceClick: () -> Unit,
+    onDetailBackClick: () -> Unit,
+    onKakaoMapClick: () -> Unit,
     onShareClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (uiState.step == Step.DETAIL) {
+        PlaceDetailContent(
+            innerPadding = innerPadding,
+            place = uiState.currentPlaceDetail,
+            title = uiState.currentPlaceDetail.placeName,
+            onBackClick = onDetailBackClick,
+            onKakaoMapClick = onKakaoMapClick,
+            showSelectButton = false,
+            modifier = modifier,
+        )
+        return
+    }
+
     val lazyListState = rememberLazyListState()
     val isContentScrollable by remember {
         derivedStateOf { lazyListState.canScrollForward || lazyListState.canScrollBackward }
@@ -149,6 +183,8 @@ private fun MeetingConfirmedScreenPreview() {
             uiState = MeetingConfirmedContract.State(),
             onBackClick = {},
             onPlaceClick = {},
+            onDetailBackClick = {},
+            onKakaoMapClick = {},
             onShareClick = {},
         )
     }
@@ -165,6 +201,8 @@ private fun MeetingConfirmedScreenPlaceUndecidedPreview() {
             ),
             onBackClick = {},
             onPlaceClick = {},
+            onDetailBackClick = {},
+            onKakaoMapClick = {},
             onShareClick = {},
         )
     }
