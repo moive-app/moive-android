@@ -109,6 +109,7 @@ fun MainNavHost(
         )
 
         meetingCompleteGraph(
+            navController = navController,
             innerPadding = innerPadding,
         )
 
