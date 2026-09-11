@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -41,6 +42,7 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubIconTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.core.extensions.shareText
 import com.moive.app.data.meeting.mapper.MeetingStatus
 import com.moive.app.data.meeting.model.ParticipantItemModel
 import com.moive.app.presentation.common.component.ShadowButton
@@ -62,6 +64,7 @@ fun MeetingDetailRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
 
     LaunchedEffect(lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -83,7 +86,7 @@ fun MeetingDetailRoute(
         innerPadding = innerPadding,
         uiState = uiState,
         onBackClick = navigateBack,
-        onInviteFriendClick = {},
+        onInviteFriendClick = { context.shareText(uiState.inviteUrl) },
         onActionButtonClick = {
             when (uiState.status) {
                 MeetingStatus.CONDITION_INPUT -> navigateToCondition()
