@@ -137,7 +137,7 @@ fun MeetingCreationContent(
 
                     MoiveInputTextField(
                         state = uiState.meetingSchedule,
-                        placeholder = "예) 8월 29일 14:00",
+                        placeholder = "예) 2026년 8월 29일 14:00",
                         onKeyboardAction = {
                             focusManager.clearFocus()
                         },

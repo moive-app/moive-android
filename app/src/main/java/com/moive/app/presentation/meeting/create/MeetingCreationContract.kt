@@ -48,12 +48,14 @@ interface MeetingCreationContract {
     }
 
     companion object {
-        private val SCHEDULE_LIST = persistentListOf("네", "아니오")
+        const val SCHEDULE_CONFIRMED = "네"
+        const val SCHEDULE_NOT_CONFIRMED = "아니오"
+        private val SCHEDULE_LIST = persistentListOf(SCHEDULE_CONFIRMED, SCHEDULE_NOT_CONFIRMED)
         private val MEETING_PURPOSE_LIST = persistentListOf("친목·만남", "기념·축하", "네트워킹·교류", "스터디·학습", "취미·여가", "기타")
-        private val MEETING_NAME_REGEX = Regex("^[ㄱ-ㅎ가-힣a-zA-Z0-9]+$")
+        private val MEETING_NAME_REGEX = Regex("^(?=.*[ㄱ-ㅎ가-힣a-zA-Z0-9])[ㄱ-ㅎ가-힣a-zA-Z0-9 ]+$")
         private const val MEETING_NAME_MAX_LENGTH = 10
-        private val SCHEDULE_FORMAT_REGEX = Regex(
-            """^(0?[1-9]|1[0-2])월 (0?[1-9]|[12][0-9]|3[01])일 ([01][0-9]|2[0-3]):[0-5][0-9]$"""
+        val SCHEDULE_FORMAT_REGEX = Regex(
+            """^(20[0-9]{2})년 (0?[1-9]|1[0-2])월 (0?[1-9]|[12][0-9]|3[01])일 ([01][0-9]|2[0-3]):([0-5][0-9])$"""
         )
     }
 }
