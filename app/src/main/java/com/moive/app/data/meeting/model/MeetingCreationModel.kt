@@ -1,7 +1,9 @@
 package com.moive.app.data.meeting.model
 
+import androidx.compose.runtime.Immutable
 import com.moive.app.data.meeting.mapper.MeetingPurposeType
 
+@Immutable
 data class MeetingCreationModel(
     val meetingId: Long,
     val name: String,
