@@ -6,6 +6,7 @@ import com.moive.app.data.home.model.MyMeetingCardItemModel
 import com.moive.app.data.home.model.ConfirmedMeetingItemModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 interface HomeContract {
     @Immutable
@@ -22,11 +23,15 @@ interface HomeContract {
             MeetingTab.UPCOMING.label,
             MeetingTab.PAST.label,
         )
+
+        val displayedMyMeetingList: ImmutableList<MyMeetingCardItemModel>
+            get() = myMeetingList.take(MY_MEETING_LIST_MAX_SIZE).toImmutableList()
+
+        companion object {
+            private const val MY_MEETING_LIST_MAX_SIZE = 5
+        }
     }
 }
-
-fun String.toMeetingTab(): MeetingTab =
-    MeetingTab.entries.find { it.label == this } ?: MeetingTab.ALL
 
 sealed interface HomeUiState {
     data object Idle : HomeUiState

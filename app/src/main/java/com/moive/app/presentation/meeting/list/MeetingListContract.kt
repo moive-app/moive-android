@@ -1,7 +1,6 @@
 package com.moive.app.presentation.meeting.list
 
 import androidx.compose.runtime.Immutable
-import com.moive.app.core.designsystem.component.chip.LabelType
 import com.moive.app.data.home.mapper.MeetingTab
 import com.moive.app.data.meeting.model.MeetingListCardItemModel
 import kotlinx.collections.immutable.ImmutableList
@@ -11,53 +10,10 @@ interface MeetingListContract {
     @Immutable
     data class State(
         val selectedTab: String = MeetingTab.ALL.label,
-        val meetingList: ImmutableList<MeetingListCardItemModel> = persistentListOf(
-            MeetingListCardItemModel(
-                id = 1L,
-                title = "주말 맛집 모임",
-                dateTime = "8월 29일 14:00",
-                participantImageUrls = persistentListOf("", "", ""),
-                extraParticipantCount = 2,
-                statusText = "조건 입력중",
-                statusLabelType = LabelType.CONDITION,
-            ),
-            MeetingListCardItemModel(
-                id = 2L,
-                title = "주말 맛집 모임",
-                dateTime = "8월 29일 14:00",
-                participantImageUrls = persistentListOf("", "", ""),
-                extraParticipantCount = 2,
-                statusText = "투표 진행중",
-                statusLabelType = LabelType.VOTING,
-            ),
-            MeetingListCardItemModel(
-                id = 3L,
-                title = "주말 맛집 모임",
-                dateTime = "8월 29일 14:00",
-                participantImageUrls = persistentListOf("", "", ""),
-                extraParticipantCount = 2,
-                statusText = "모임 확정",
-                statusLabelType = LabelType.CONFIRMED,
-            ),
-            MeetingListCardItemModel(
-                id = 4L,
-                title = "주말 맛집 모임",
-                dateTime = "8월 29일 14:00",
-                participantImageUrls = persistentListOf("", "", ""),
-                extraParticipantCount = 2,
-                statusText = "모임 완료",
-                statusLabelType = LabelType.COMPLETE,
-            ),
-            MeetingListCardItemModel(
-                id = 5L,
-                title = "주말 맛집 모임",
-                dateTime = "8월 29일 14:00",
-                participantImageUrls = persistentListOf("", "", ""),
-                extraParticipantCount = 2,
-                statusText = "조건 입력중",
-                statusLabelType = LabelType.CONDITION,
-            ),
-        ),
+        val meetingListUiState: MeetingListUiState = MeetingListUiState.Idle,
+        val meetingList: ImmutableList<MeetingListCardItemModel> = persistentListOf(),
+        val nextCursor: Long? = null,
+        val hasNextMeetingList: Boolean = true,
     ) {
         val tabList: ImmutableList<String> = persistentListOf(
             MeetingTab.ALL.label,
@@ -65,4 +21,13 @@ interface MeetingListContract {
             MeetingTab.PAST.label,
         )
     }
+}
+
+sealed interface MeetingListUiState {
+    data object Idle : MeetingListUiState
+    data object Loading : MeetingListUiState
+    data object Success : MeetingListUiState
+    data class Failure(
+        val msg: String,
+    ) : MeetingListUiState
 }

@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moive.app.core.designsystem.component.chip.LabelType
 import com.moive.app.core.designsystem.theme.MoiveTheme
+import com.moive.app.core.extensions.OnBottomReached
 import com.moive.app.data.meeting.model.MeetingListCardItemModel
 import com.moive.app.presentation.common.component.MyMeetingCardItem
 import kotlinx.collections.immutable.ImmutableList
@@ -20,11 +22,22 @@ import kotlinx.collections.immutable.persistentListOf
 fun MeetingCardList(
     meetings: ImmutableList<MeetingListCardItemModel>,
     onMeetingClick: (Long) -> Unit,
+    isLoading: Boolean,
+    onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val listState = rememberLazyListState()
+
+    listState.OnBottomReached(
+        threshold = 3,
+        isLoading = isLoading,
+        onLoadMore = onLoadMore,
+    )
+
     LazyColumn(
+        state = listState,
         modifier = modifier,
-        contentPadding = PaddingValues(top = 14.dp, bottom = 24.dp),
+        contentPadding = PaddingValues(top = 14.dp, bottom = 48.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(
@@ -33,7 +46,7 @@ fun MeetingCardList(
         ) { meeting ->
             MyMeetingCardItem(
                 title = meeting.title,
-                dateTime = meeting.dateTime,
+                dateTime = meeting.dateTime ?: "일정 미정",
                 participantImageList = meeting.participantImageUrls,
                 extraCount = meeting.extraParticipantCount,
                 statusText = meeting.statusText,
@@ -77,6 +90,8 @@ private fun MeetingCardListPreview() {
                 ),
             ),
             onMeetingClick = {},
+            isLoading = false,
+            onLoadMore = {},
             modifier = Modifier.padding(20.dp),
         )
     }

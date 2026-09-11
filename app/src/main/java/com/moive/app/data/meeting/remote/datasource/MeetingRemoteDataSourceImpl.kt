@@ -3,6 +3,7 @@ package com.moive.app.data.meeting.remote.datasource
 import com.moive.app.data.common.dto.BaseResponse
 import com.moive.app.data.meeting.remote.dto.MeetingCreationRequest
 import com.moive.app.data.meeting.remote.dto.MeetingCreationResponse
+import com.moive.app.data.meeting.remote.dto.MeetingListResponse
 import com.moive.app.data.meeting.remote.service.MeetingService
 import javax.inject.Inject
 
@@ -12,4 +13,7 @@ class MeetingRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun postMeetingCreation(request: MeetingCreationRequest): BaseResponse<MeetingCreationResponse> =
         meetingService.postMeeting(request)
+
+    override suspend fun getMeetingList(filter: String, cursor: Long?, size: Int): BaseResponse<MeetingListResponse> =
+        meetingService.getMeetings(filter, cursor, size)
 }

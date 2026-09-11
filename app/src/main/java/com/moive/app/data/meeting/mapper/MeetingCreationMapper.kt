@@ -20,7 +20,7 @@ fun MeetingCreationResponse.toModel(): MeetingCreationModel =
 
 @Serializable
 enum class MeetingPurposeType(val label: String) {
-    FRIENDSHIP("친목·만남"),
+    FRIENDLY("친목·만남"),
     CELEBRATION("기념·축하"),
     NETWORKING("네트워킹·교류"),
     STUDY("스터디·학습"),
