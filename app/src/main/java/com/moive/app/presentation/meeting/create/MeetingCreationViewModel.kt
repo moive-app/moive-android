@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moive.app.core.extensions.trim
 import com.moive.app.data.meeting.mapper.MeetingPurposeType
-import com.moive.app.data.meeting.mapper.toMeetingPurposeType
 import com.moive.app.data.meeting.repository.MeetingRepository
 import com.moive.app.presentation.meeting.create.MeetingCreationContract.SideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel

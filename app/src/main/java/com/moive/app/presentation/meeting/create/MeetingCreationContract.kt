@@ -2,7 +2,6 @@ package com.moive.app.presentation.meeting.create
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Immutable
-import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.core.extensions.checkLength
 import com.moive.app.data.meeting.mapper.MeetingPurposeType
 import kotlinx.collections.immutable.ImmutableList
