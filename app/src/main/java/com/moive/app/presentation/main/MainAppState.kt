@@ -9,6 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.moive.app.presentation.home.navigation.navigateToHome
+import com.moive.app.presentation.login.navigation.Login
+import com.moive.app.presentation.login.signup.navigation.SignUpComplete
 import com.moive.app.presentation.main.component.MainTab
 import com.moive.app.presentation.meeting.list.navigation.MeetingList
 import com.moive.app.presentation.mypage.navigation.navigateToMyPage
@@ -44,6 +46,19 @@ class MainAppState(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = null
+        )
+
+    val isSignedIn: StateFlow<Boolean> = currentDestination
+        .map { destination ->
+            destination != null &&
+                destination.hasRoute(Splash::class).not() &&
+                destination.hasRoute(Login::class).not() &&
+                destination.hasRoute(SignUpComplete::class).not()
+        }
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
         )
 
     val isBottomBarVisible: StateFlow<Boolean> = currentDestination

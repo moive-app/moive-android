@@ -22,6 +22,10 @@ interface MeetingDetailContract {
         val primaryActionLabel: String = "",
         val primaryActionEnabled: Boolean = false,
     )
+
+    sealed class SideEffect {
+        data object NavigateBack : SideEffect()
+    }
 }
 
 fun statusActionButtonText(status: MeetingStatus, isDone: Boolean): String = when (status) {
