@@ -25,7 +25,7 @@ import com.moive.app.presentation.meeting.list.component.MeetingCardList
 fun MeetingListRoute(
     innerPadding: PaddingValues,
     navigateBack: () -> Unit,
-    navigateToMeetingDetail: () -> Unit,
+    navigateToMeetingDetail: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MeetingListViewModel = hiltViewModel(),
 ) {
@@ -36,7 +36,7 @@ fun MeetingListRoute(
         uiState = uiState,
         onBackClick = navigateBack,
         onTabClick = viewModel::postMeetingFilter,
-        onMeetingClick = { navigateToMeetingDetail() },
+        onMeetingClick = navigateToMeetingDetail,
         onLoadMore = { viewModel.getMeetingList(loadMore = true) },
         modifier = modifier,
     )

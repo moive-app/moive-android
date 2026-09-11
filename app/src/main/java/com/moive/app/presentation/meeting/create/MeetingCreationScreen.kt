@@ -26,7 +26,7 @@ import com.moive.app.presentation.meeting.create.component.MeetingInfoConfirmCon
 fun MeetingCreationRoute(
     innerPadding: PaddingValues,
     navigateBack: () -> Unit,
-    navigateToMeetingDetail: () -> Unit,
+    navigateToMeetingDetail: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MeetingCreationViewModel = hiltViewModel()
 ) {
@@ -42,7 +42,7 @@ fun MeetingCreationRoute(
         lifeCycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.sideEffect.collect { sideEffect ->
                 when (sideEffect) {
-                    SideEffect.NavigateToMeetingDetail -> navigateToMeetingDetail()
+                    is SideEffect.NavigateToMeetingDetail -> navigateToMeetingDetail(sideEffect.meetingId)
                 }
             }
         }

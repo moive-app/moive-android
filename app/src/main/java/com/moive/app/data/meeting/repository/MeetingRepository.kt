@@ -2,6 +2,7 @@ package com.moive.app.data.meeting.repository
 
 import com.moive.app.data.meeting.mapper.MeetingPurposeType
 import com.moive.app.data.meeting.model.MeetingCreationModel
+import com.moive.app.data.meeting.model.MeetingDetailModel
 import com.moive.app.data.meeting.model.MeetingListModel
 
 interface MeetingRepository {
@@ -14,4 +15,6 @@ interface MeetingRepository {
     ): Result<MeetingCreationModel>
 
     suspend fun getMeetingList(filter: String, cursor: Long?, size: Int): Result<MeetingListModel>
+
+    suspend fun getMeetingDetail(meetingId: Long): Result<MeetingDetailModel>
 }

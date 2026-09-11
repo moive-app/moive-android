@@ -50,7 +50,7 @@ import kotlinx.collections.immutable.persistentListOf
 fun HomeRoute(
     innerPadding: PaddingValues,
     navigateToMeetingList: () -> Unit,
-    navigateToMeetingDetail: () -> Unit,
+    navigateToMeetingDetail: (Long) -> Unit,
     navigateToMeetingCreation: () -> Unit,
     navigateToNotification: () -> Unit,
     modifier: Modifier = Modifier,
@@ -83,7 +83,7 @@ private fun HomeScreen(
     uiState: HomeContract.State,
     onTabClick: (String) -> Unit,
     onShowListClick: () -> Unit,
-    onMeetingClick: () -> Unit,
+    onMeetingClick: (Long) -> Unit,
     onAddMeetingClick: () -> Unit,
     onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -132,7 +132,7 @@ private fun HomeScreen(
                 } else {
                     ConfirmedMeetingPager(
                         meetings = uiState.upcomingMeetings,
-                        onMeetingClick = { onMeetingClick() },
+                        onMeetingClick = onMeetingClick,
                         onAddMeetingClick = onAddMeetingClick,
                     )
                 }
@@ -200,7 +200,7 @@ private fun HomeScreen(
                         extraCount = meeting.extraParticipantCount,
                         statusText = meeting.statusText,
                         statusLabelType = meeting.statusLabelType,
-                        onCardClick = onMeetingClick ,
+                        onCardClick = { onMeetingClick(meeting.id) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp, vertical = 6.dp),

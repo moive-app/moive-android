@@ -8,14 +8,16 @@ import androidx.navigation.compose.composable
 import com.moive.app.core.extensions.safePopBackStack
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.condition.navigation.navigateToCondition
+import com.moive.app.presentation.meeting.complete.navigation.navigateToMeetingComplete
 import com.moive.app.presentation.meeting.confirmed.navigation.navigateToMeetingConfirmed
 import com.moive.app.presentation.meeting.detail.MeetingDetailRoute
 import com.moive.app.presentation.voting.navigation.navigateToVoting
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToMeetingDetail(
-    navOptions: NavOptions? = null
-) = navigate(MeetingDetail, navOptions)
+    meetingId: Long,
+    navOptions: NavOptions? = null,
+) = navigate(MeetingDetail(meetingId), navOptions)
 
 fun NavGraphBuilder.meetingDetailGraph(
     navController: NavController,
@@ -27,10 +29,13 @@ fun NavGraphBuilder.meetingDetailGraph(
             navigateToCondition = navController::navigateToCondition,
             navigateToVoting = navController::navigateToVoting,
             navigateToMeetingConfirmed = navController::navigateToMeetingConfirmed,
+            navigateToMeetingComplete = navController::navigateToMeetingComplete,
             innerPadding = innerPadding,
         )
     }
 }
 
 @Serializable
-data object MeetingDetail : Route
+data class MeetingDetail(
+    val meetingId: Long
+) : Route

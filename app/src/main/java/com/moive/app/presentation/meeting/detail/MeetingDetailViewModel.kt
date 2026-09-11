@@ -1,19 +1,63 @@
 package com.moive.app.presentation.meeting.detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.moive.app.data.meeting.repository.MeetingRepository
+import com.moive.app.presentation.meeting.detail.navigation.MeetingDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MeetingDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val meetingRepository: MeetingRepository,
+) : ViewModel() {
 
-): ViewModel() {
+    private val meetingId: Long = savedStateHandle.toRoute<MeetingDetail>().meetingId
 
     private val _uiState = MutableStateFlow(MeetingDetailContract.State())
     val uiState = _uiState.asStateFlow()
+
+    private var job: Job? = null
+
+    fun getMeetingDetail() {
+        job?.cancel()
+        job = viewModelScope.launch {
+            _uiState.update { it.copy(meetingDetailUiState = MeetingDetailUiState.Loading) }
+
+            meetingRepository.getMeetingDetail(meetingId)
+                .onSuccess { detail ->
+                    _uiState.update {
+                        it.copy(
+                            meetingDetailUiState = MeetingDetailUiState.Success,
+                            status = detail.status,
+                            meetingName = detail.name,
+                            meetingPurpose = detail.purposeType.label,
+                            inviteCode = detail.inviteCode,
+                            inviteUrl = detail.inviteUrl,
+                            participants = detail.participants,
+                            toolTipMessage = detail.homeMessage,
+                            primaryActionLabel = detail.primaryActionLabel,
+                            primaryActionEnabled = detail.primaryActionEnabled,
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    Timber.tag(TAG).e(error)
+                    _uiState.update {
+                        it.copy(meetingDetailUiState = MeetingDetailUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE))
+                    }
+                }
+        }
+    }
 
     fun showLeaveMeetingDialog() {
         _uiState.update { it.copy(isLeaveMeetingDialogVisible = true) }
@@ -27,5 +71,8 @@ class MeetingDetailViewModel @Inject constructor(
         // TODO: 모임 나가기 API 연동
     }
 
+    companion object {
+        private const val TAG = "MeetingDetail"
+        private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
+    }
 }
-
