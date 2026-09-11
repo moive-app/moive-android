@@ -17,4 +17,6 @@ interface MeetingRepository {
     suspend fun getMeetingList(filter: String, cursor: Long?, size: Int): Result<MeetingListModel>
 
     suspend fun getMeetingDetail(meetingId: Long): Result<MeetingDetailModel>
+
+    suspend fun deleteMeeting(meetingId: Long): Result<Unit>
 }
