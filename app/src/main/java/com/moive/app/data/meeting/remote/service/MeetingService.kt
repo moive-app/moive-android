@@ -3,8 +3,11 @@ package com.moive.app.data.meeting.remote.service
 import com.moive.app.data.common.dto.BaseResponse
 import com.moive.app.data.meeting.remote.dto.MeetingCreationRequest
 import com.moive.app.data.meeting.remote.dto.MeetingCreationResponse
+import com.moive.app.data.meeting.remote.dto.MeetingListResponse
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface MeetingService {
 
@@ -12,4 +15,11 @@ interface MeetingService {
     suspend fun postMeeting(
         @Body request: MeetingCreationRequest,
     ): BaseResponse<MeetingCreationResponse>
+
+    @GET("meetings")
+    suspend fun getMeetings(
+        @Query("filter") filter: String,
+        @Query("cursor") cursor: Long?,
+        @Query("size") size: Int,
+    ): BaseResponse<MeetingListResponse>
 }
