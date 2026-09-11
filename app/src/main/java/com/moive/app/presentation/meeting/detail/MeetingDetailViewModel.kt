@@ -7,6 +7,7 @@ import androidx.navigation.toRoute
 import com.moive.app.data.meeting.repository.MeetingRepository
 import com.moive.app.presentation.meeting.detail.navigation.MeetingDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -25,32 +26,37 @@ class MeetingDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MeetingDetailContract.State())
     val uiState = _uiState.asStateFlow()
 
-    fun getMeetingDetail() = viewModelScope.launch {
-        _uiState.update { it.copy(meetingDetailUiState = MeetingDetailUiState.Loading) }
+    private var job: Job? = null
 
-        meetingRepository.getMeetingDetail(meetingId)
-            .onSuccess { detail ->
-                _uiState.update {
-                    it.copy(
-                        meetingDetailUiState = MeetingDetailUiState.Success,
-                        status = detail.status,
-                        meetingName = detail.name,
-                        meetingPurpose = detail.purposeType.label,
-                        inviteCode = detail.inviteCode,
-                        inviteUrl = detail.inviteUrl,
-                        participants = detail.participants,
-                        toolTipMessage = detail.homeMessage,
-                        primaryActionLabel = detail.primaryActionLabel,
-                        primaryActionEnabled = detail.primaryActionEnabled,
-                    )
+    fun getMeetingDetail() {
+        job?.cancel()
+        job = viewModelScope.launch {
+            _uiState.update { it.copy(meetingDetailUiState = MeetingDetailUiState.Loading) }
+
+            meetingRepository.getMeetingDetail(meetingId)
+                .onSuccess { detail ->
+                    _uiState.update {
+                        it.copy(
+                            meetingDetailUiState = MeetingDetailUiState.Success,
+                            status = detail.status,
+                            meetingName = detail.name,
+                            meetingPurpose = detail.purposeType.label,
+                            inviteCode = detail.inviteCode,
+                            inviteUrl = detail.inviteUrl,
+                            participants = detail.participants,
+                            toolTipMessage = detail.homeMessage,
+                            primaryActionLabel = detail.primaryActionLabel,
+                            primaryActionEnabled = detail.primaryActionEnabled,
+                        )
+                    }
                 }
-            }
-            .onFailure { error ->
-                Timber.tag(TAG).e(error)
-                _uiState.update {
-                    it.copy(meetingDetailUiState = MeetingDetailUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE))
+                .onFailure { error ->
+                    Timber.tag(TAG).e(error)
+                    _uiState.update {
+                        it.copy(meetingDetailUiState = MeetingDetailUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE))
+                    }
                 }
-            }
+        }
     }
 
     fun showLeaveMeetingDialog() {
