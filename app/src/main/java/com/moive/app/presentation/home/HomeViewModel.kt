@@ -2,7 +2,6 @@ package com.moive.app.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.moive.app.data.home.mapper.MeetingTab
 import com.moive.app.data.home.mapper.toMeetingTab
 import com.moive.app.data.home.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,11 +23,9 @@ class HomeViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    init {
-        getHome(MeetingTab.ALL)
-    }
+    fun getHome(selectedTab: String) {
+        val tab = selectedTab.toMeetingTab()
 
-    private fun getHome(tab: MeetingTab) {
         job?.cancel()
         job = viewModelScope.launch {
             _uiState.update { it.copy(homeUiState = HomeUiState.Loading) }
@@ -54,7 +51,7 @@ class HomeViewModel @Inject constructor(
 
     fun postMeetingFilter(tab: String) {
         _uiState.update { it.copy(selectedTab = tab) }
-        getHome(tab.toMeetingTab())
+        getHome(tab)
     }
 
     companion object {
