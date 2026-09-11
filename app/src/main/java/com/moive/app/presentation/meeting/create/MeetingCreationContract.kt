@@ -1,11 +1,10 @@
 package com.moive.app.presentation.meeting.create
 
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.mutableStateOf
 import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.core.extensions.checkLength
+import com.moive.app.data.meeting.mapper.MeetingPurposeType
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -19,6 +18,7 @@ interface MeetingCreationContract {
         val selectedScheduleConfirmed: String = "",
         val meetingPurpose: ImmutableList<String> = MEETING_PURPOSE_LIST,
         val selectedMeetingPurpose: String = "",
+        val meetingCreationUiState: MeetingCreationUiState = MeetingCreationUiState.Idle,
     ) {
         val isMeetingNameInvalid: Boolean
             get() = meetingName.text.isNotEmpty() &&
@@ -47,6 +47,10 @@ interface MeetingCreationContract {
         CONFIRM,
     }
 
+    sealed class SideEffect {
+        data object NavigateToMeetingDetail : SideEffect()
+    }
+
     companion object {
         const val SCHEDULE_CONFIRMED = "네"
         const val SCHEDULE_NOT_CONFIRMED = "아니오"
@@ -59,3 +63,43 @@ interface MeetingCreationContract {
         )
     }
 }
+
+sealed interface MeetingCreationUiState {
+    data object Idle: MeetingCreationUiState
+    data object Loading: MeetingCreationUiState
+    data object Success: MeetingCreationUiState
+    data class Failure (
+        val msg: String,
+    ): MeetingCreationUiState
+}
+
+data class ScheduleComponents(
+    val year: Int,
+    val month: Int,
+    val day: Int,
+    val hour: Int,
+    val minute: Int,
+)
+
+fun String.toScheduleComponents(): ScheduleComponents? {
+    val match = MeetingCreationContract.SCHEDULE_FORMAT_REGEX.find(this) ?: return null
+    val (year, month, day, hour, minute) = match.destructured
+    return ScheduleComponents(
+        year = year.toInt(),
+        month = month.toInt(),
+        day = day.toInt(),
+        hour = hour.toInt(),
+        minute = minute.toInt(),
+    )
+}
+
+fun String.toScheduledDateTime(): Pair<String, String>? {
+    val components = toScheduleComponents() ?: return null
+    val scheduledDate = "%04d-%02d-%02d".format(components.year, components.month, components.day)
+    val scheduledTime = "%02d:%02d:00".format(components.hour, components.minute)
+    return scheduledDate to scheduledTime
+}
+
+fun String.toMeetingPurposeType(): MeetingPurposeType? =
+    MeetingPurposeType.entries.find { it.label == this }
+
