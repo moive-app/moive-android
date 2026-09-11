@@ -181,7 +181,7 @@ private fun HomeScreen(
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
-            if (uiState.myMeetingList.isEmpty()) {
+            if (uiState.displayedMyMeetingList.isEmpty()) {
                 item {
                     HomeEmptyMeetingList(
                         modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
@@ -189,7 +189,7 @@ private fun HomeScreen(
                 }
             } else {
                 items(
-                    items = uiState.myMeetingList,
+                    items = uiState.displayedMyMeetingList,
                     key = { it.id },
                 ) { meeting ->
                     MyMeetingCardItem(
