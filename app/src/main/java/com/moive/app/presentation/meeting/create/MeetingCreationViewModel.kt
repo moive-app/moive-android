@@ -85,11 +85,11 @@ class MeetingCreationViewModel @Inject constructor(
                 scheduledTime = scheduledTime,
                 purposeType = currentState.selectedMeetingPurpose.toMeetingPurposeType() ?: MeetingPurposeType.ETC,
             )
-                .onSuccess {
-                    _sideEffect.send(SideEffect.NavigateToMeetingDetail)
+                .onSuccess { meeting ->
                     _uiState.update {
                         it.copy(meetingCreationUiState = MeetingCreationUiState.Success)
                     }
+                    _sideEffect.send(SideEffect.NavigateToMeetingDetail(meeting.meetingId))
                 }
                 .onFailure { error ->
                     Timber.tag(MEETING_CREATION_TAG).e(error, CREATE_MEETING_FAILURE_MESSAGE)

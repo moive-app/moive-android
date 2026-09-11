@@ -47,7 +47,7 @@ interface MeetingCreationContract {
     }
 
     sealed class SideEffect {
-        data object NavigateToMeetingDetail : SideEffect()
+        data class NavigateToMeetingDetail(val meetingId: Long) : SideEffect()
     }
 
     companion object {

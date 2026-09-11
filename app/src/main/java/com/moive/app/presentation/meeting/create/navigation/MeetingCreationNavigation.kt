@@ -23,8 +23,9 @@ fun NavGraphBuilder.meetingCreationGraph(
     composable<MeetingCreation> {
         MeetingCreationRoute(
             navigateBack = navController.safePopBackStack(),
-            navigateToMeetingDetail = {
+            navigateToMeetingDetail = { meetingId ->
                 navController.navigateToMeetingDetail(
+                    meetingId = meetingId,
                     navOptions = navOptions {
                         popUpTo<MeetingCreation> {
                             inclusive = true
