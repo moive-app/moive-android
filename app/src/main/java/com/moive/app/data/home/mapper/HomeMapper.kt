@@ -1,6 +1,5 @@
 package com.moive.app.data.home.mapper
 
-import com.moive.app.core.designsystem.component.chip.LabelType
 import com.moive.app.core.extensions.parseDate
 import com.moive.app.data.home.model.ConfirmedMeetingItemModel
 import com.moive.app.data.home.model.HomeModel
@@ -8,6 +7,7 @@ import com.moive.app.data.home.model.MyMeetingCardItemModel
 import com.moive.app.data.home.remote.dto.ConfirmedMeetingResponse
 import com.moive.app.data.home.remote.dto.HomeResponse
 import com.moive.app.data.home.remote.dto.MyMeetingResponse
+import com.moive.app.data.meeting.mapper.toLabelType
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -43,16 +43,11 @@ fun MyMeetingResponse.toModel(): MyMeetingCardItemModel =
         extraParticipantCount = (participantCnt - participantProfileImages.size).coerceAtLeast(0),
     )
 
-private fun String.toLabelType(): LabelType = when (this) {
-    "CONDITION_INPUT" -> LabelType.CONDITION
-    "VOTING" -> LabelType.VOTING
-    "CONFIRMED" -> LabelType.CONFIRMED
-    "COMPLETED" -> LabelType.COMPLETE
-    else -> LabelType.CONDITION
-}
-
 enum class MeetingTab(val label: String) {
     ALL("전체"),
     UPCOMING("예정"),
     PAST("지난 모임"),
 }
+
+fun String.toMeetingTab(): MeetingTab =
+    MeetingTab.entries.find { it.label == this } ?: MeetingTab.ALL

@@ -25,9 +25,6 @@ interface HomeContract {
     }
 }
 
-fun String.toMeetingTab(): MeetingTab =
-    MeetingTab.entries.find { it.label == this } ?: MeetingTab.ALL
-
 sealed interface HomeUiState {
     data object Idle : HomeUiState
     data object Loading : HomeUiState
