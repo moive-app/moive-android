@@ -20,4 +20,7 @@ class MeetingRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getMeetingDetail(meetingId: Long): BaseResponse<MeetingDetailResponse> =
         meetingService.getMeetingDetail(meetingId)
+
+    override suspend fun deleteMeeting(meetingId: Long): BaseResponse<Unit> =
+        meetingService.deleteMeeting(meetingId)
 }

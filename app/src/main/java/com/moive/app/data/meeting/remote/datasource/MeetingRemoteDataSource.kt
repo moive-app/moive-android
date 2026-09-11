@@ -12,4 +12,6 @@ interface MeetingRemoteDataSource {
     suspend fun getMeetingList(filter: String, cursor: Long?, size: Int): BaseResponse<MeetingListResponse>
 
     suspend fun getMeetingDetail(meetingId: Long): BaseResponse<MeetingDetailResponse>
+
+    suspend fun deleteMeeting(meetingId: Long): BaseResponse<Unit>
 }
