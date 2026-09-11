@@ -3,6 +3,7 @@ package com.moive.app.presentation.meeting.create
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -10,8 +11,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
 import com.moive.app.core.designsystem.theme.MoiveTheme
+import com.moive.app.presentation.meeting.create.MeetingCreationContract.SideEffect
 import com.moive.app.presentation.meeting.create.MeetingCreationContract.Step
 import com.moive.app.presentation.meeting.create.component.MeetingCreationContent
 import com.moive.app.presentation.meeting.create.component.MeetingInfoConfirmContent
@@ -25,9 +31,21 @@ fun MeetingCreationRoute(
     viewModel: MeetingCreationViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val showToast = LocalToastTrigger.current
+    val lifeCycleOwner = LocalLifecycleOwner.current
 
     BackHandler(enabled = uiState.step != Step.CREATE) {
         viewModel.backToCreateStep()
+    }
+
+    LaunchedEffect(lifeCycleOwner) {
+        lifeCycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.sideEffect.collect { sideEffect ->
+                when (sideEffect) {
+                    SideEffect.NavigateToMeetingDetail -> navigateToMeetingDetail()
+                }
+            }
+        }
     }
 
     MeetingCreationScreen(
@@ -41,7 +59,7 @@ fun MeetingCreationRoute(
             viewModel.moveToConfirmStep()
         },
         onConfirmBackClick = viewModel::backToCreateStep,
-        onConfirmButtonClick = navigateToMeetingDetail,
+        onConfirmButtonClick = viewModel::postMeetingCreation,
         modifier = modifier,
     )
 }

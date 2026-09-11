@@ -10,17 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.moive.app.core.designsystem.component.chip.MoiveSingleSelectChipList
 import com.moive.app.core.designsystem.component.textfield.MoiveInputTextField
@@ -137,7 +133,7 @@ fun MeetingCreationContent(
 
                     MoiveInputTextField(
                         state = uiState.meetingSchedule,
-                        placeholder = "예) 8월 29일 14:00",
+                        placeholder = "예) 2026년 8월 29일 14:00",
                         onKeyboardAction = {
                             focusManager.clearFocus()
                         },
