@@ -37,7 +37,7 @@ fun MeetingCardList(
     LazyColumn(
         state = listState,
         modifier = modifier,
-        contentPadding = PaddingValues(top = 14.dp, bottom = 24.dp),
+        contentPadding = PaddingValues(top = 14.dp, bottom = 48.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(

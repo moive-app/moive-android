@@ -104,6 +104,7 @@ private fun HomeScreen(
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 48.dp)
         ) {
             item {
                 Text(
