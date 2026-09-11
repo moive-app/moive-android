@@ -4,6 +4,7 @@ import com.moive.app.data.common.dto.BaseResponse
 import com.moive.app.data.meeting.remote.dto.MeetingCreationRequest
 import com.moive.app.data.meeting.remote.dto.MeetingCreationResponse
 import com.moive.app.data.meeting.remote.dto.MeetingDetailResponse
+import com.moive.app.data.meeting.remote.dto.MeetingJoinResponse
 import com.moive.app.data.meeting.remote.dto.MeetingListResponse
 
 interface MeetingRemoteDataSource {
@@ -14,4 +15,6 @@ interface MeetingRemoteDataSource {
     suspend fun getMeetingDetail(meetingId: Long): BaseResponse<MeetingDetailResponse>
 
     suspend fun deleteMeeting(meetingId: Long): BaseResponse<Unit>
+
+    suspend fun postMeetingJoin(inviteCode: String): BaseResponse<MeetingJoinResponse>
 }

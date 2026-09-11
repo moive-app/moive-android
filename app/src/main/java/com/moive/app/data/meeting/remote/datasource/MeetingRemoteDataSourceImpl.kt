@@ -4,6 +4,7 @@ import com.moive.app.data.common.dto.BaseResponse
 import com.moive.app.data.meeting.remote.dto.MeetingCreationRequest
 import com.moive.app.data.meeting.remote.dto.MeetingCreationResponse
 import com.moive.app.data.meeting.remote.dto.MeetingDetailResponse
+import com.moive.app.data.meeting.remote.dto.MeetingJoinResponse
 import com.moive.app.data.meeting.remote.dto.MeetingListResponse
 import com.moive.app.data.meeting.remote.service.MeetingService
 import javax.inject.Inject
@@ -23,4 +24,7 @@ class MeetingRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun deleteMeeting(meetingId: Long): BaseResponse<Unit> =
         meetingService.deleteMeeting(meetingId)
+
+    override suspend fun postMeetingJoin(inviteCode: String): BaseResponse<MeetingJoinResponse> =
+        meetingService.postMeetingJoin(inviteCode)
 }
