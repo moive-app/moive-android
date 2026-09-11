@@ -5,11 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.moive.app.data.meeting.repository.MeetingRepository
+import com.moive.app.presentation.meeting.detail.MeetingDetailContract.SideEffect
 import com.moive.app.presentation.meeting.detail.navigation.MeetingDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -26,11 +29,15 @@ class MeetingDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MeetingDetailContract.State())
     val uiState = _uiState.asStateFlow()
 
-    private var job: Job? = null
+    private val _sideEffect = Channel<SideEffect>(Channel.BUFFERED)
+    val sideEffect = _sideEffect.receiveAsFlow()
+
+    private var getMeetingDetailJob: Job? = null
+    private var deleteMeetingJob: Job? = null
 
     fun getMeetingDetail() {
-        job?.cancel()
-        job = viewModelScope.launch {
+        getMeetingDetailJob?.cancel()
+        getMeetingDetailJob = viewModelScope.launch {
             _uiState.update { it.copy(meetingDetailUiState = MeetingDetailUiState.Loading) }
 
             meetingRepository.getMeetingDetail(meetingId)
@@ -68,7 +75,16 @@ class MeetingDetailViewModel @Inject constructor(
     }
 
     fun deleteMeeting() {
-        // TODO: 모임 나가기 API 연동
+        if (deleteMeetingJob?.isActive == true) return
+        deleteMeetingJob = viewModelScope.launch {
+            meetingRepository.deleteMeeting(meetingId)
+                .onSuccess {
+                    _sideEffect.send(SideEffect.NavigateBack)
+                }
+                .onFailure { error ->
+                    Timber.tag(TAG).e(error)
+                }
+        }
     }
 
     companion object {

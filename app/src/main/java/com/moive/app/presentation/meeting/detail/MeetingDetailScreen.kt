@@ -69,6 +69,16 @@ fun MeetingDetailRoute(
         }
     }
 
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.sideEffect.collect { sideEffect ->
+                when (sideEffect) {
+                    MeetingDetailContract.SideEffect.NavigateBack -> navigateBack()
+                }
+            }
+        }
+    }
+
     MeetingDetailScreen(
         innerPadding = innerPadding,
         uiState = uiState,
@@ -93,7 +103,6 @@ fun MeetingDetailRoute(
         onLeaveMeetingClick = {
             viewModel.dismissLeaveMeetingDialog()
             viewModel.deleteMeeting()
-            navigateBack()
         },
         modifier = modifier,
     )
