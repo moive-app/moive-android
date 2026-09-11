@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         pendingInviteCode.value = intent.extractInviteCode()
+        setIntent(Intent())
         setContent {
             MoiveTheme {
                 val appState = rememberMainAppState()
@@ -68,8 +69,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        setIntent(intent)
         pendingInviteCode.value = intent.extractInviteCode()
+        setIntent(Intent())
     }
 
     companion object {
