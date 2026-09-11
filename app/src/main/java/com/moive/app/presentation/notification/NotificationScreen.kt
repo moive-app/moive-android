@@ -36,7 +36,7 @@ import kotlinx.collections.immutable.ImmutableList
 fun NotificationRoute(
     innerPadding: PaddingValues,
     navigateBack: () -> Unit,
-    navigateToMeetingDetail: () -> Unit,
+    navigateToMeetingDetail: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NotificationViewModel = hiltViewModel(),
 ) {
@@ -55,7 +55,7 @@ fun NotificationRoute(
         notifications = uiState.notifications,
         isNotificationPermissionGranted = uiState.isNotificationPermissionGranted,
         onBackClick = navigateBack,
-        onNotificationItemClick = { navigateToMeetingDetail() },
+        onNotificationItemClick = navigateToMeetingDetail,
         onNotificationSettingClick = { context.navigateToAppNotificationSettings() },
         modifier = modifier,
     )
@@ -111,7 +111,7 @@ private fun NotificationScreen(
                 ) { item ->
                     NotificationListItem(
                         item = item,
-                        onItemClick = { onNotificationItemClick(item.id) },
+                        onItemClick = { onNotificationItemClick(item.meetingId) },
                     )
 
                     Spacer(modifier.height(12.dp))

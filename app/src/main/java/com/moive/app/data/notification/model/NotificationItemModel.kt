@@ -2,6 +2,7 @@ package com.moive.app.data.notification.model
 
 data class NotificationItemModel(
     val id: Long,
+    val meetingId: Long,
     val title: String,
     val description: String,
     val time: String,
