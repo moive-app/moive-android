@@ -183,7 +183,7 @@ private fun HomeScreen(
                 ) { meeting ->
                     MyMeetingCardItem(
                         title = meeting.title,
-                        dateTime = meeting.dateTime,
+                        dateTime = meeting.dateTime ?: "일정 미정",
                         participantImageList = meeting.participantImageUrls,
                         extraCount = meeting.extraParticipantCount,
                         statusText = meeting.statusText,
