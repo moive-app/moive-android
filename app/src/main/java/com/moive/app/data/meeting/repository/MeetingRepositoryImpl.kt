@@ -6,6 +6,7 @@ import com.moive.app.data.common.dto.checkSuccess
 import com.moive.app.data.meeting.mapper.toModel
 import com.moive.app.data.meeting.model.MeetingCreationModel
 import com.moive.app.data.meeting.model.MeetingDetailModel
+import com.moive.app.data.meeting.model.MeetingJoinModel
 import com.moive.app.data.meeting.model.MeetingListModel
 import com.moive.app.data.meeting.mapper.MeetingPurposeType
 import com.moive.app.data.meeting.remote.datasource.MeetingRemoteDataSource
@@ -48,5 +49,10 @@ class MeetingRepositoryImpl @Inject constructor(
     override suspend fun deleteMeeting(meetingId: Long): Result<Unit> =
         suspendRunCatching {
             meetingRemoteDataSource.deleteMeeting(meetingId).checkSuccess()
+        }
+
+    override suspend fun postMeetingJoin(inviteCode: String): Result<MeetingJoinModel> =
+        suspendRunCatching {
+            meetingRemoteDataSource.postMeetingJoin(inviteCode).checkData().toModel()
         }
 }
