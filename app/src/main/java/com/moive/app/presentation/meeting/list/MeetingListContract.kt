@@ -2,8 +2,8 @@ package com.moive.app.presentation.meeting.list
 
 import androidx.compose.runtime.Immutable
 import com.moive.app.core.designsystem.component.chip.LabelType
+import com.moive.app.data.home.mapper.MeetingTab
 import com.moive.app.data.meeting.model.MeetingListCardItemModel
-import com.moive.app.presentation.home.HomeContract.MeetingTab
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
