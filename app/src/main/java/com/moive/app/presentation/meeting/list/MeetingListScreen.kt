@@ -37,6 +37,7 @@ fun MeetingListRoute(
         onBackClick = navigateBack,
         onTabClick = viewModel::postMeetingFilter,
         onMeetingClick = { navigateToMeetingDetail() },
+        onLoadMore = { viewModel.getMeetingList(loadMore = true) },
         modifier = modifier,
     )
 }
@@ -48,6 +49,7 @@ private fun MeetingListScreen(
     onBackClick: () -> Unit,
     onTabClick: (String) -> Unit,
     onMeetingClick: (Long) -> Unit,
+    onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -73,6 +75,8 @@ private fun MeetingListScreen(
         MeetingCardList(
             meetings = uiState.meetingList,
             onMeetingClick = onMeetingClick,
+            isLoading = uiState.meetingListUiState is MeetingListUiState.Loading,
+            onLoadMore = onLoadMore,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -91,6 +95,7 @@ private fun MeetingListScreenPreview() {
             onBackClick = {},
             onTabClick = {},
             onMeetingClick = {},
+            onLoadMore = {},
         )
     }
 }
