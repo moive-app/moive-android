@@ -46,6 +46,9 @@ class MeetingDetailViewModel @Inject constructor(
                         it.copy(
                             meetingDetailUiState = MeetingDetailUiState.Success,
                             status = detail.status,
+                            hasSchedule = detail.hasSchedule,
+                            scheduledDate = detail.scheduledDate,
+                            scheduledTime = detail.scheduledTime,
                             meetingName = detail.name,
                             meetingPurpose = detail.purposeType.label,
                             inviteCode = detail.inviteCode,

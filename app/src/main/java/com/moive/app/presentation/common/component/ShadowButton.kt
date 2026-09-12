@@ -22,6 +22,7 @@ fun ShadowButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     showShadow: Boolean = true,
+    isLoading: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -54,6 +55,7 @@ fun ShadowButton(
             type = MoiveButtonType.PRIMARY,
             onClick = onClick,
             enabled = isEnabled,
+            isLoading = isLoading,
             modifier = Modifier
                 .padding(vertical = 12.dp, horizontal = 20.dp),
         )

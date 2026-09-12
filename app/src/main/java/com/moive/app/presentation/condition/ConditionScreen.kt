@@ -3,12 +3,18 @@ package com.moive.app.presentation.condition
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
 import com.moive.app.core.designsystem.theme.MoiveTheme
+import com.moive.app.presentation.condition.ConditionContract.SideEffect
 import com.moive.app.presentation.condition.ConditionContract.Step
 import com.moive.app.presentation.condition.component.ConditionConfirmContent
 import com.moive.app.presentation.condition.component.ConditionInputContent
@@ -23,9 +29,22 @@ fun ConditionRoute(
     viewModel: ConditionViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val showToast = LocalToastTrigger.current
 
     BackHandler(enabled = uiState.step != Step.INPUT) {
         viewModel.backToInputStep()
+    }
+
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.sideEffect.collect { sideEffect ->
+                when (sideEffect) {
+                    SideEffect.NavigateToMeetingDetail -> navigateToMeetingDetail()
+                    is SideEffect.OnShowToast -> showToast.invoke(sideEffect.msg, sideEffect.type)
+                }
+            }
+        }
     }
 
     ConditionScreen(
@@ -40,6 +59,7 @@ fun ConditionRoute(
         onCalendarTimeClick = viewModel::onCalendarTimeClick,
         onSaveDateClick = viewModel::onDateSaveClick,
         onNextDateClick = viewModel::onDateNextClick,
+        onDateTimeChipClick = viewModel::onDateTimeChipClick,
         onPlaceBoxClick = viewModel::onPlaceSearchBoxClick,
         onPlaceBackClick = viewModel::backToInputStep,
         onPlaceSearchSubmit = { viewModel.postPlaceSearch(uiState.searchFieldState.text.toString()) },
@@ -47,7 +67,7 @@ fun ConditionRoute(
         onTravelTimeClick = viewModel::onTravelTimeClick,
         onPreferenceClick = viewModel::onPreferenceClick,
         onNextButtonClick = viewModel::onNextButtonClick,
-        onConfirmButtonClick = navigateToMeetingDetail,
+        onConfirmButtonClick = viewModel::postCondition,
         modifier = modifier,
     )
 }
@@ -65,6 +85,7 @@ private fun ConditionScreen(
     onCalendarTimeClick: (String) -> Unit,
     onSaveDateClick: () -> Unit,
     onNextDateClick: () -> Unit,
+    onDateTimeChipClick: (DateTimeSelection) -> Unit,
     onPlaceBoxClick: () -> Unit,
     onPlaceBackClick: () -> Unit,
     onPlaceSearchSubmit: () -> Unit,
@@ -87,6 +108,7 @@ private fun ConditionScreen(
             onCalendarTimeClick = onCalendarTimeClick,
             onSaveDateClick = onSaveDateClick,
             onNextDateClick = onNextDateClick,
+            onDateTimeChipClick = onDateTimeChipClick,
             onPlaceBoxClick = onPlaceBoxClick,
             onTimeClick = onTravelTimeClick,
             onPreferenceClick = onPreferenceClick,
@@ -131,6 +153,7 @@ private fun ConditionScreenPreview() {
             onCalendarTimeClick = {},
             onSaveDateClick = {},
             onNextDateClick = {},
+            onDateTimeChipClick = {},
             onPlaceBoxClick = {},
             onPlaceBackClick = {},
             onPlaceSearchSubmit = {},

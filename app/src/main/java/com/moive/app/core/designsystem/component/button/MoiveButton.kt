@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,11 +37,12 @@ fun MoiveButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    isLoading: Boolean = false,
     icon: ImageVector? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    val style = type.getStyle(enabled = enabled, isPressed = isPressed)
+    val style = type.getStyle(enabled = enabled && !isLoading, isPressed = isPressed)
     val shape = RoundedCornerShape(radius.md)
 
     Row(
@@ -57,27 +59,35 @@ fun MoiveButton(
             )
             .noRippleClickable(
                 onClick = onClick,
-                isEnabled = enabled,
+                isEnabled = enabled && !isLoading,
                 interactionSource = interactionSource,
             )
             .padding(vertical = size.verticalPadding),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (icon != null) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = style.contentColor,
+        if (isLoading) {
+            CircularProgressIndicator(
+                color = style.contentColor,
+                strokeWidth = 2.dp,
                 modifier = Modifier.size(20.dp),
             )
-            Spacer(modifier = Modifier.width(6.dp))
+        } else {
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = style.contentColor,
+                    modifier = Modifier.size(20.dp),
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+            }
+            Text(
+                text = text,
+                color = style.contentColor,
+                style = size.textStyle(),
+            )
         }
-        Text(
-            text = text,
-            color = style.contentColor,
-            style = size.textStyle(),
-        )
     }
 }
 
