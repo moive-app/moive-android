@@ -6,6 +6,7 @@ import com.moive.app.data.meeting.remote.dto.MeetingCreationResponse
 import com.moive.app.data.meeting.remote.dto.MeetingDetailResponse
 import com.moive.app.data.meeting.remote.dto.MeetingJoinResponse
 import com.moive.app.data.meeting.remote.dto.MeetingListResponse
+import com.moive.app.data.meeting.remote.dto.MeetingResultResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -31,6 +32,11 @@ interface MeetingService {
     suspend fun getMeetingDetail(
         @Path("meetingId") meetingId: Long,
     ): BaseResponse<MeetingDetailResponse>
+
+    @GET("meetings/{meetingId}")
+    suspend fun getMeetingResult(
+        @Path("meetingId") meetingId: Long,
+    ): BaseResponse<MeetingResultResponse>
 
     @DELETE("meetings/{meetingId}/leave")
     suspend fun deleteMeeting(
