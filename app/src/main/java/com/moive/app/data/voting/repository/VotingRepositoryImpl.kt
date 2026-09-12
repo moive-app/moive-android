@@ -4,6 +4,7 @@ import com.moive.app.core.utils.suspendRunCatching
 import com.moive.app.data.common.dto.checkData
 import com.moive.app.data.voting.mapper.toModel
 import com.moive.app.data.voting.model.PlaceRecommendedPlaceCardItemModel
+import com.moive.app.data.voting.model.RecommendedPlaceDetailModel
 import com.moive.app.data.voting.model.RegionPinModel
 import com.moive.app.data.voting.remote.datasource.VotingRemoteDataSource
 import javax.inject.Inject
@@ -29,5 +30,16 @@ class VotingRepositoryImpl @Inject constructor(
                 .checkData()
                 .places
                 .map { it.toModel() }
+        }
+
+    override suspend fun getRecommendedPlaceDetail(
+        meetingId: Long,
+        recommendedAreaId: Long,
+        recommendedPlaceId: Long,
+    ): Result<RecommendedPlaceDetailModel> =
+        suspendRunCatching {
+            votingRemoteDataSource.getRecommendedPlaceDetail(meetingId, recommendedAreaId, recommendedPlaceId)
+                .checkData()
+                .toModel()
         }
 }
