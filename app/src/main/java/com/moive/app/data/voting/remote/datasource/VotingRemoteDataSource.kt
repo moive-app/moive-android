@@ -4,6 +4,7 @@ import com.moive.app.data.common.dto.BaseResponse
 import com.moive.app.data.voting.remote.dto.RecommendedAreaListResponse
 import com.moive.app.data.voting.remote.dto.RecommendedPlaceDetailResponse
 import com.moive.app.data.voting.remote.dto.RecommendedPlaceListResponse
+import com.moive.app.data.voting.remote.dto.RecommendedPlaceRouteResponse
 
 interface VotingRemoteDataSource {
     suspend fun getRecommendedAreas(meetingId: Long): BaseResponse<RecommendedAreaListResponse>
@@ -18,4 +19,9 @@ interface VotingRemoteDataSource {
         recommendedAreaId: Long,
         recommendedPlaceId: Long,
     ): BaseResponse<RecommendedPlaceDetailResponse>
+
+    suspend fun getRecommendedPlaceRoute(
+        meetingId: Long,
+        recommendedPlaceId: Long,
+    ): BaseResponse<RecommendedPlaceRouteResponse>
 }

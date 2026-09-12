@@ -4,6 +4,7 @@ import com.moive.app.data.common.dto.BaseResponse
 import com.moive.app.data.voting.remote.dto.RecommendedAreaListResponse
 import com.moive.app.data.voting.remote.dto.RecommendedPlaceDetailResponse
 import com.moive.app.data.voting.remote.dto.RecommendedPlaceListResponse
+import com.moive.app.data.voting.remote.dto.RecommendedPlaceRouteResponse
 import com.moive.app.data.voting.remote.service.VotingService
 import javax.inject.Inject
 
@@ -26,4 +27,10 @@ class VotingRemoteDataSourceImpl @Inject constructor(
         recommendedPlaceId: Long,
     ): BaseResponse<RecommendedPlaceDetailResponse> =
         votingService.getRecommendedPlaceDetail(meetingId, recommendedAreaId, recommendedPlaceId)
+
+    override suspend fun getRecommendedPlaceRoute(
+        meetingId: Long,
+        recommendedPlaceId: Long,
+    ): BaseResponse<RecommendedPlaceRouteResponse> =
+        votingService.getRecommendedPlaceRoute(meetingId, recommendedPlaceId)
 }
