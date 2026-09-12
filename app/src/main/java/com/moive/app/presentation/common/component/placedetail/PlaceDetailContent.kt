@@ -50,7 +50,6 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.customShadow
-import com.moive.app.data.voting.model.PlaceDetailImageItemModel
 import com.moive.app.data.voting.model.PlaceDetailModel
 import com.moive.app.data.voting.model.PlaceDetailPinLatLang
 import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
@@ -67,7 +66,7 @@ fun PlaceDetailContent(
     modifier: Modifier = Modifier,
     onSelectButtonClick: () -> Unit = {},
 ) {
-    val mapView = rememberPlaceRouteMapView(place)
+    val mapView = rememberPlaceRouteMapView(place, cornerRadius = radius.lg)
 
     Column(
         modifier = modifier
@@ -154,10 +153,10 @@ fun PlaceDetailContent(
                 ) {
                     items(
                         items = place.imageList,
-                        key = { it.id }
-                    ) { img ->
+                        key = { it }
+                    ) { imageUrl ->
                         UrlImage(
-                            url = img.imageUrl,
+                            url = imageUrl,
                             modifier = Modifier
                                 .width(152.dp)
                                 .aspectRatio(152f / 168f)
@@ -195,9 +194,6 @@ fun PlaceDetailContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(180.dp)
-                            .clip(
-                                shape = RoundedCornerShape(radius.lg),
-                            )
                             .pointerInput(mapView) {
                                 awaitEachGesture {
                                     awaitFirstDown(requireUnconsumed = false)
@@ -348,11 +344,12 @@ private fun PlaceDetailContentPreview() {
                 placeName = "장소명(상호명)",
                 category = "카페",
                 address = "서울시 강남구 워시기워시기 123",
+                areaName = "신논현동",
                 totalMemberCount = 7,
                 matchMemberCount = 4,
                 imageList = listOf(
-                    PlaceDetailImageItemModel(id = 1L, imageUrl = ""),
-                    PlaceDetailImageItemModel(id = 2L, imageUrl = ""),
+                    "https://example.com/1.jpg",
+                    "https://example.com/2.jpg",
                 ),
                 startPinLatLang = PlaceDetailPinLatLang(
                     latitude = 37.5044,

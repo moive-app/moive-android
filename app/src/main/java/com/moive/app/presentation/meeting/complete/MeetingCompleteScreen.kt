@@ -13,12 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,13 +90,13 @@ private fun MeetingCompleteScreen(
                     val mapView = rememberMeetingPlaceMapView(
                         latitude = uiState.latitude,
                         longitude = uiState.longitude,
+                        cornerRadius = radius.xl,
                     )
 
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(320f / 167f)
-                            .clip(RoundedCornerShape(radius.xl))
                             .pointerInput(mapView) {
                                 awaitEachGesture {
                                     awaitFirstDown(requireUnconsumed = false)

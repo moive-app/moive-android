@@ -31,11 +31,11 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.noRippleClickable
-import com.moive.app.data.voting.model.PlaceRecommendationCardItemModel
+import com.moive.app.data.voting.model.PlaceRecommendedPlaceCardItemModel
 
 @Composable
 fun PlaceRecommendationCardItem(
-    place: PlaceRecommendationCardItemModel,
+    place: PlaceRecommendedPlaceCardItemModel,
     isSelected: Boolean,
     onItemClick: () -> Unit,
     onSelectClick: () -> Unit,
@@ -167,18 +167,14 @@ private fun PlaceStat(
 private fun PlaceRecommendationCardItemPreview() {
     MoiveTheme {
         PlaceRecommendationCardItem(
-            place = PlaceRecommendationCardItemModel(
+            place = PlaceRecommendedPlaceCardItemModel(
                 id = 1L,
                 name = "장소명(상호명) 1dddddddddddddddddddddddddddddddddddddddddd",
                 category = "카페",
-                address = "서울시 강남구 워시기워시기 123",
                 matchRate = 60,
                 avgTravelMinutes = 36,
                 maxTravelMinutes = 41,
                 tasteMatchCount = 4,
-                tasteMatchTotal = 7,
-                totalTravelMinutes = 34,
-                totalTravelFare = 1_650,
             ),
             isSelected = true,
             onItemClick = {},

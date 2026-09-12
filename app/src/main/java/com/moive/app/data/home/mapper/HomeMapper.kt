@@ -37,10 +37,10 @@ fun MyMeetingResponse.toModel(): MyMeetingCardItemModel =
         } else {
             null
         },
-        participantImageUrls = participantProfileImages.toPersistentList(),
+        participantImageUrls = participantImages.toImmutableList(),
         statusText = statusLabel,
         statusLabelType = status.toLabelType(),
-        extraParticipantCount = (participantCnt - participantProfileImages.size).coerceAtLeast(0),
+        extraParticipantCount = (participantCnt - participantImages.size).coerceAtLeast(0),
     )
 
 enum class MeetingTab(val label: String) {

@@ -8,8 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.route.RouteLine
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
@@ -20,8 +23,10 @@ import com.moive.app.data.voting.model.PlaceDetailPinLatLang
 import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
 import com.moive.app.presentation.voting.util.rememberMapViewWithLifecycle
 
+private const val MAP_BOUNDS_PADDING_PX = 150
+
 @Composable
-fun rememberPlaceRouteMapView(place: PlaceDetailModel): View {
+fun rememberPlaceRouteMapView(place: PlaceDetailModel, cornerRadius: Dp = 0.dp): View {
     var kakaoMap by remember { mutableStateOf<KakaoMap?>(null) }
     var startPinLabel by remember { mutableStateOf<Label?>(null) }
     var endPinLabel by remember { mutableStateOf<Label?>(null) }
@@ -35,6 +40,7 @@ fun rememberPlaceRouteMapView(place: PlaceDetailModel): View {
         locationX = (place.startPinLatLang.longitude + place.endPinLatLang.longitude) / 2,
         locationY = (place.startPinLatLang.latitude + place.endPinLatLang.latitude) / 2,
         onMapReady = { kakaoMap = it },
+        cornerRadius = cornerRadius,
     )
 
     LaunchedEffect(kakaoMap, startPinBitmap, endPinBitmap, place.routeLatLang) {
@@ -46,13 +52,19 @@ fun rememberPlaceRouteMapView(place: PlaceDetailModel): View {
         endPinLabel?.remove()
         routeLine?.remove()
 
+        val routePoints = place.routeLatLang.toLatLngList()
+
         routeLine = map.addRouteLine(
-            points = place.routeLatLang.toLatLngList(),
+            points = routePoints,
             lineWidth = 6f,
             lineColor = routeLineColor,
         )
         startPinLabel = map.addPinMarker(place.startPinLatLang, startBitmap)
         endPinLabel = map.addPinMarker(place.endPinLatLang, endBitmap)
+
+        if (routePoints.isNotEmpty()) {
+            map.moveCamera(CameraUpdateFactory.fitMapPoints(routePoints.toTypedArray(), MAP_BOUNDS_PADDING_PX))
+        }
     }
 
     return mapView

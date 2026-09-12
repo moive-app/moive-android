@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
@@ -35,7 +36,7 @@ import com.moive.app.presentation.voting.util.rememberMapViewWithLifecycle
 private const val END_PIN_ANCHOR_Y_FRACTION = 30f / 31f
 
 @Composable
-fun rememberMeetingPlaceMapView(latitude: Double, longitude: Double): View {
+fun rememberMeetingPlaceMapView(latitude: Double, longitude: Double, cornerRadius: Dp = 0.dp): View {
     var kakaoMap by remember { mutableStateOf<KakaoMap?>(null) }
     var pinLabel by remember { mutableStateOf<Label?>(null) }
     val pinBitmap = rememberEndPinBitmap()
@@ -44,6 +45,7 @@ fun rememberMeetingPlaceMapView(latitude: Double, longitude: Double): View {
         locationX = longitude,
         locationY = latitude,
         onMapReady = { kakaoMap = it },
+        cornerRadius = cornerRadius,
     )
 
     LaunchedEffect(kakaoMap, pinBitmap, latitude, longitude) {

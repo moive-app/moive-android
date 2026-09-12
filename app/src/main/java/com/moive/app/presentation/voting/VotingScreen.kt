@@ -1,7 +1,9 @@
 package com.moive.app.presentation.voting
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -10,7 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.theme.MoiveTheme
-import com.moive.app.core.extensions.openKakaoMapRoute
+import com.moive.app.core.extensions.openUrl
+import com.moive.app.data.voting.model.RegionPinModel
 import com.moive.app.presentation.common.component.placedetail.PlaceDetailContent
 import com.moive.app.presentation.voting.VotingContract.Step
 import com.moive.app.presentation.voting.component.PlaceListContent
@@ -42,14 +45,11 @@ fun VotingRoute(
         onBackClick = navigateBack,
         onDetailBackClick = viewModel::backToPlaceList,
         onKakaoMapClick = {
-            val place = uiState.currentPlaceDetail
-            val opened = context.openKakaoMapRoute(
-                startLatitude = place.startPinLatLang.latitude,
-                startLongitude = place.startPinLatLang.longitude,
-                endLatitude = place.endPinLatLang.latitude,
-                endLongitude = place.endPinLatLang.longitude,
-            )
-            viewModel.onKakaoMapRouteOpened(opened)
+            val landingUrl = uiState.currentPlaceDetail.landingUrl
+            if (landingUrl.isNotBlank()) {
+                val opened = context.openUrl(landingUrl)
+                viewModel.onKakaoMapRouteOpened(opened)
+            }
         },
         onSelectButtonClick = viewModel::onSelectButtonClick,
         onCompleteButtonClick = navigateToVoteStatus,
@@ -61,7 +61,7 @@ fun VotingRoute(
 private fun VotingScreen(
     innerPadding: PaddingValues,
     uiState: VotingContract.State,
-    onRegionPinClick: (String) -> Unit,
+    onRegionPinClick: (RegionPinModel) -> Unit,
     onPlaceItemClick: (Long) -> Unit,
     onCheckboxClick: (Long) -> Unit,
     onBottomSheetDismiss: () -> Unit,
@@ -73,8 +73,10 @@ private fun VotingScreen(
     onCompleteButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (uiState.step) {
-        Step.RECOMMENDATION -> PlaceListContent(
+    Box(modifier = modifier.fillMaxSize()) {
+        // 카카오맵 뷰를 step 전환마다 파괴/재생성하면 SDK가 새 엔진을 제대로 못 띄우는 문제가 있어,
+        // Detail로 넘어가도 이 맵은 계속 마운트된 채로 두고 위에 PlaceDetailContent를 덮어씌운다.
+        PlaceListContent(
             innerPadding = innerPadding,
             regionList = uiState.regionList,
             selectedRegionName = uiState.selectedRegionName,
@@ -88,19 +90,19 @@ private fun VotingScreen(
             onResetClick = onResetClick,
             onBackClick = onBackClick,
             onCompleteButtonClick = onCompleteButtonClick,
-            modifier = modifier,
         )
 
-        Step.DETAIL -> PlaceDetailContent(
-            innerPadding = innerPadding,
-            place = uiState.currentPlaceDetail,
-            title = uiState.selectedRegionName ?: "추천 지역",
-            onBackClick = onDetailBackClick,
-            onKakaoMapClick = onKakaoMapClick,
-            showSelectButton = true,
-            onSelectButtonClick = onSelectButtonClick,
-            modifier = modifier,
-        )
+        if (uiState.step == Step.DETAIL) {
+            PlaceDetailContent(
+                innerPadding = innerPadding,
+                place = uiState.currentPlaceDetail,
+                title = uiState.currentPlaceDetail.areaName,
+                onBackClick = onDetailBackClick,
+                onKakaoMapClick = onKakaoMapClick,
+                showSelectButton = true,
+                onSelectButtonClick = onSelectButtonClick,
+            )
+        }
     }
 }
 

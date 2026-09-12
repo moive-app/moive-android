@@ -17,15 +17,13 @@ fun MeetingDetailResponse.toModel(): MeetingDetailModel =
         scheduledTime = scheduledTime,
         inviteCode = inviteCode,
         inviteUrl = inviteUrl,
-        participants = participants.mapIndexed { index, participant ->
-            participant.toModel(isMe = index == 0)
-        }.toImmutableList(),
+        participants = participants.map { it.toModel() }.toImmutableList(),
         homeMessage = homeMessage,
         primaryActionLabel = primaryActionLabel,
         primaryActionEnabled = primaryActionEnabled,
     )
 
-fun ParticipantResponse.toModel(isMe: Boolean): ParticipantItemModel =
+fun ParticipantResponse.toModel(): ParticipantItemModel =
     ParticipantItemModel(
         id = participantId,
         name = nickname,

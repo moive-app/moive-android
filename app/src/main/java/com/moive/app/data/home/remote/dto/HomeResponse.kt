@@ -47,8 +47,8 @@ data class MyMeetingResponse(
     val scheduledDate: String?,
     @SerialName("scheduledTime")
     val scheduledTime: String?,
-    @SerialName("participantProfileImages")
-    val participantProfileImages: List<String> = emptyList(),
+    @SerialName("participantImages")
+    val participantImages: List<String> = emptyList(),
     @SerialName("participantCnt")
     val participantCnt: Int,
 )

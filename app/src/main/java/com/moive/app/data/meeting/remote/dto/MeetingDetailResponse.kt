@@ -45,4 +45,6 @@ data class ParticipantResponse(
     val participantState: String,
     @SerialName("participantStateLabel")
     val participantStateLabel: String,
+    @SerialName("isMe")
+    val isMe: Boolean,
 )

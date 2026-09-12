@@ -32,7 +32,7 @@ fun NavGraphBuilder.meetingDetailGraph(
             navigateToCondition = { hasSchedule, scheduledDate, scheduledTime ->
                 navController.navigateToCondition(meetingId, hasSchedule, scheduledDate, scheduledTime)
             },
-            navigateToVoting = navController::navigateToVoting,
+            navigateToVoting = { navController.navigateToVoting(meetingId) },
             navigateToMeetingConfirmed = navController::navigateToMeetingConfirmed,
             navigateToMeetingComplete = navController::navigateToMeetingComplete,
             innerPadding = innerPadding,

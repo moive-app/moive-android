@@ -2,7 +2,6 @@ package com.moive.app.presentation.meeting.confirmed
 
 import androidx.compose.runtime.Immutable
 import com.moive.app.data.meeting.model.TravelParticipantModel
-import com.moive.app.data.voting.model.PlaceDetailImageItemModel
 import com.moive.app.data.voting.model.PlaceDetailModel
 import com.moive.app.data.voting.model.PlaceDetailPinLatLang
 import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
@@ -34,13 +33,10 @@ interface MeetingConfirmedContract {
             placeName = "장소명(상호명)",
             category = "카페",
             address = "서울시 강남구 워시기워시기 123",
+            areaName = "신논현동",
             totalMemberCount = 7,
             matchMemberCount = 4,
-            imageList = listOf(
-                PlaceDetailImageItemModel(id = 1L, imageUrl = ""),
-                PlaceDetailImageItemModel(id = 2L, imageUrl = ""),
-                PlaceDetailImageItemModel(id = 3L, imageUrl = ""),
-            ),
+            imageList = emptyList(),
             startPinLatLang = PlaceDetailPinLatLang(
                 latitude = 37.5044,
                 longitude = 127.0246,
