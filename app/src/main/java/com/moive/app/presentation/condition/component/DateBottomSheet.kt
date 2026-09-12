@@ -62,6 +62,7 @@ fun DateBottomSheet(
     onTimeClick: (String) -> Unit,
     onSaveDateClick: () -> Unit,
     onNextDateClick: () -> Unit,
+    onDateTimeChipClick: (DateTimeSelection) -> Unit,
     modifier: Modifier = Modifier,
     bottomSheetState: SheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
@@ -79,6 +80,7 @@ fun DateBottomSheet(
                 onNextMonthClick = onNextMonthClick,
                 onDayClick = onDayClick,
                 onTimeClick = onTimeClick,
+                onDateTimeChipClick = onDateTimeChipClick,
             )
         },
         buttonContent = {
@@ -113,6 +115,7 @@ private fun DateBottomSheetContent(
     onNextMonthClick: () -> Unit,
     onDayClick: (Int) -> Unit,
     onTimeClick: (String) -> Unit,
+    onDateTimeChipClick: (DateTimeSelection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -250,7 +253,10 @@ private fun DateBottomSheetContent(
                         items = uiState.selectedDateTimes,
                         key = { "${it.year}-${it.month}-${it.day}-${it.time}" }
                     ) { item ->
-                        DateTimeChip(entry = item)
+                        DateTimeChip(
+                            entry = item,
+                            onClick = { onDateTimeChipClick(item) },
+                        )
                     }
                 }
             }
@@ -305,6 +311,7 @@ private fun CalendarDayCell(
 @Composable
 private fun DateTimeChip(
     entry: DateTimeSelection,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -318,6 +325,7 @@ private fun DateTimeChip(
                 color = colors.primary.sub03,
                 shape = RoundedCornerShape(radius.sm),
             )
+            .noRippleClickable(onClick = onClick)
             .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -345,6 +353,7 @@ private fun DateBottomSheetContentPreview() {
             onNextMonthClick = {},
             onDayClick = {},
             onTimeClick = {},
+            onDateTimeChipClick = {},
         )
     }
 }

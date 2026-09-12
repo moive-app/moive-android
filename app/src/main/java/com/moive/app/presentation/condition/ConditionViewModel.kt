@@ -73,6 +73,21 @@ class ConditionViewModel @Inject constructor(
         _uiState.update { it.copy(pendingTime = time) }
     }
 
+    fun onDateTimeChipClick(entry: DateTimeSelection) {
+        _uiState.update { state ->
+            val isPending = state.calendarYear == entry.year &&
+                state.calendarMonth == entry.month &&
+                state.pendingDay == entry.day
+            state.copy(
+                pendingDay = if (isPending) null else state.pendingDay,
+                pendingTime = if (isPending) null else state.pendingTime,
+                confirmedDateTimes = state.confirmedDateTimes
+                    .filterNot { it.year == entry.year && it.month == entry.month && it.day == entry.day }
+                    .toPersistentList(),
+            )
+        }
+    }
+
     fun onDateNextClick() {
         _uiState.update {
             it.copy(

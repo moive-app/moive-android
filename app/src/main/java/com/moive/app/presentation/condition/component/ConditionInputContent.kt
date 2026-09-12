@@ -24,6 +24,7 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.presentation.common.component.ShadowButton
 import com.moive.app.presentation.condition.ConditionContract
+import com.moive.app.presentation.condition.DateTimeSelection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +39,7 @@ fun ConditionInputContent(
     onCalendarTimeClick: (String) -> Unit,
     onSaveDateClick: () -> Unit,
     onNextDateClick: () -> Unit,
+    onDateTimeChipClick: (DateTimeSelection) -> Unit,
     onPlaceBoxClick: () -> Unit,
     onTimeClick: (String) -> Unit,
     onPreferenceClick: (String) -> Unit,
@@ -139,6 +141,7 @@ fun ConditionInputContent(
             onTimeClick = onCalendarTimeClick,
             onSaveDateClick = onSaveDateClick,
             onNextDateClick = onNextDateClick,
+            onDateTimeChipClick = onDateTimeChipClick,
         )
     }
 }
@@ -158,6 +161,7 @@ private fun ConditionInputContentPreview() {
             onCalendarTimeClick = {},
             onSaveDateClick = {},
             onNextDateClick = {},
+            onDateTimeChipClick = {},
             onPlaceBoxClick = {},
             onTimeClick = {},
             onPreferenceClick = {},
