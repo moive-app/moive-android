@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.moive.app.data.voting.model.PlaceDetailPinLatLang
+import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
 import com.moive.app.data.voting.repository.VotingRepository
 import com.moive.app.data.votingstatus.repository.VoteStatusRepository
 import com.moive.app.presentation.votestatus.VoteStatusContract.Step
@@ -101,6 +103,17 @@ class VoteStatusViewModel @Inject constructor(
                 currentPlaceDetail = it.currentPlaceDetail.copy(
                     id = placeId,
                     placeName = candidateName ?: UNKNOWN_PLACE_NAME,
+                    userName = "",
+                    startPinLatLang = PlaceDetailPinLatLang(latitude = 0.0, longitude = 0.0),
+                    endPinLatLang = PlaceDetailPinLatLang(latitude = 0.0, longitude = 0.0),
+                    routeLatLang = PlaceDetailRouteLatLang(latitude = listOf(0.0, 0.0), longitude = listOf(0.0, 0.0)),
+                    totalTravelMinutes = 0,
+                    avgTravelMinutes = 0,
+                    walkMinutes = 0,
+                    busMinutes = 0,
+                    subwayMinutes = 0,
+                    travelFare = 0,
+                    landingUrl = "",
                 ),
             )
         }
