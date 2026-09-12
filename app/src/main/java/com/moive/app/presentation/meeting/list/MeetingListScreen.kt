@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.moive.app.core.designsystem.component.chip.LabelType
 import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
@@ -26,6 +27,7 @@ fun MeetingListRoute(
     innerPadding: PaddingValues,
     navigateBack: () -> Unit,
     navigateToMeetingDetail: (Long) -> Unit,
+    navigateToMeetingComplete: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MeetingListViewModel = hiltViewModel(),
 ) {
@@ -36,7 +38,13 @@ fun MeetingListRoute(
         uiState = uiState,
         onBackClick = navigateBack,
         onTabClick = viewModel::postMeetingFilter,
-        onMeetingClick = navigateToMeetingDetail,
+        onMeetingClick = { meetingId, statusLabelType ->
+            if (statusLabelType == LabelType.COMPLETE) {
+                navigateToMeetingComplete(meetingId)
+            } else {
+                navigateToMeetingDetail(meetingId)
+            }
+        },
         onLoadMore = { viewModel.getMeetingList(loadMore = true) },
         modifier = modifier,
     )
@@ -48,7 +56,7 @@ private fun MeetingListScreen(
     uiState: MeetingListContract.State,
     onBackClick: () -> Unit,
     onTabClick: (String) -> Unit,
-    onMeetingClick: (Long) -> Unit,
+    onMeetingClick: (Long, LabelType) -> Unit,
     onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -94,7 +102,7 @@ private fun MeetingListScreenPreview() {
             uiState = MeetingListContract.State(),
             onBackClick = {},
             onTabClick = {},
-            onMeetingClick = {},
+            onMeetingClick = { _, _ -> },
             onLoadMore = {},
         )
     }
