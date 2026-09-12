@@ -27,7 +27,7 @@ enum class ActivityType(val label: String) {
     KARAOKE("노래방"),
     PC_ROOM("PC방"),
     COMIC_CAFE("만화카페"),
-    MOVIE_THEATER("영화관"),
+    MOVIE("영화관"),
     PERFORMANCE("공연"),
     EXHIBITION("전시·미술관"),
     MUSEUM("박물관"),
