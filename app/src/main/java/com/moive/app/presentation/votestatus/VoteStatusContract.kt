@@ -13,6 +13,7 @@ interface VoteStatusContract {
     @Immutable
     data class State(
         val step: Step = Step.LIST,
+        val scheduleVoteResultUiState: ScheduleVoteResultUiState = ScheduleVoteResultUiState.Idle,
         val isScheduleVoteSkipped: Boolean = false,
         val scheduleTotalVoterCount: Int? = 5,
         val scheduleCandidates: ImmutableList<ScheduleVoteCandidateModel> = persistentListOf(
@@ -77,4 +78,13 @@ interface VoteStatusContract {
         LIST,
         DETAIL;
     }
+}
+
+sealed interface ScheduleVoteResultUiState {
+    data object Idle : ScheduleVoteResultUiState
+    data object Loading : ScheduleVoteResultUiState
+    data object Success : ScheduleVoteResultUiState
+    data class Failure(
+        val msg: String,
+    ) : ScheduleVoteResultUiState
 }
