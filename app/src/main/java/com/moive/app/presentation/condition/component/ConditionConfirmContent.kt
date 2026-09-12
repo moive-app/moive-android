@@ -29,6 +29,7 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.presentation.common.component.ConfirmInfoRow
 import com.moive.app.presentation.common.component.ShadowButton
 import com.moive.app.presentation.condition.ConditionContract
+import com.moive.app.presentation.condition.ConditionUiState
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -116,6 +117,7 @@ fun ConditionConfirmContent(
             isEnabled = true,
             onClick = onConfirmButtonClick,
             showShadow = isContentScrollable,
+            isLoading = state.conditionUiState is ConditionUiState.Loading,
         )
     }
 }
