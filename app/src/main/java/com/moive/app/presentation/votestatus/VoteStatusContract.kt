@@ -1,7 +1,6 @@
 package com.moive.app.presentation.votestatus
 
 import androidx.compose.runtime.Immutable
-import com.moive.app.data.voting.model.PlaceDetailImageItemModel
 import com.moive.app.data.voting.model.PlaceDetailModel
 import com.moive.app.data.voting.model.PlaceDetailPinLatLang
 import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
@@ -36,11 +35,7 @@ interface VoteStatusContract {
             address = "서울시 강남구 워시기워시기 123",
             totalMemberCount = 7,
             matchMemberCount = 4,
-            imageList = listOf(
-                PlaceDetailImageItemModel(id = 1L, imageUrl = ""),
-                PlaceDetailImageItemModel(id = 2L, imageUrl = ""),
-                PlaceDetailImageItemModel(id = 3L, imageUrl = ""),
-            ),
+            imageList = emptyList(),
             startPinLatLang = PlaceDetailPinLatLang(
                 latitude = 37.5044,
                 longitude = 127.0246,

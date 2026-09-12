@@ -50,7 +50,6 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.customShadow
-import com.moive.app.data.voting.model.PlaceDetailImageItemModel
 import com.moive.app.data.voting.model.PlaceDetailModel
 import com.moive.app.data.voting.model.PlaceDetailPinLatLang
 import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
@@ -154,10 +153,10 @@ fun PlaceDetailContent(
                 ) {
                     items(
                         items = place.imageList,
-                        key = { it.id }
-                    ) { img ->
+                        key = { it }
+                    ) { imageUrl ->
                         UrlImage(
-                            url = img.imageUrl,
+                            url = imageUrl,
                             modifier = Modifier
                                 .width(152.dp)
                                 .aspectRatio(152f / 168f)
@@ -351,8 +350,8 @@ private fun PlaceDetailContentPreview() {
                 totalMemberCount = 7,
                 matchMemberCount = 4,
                 imageList = listOf(
-                    PlaceDetailImageItemModel(id = 1L, imageUrl = ""),
-                    PlaceDetailImageItemModel(id = 2L, imageUrl = ""),
+                    "https://example.com/1.jpg",
+                    "https://example.com/2.jpg",
                 ),
                 startPinLatLang = PlaceDetailPinLatLang(
                     latitude = 37.5044,
