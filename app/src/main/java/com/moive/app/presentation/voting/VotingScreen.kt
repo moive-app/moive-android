@@ -27,7 +27,7 @@ import kotlinx.collections.immutable.persistentSetOf
 fun VotingRoute(
     innerPadding: PaddingValues,
     navigateBack: () -> Unit,
-    navigateToVoteStatus: () -> Unit,
+    navigateToVoteStatus: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: VotingViewModel = hiltViewModel(),
 ) {
@@ -43,7 +43,7 @@ fun VotingRoute(
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.sideEffect.collect { sideEffect ->
                 when (sideEffect) {
-                    VotingContract.SideEffect.NavigateToVoteStatus -> navigateToVoteStatus()
+                    is VotingContract.SideEffect.NavigateToVoteStatus -> navigateToVoteStatus(sideEffect.meetingId)
                 }
             }
         }

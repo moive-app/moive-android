@@ -244,7 +244,7 @@ class VotingViewModel @Inject constructor(
             votingRepository.postPlaceVotes(meetingId, recommendedPlaceIds)
                 .onSuccess {
                     _uiState.update { it.copy(placeVoteUiState = PlaceVoteUiState.Success) }
-                    _sideEffect.send(VotingContract.SideEffect.NavigateToVoteStatus)
+                    _sideEffect.send(VotingContract.SideEffect.NavigateToVoteStatus(meetingId))
                 }
                 .onFailure { error ->
                     Timber.tag(TAG).e(error, PLACE_VOTE_FAILURE_MESSAGE)

@@ -25,8 +25,9 @@ fun NavGraphBuilder.votingGraph(
     composable<Voting> {
         VotingRoute(
             navigateBack = navController.safePopBackStack(),
-            navigateToVoteStatus = {
+            navigateToVoteStatus = { meetingId ->
                 navController.navigateToVoteStatus(
+                    meetingId = meetingId,
                     navOptions = navOptions {
                         popUpTo<MeetingDetail> {
                             inclusive = false
@@ -40,4 +41,6 @@ fun NavGraphBuilder.votingGraph(
 }
 
 @Serializable
-data class Voting(val meetingId: Long) : Route
+data class Voting(
+    val meetingId: Long
+) : Route

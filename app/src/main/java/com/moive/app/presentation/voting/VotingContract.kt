@@ -64,7 +64,7 @@ interface VotingContract {
     }
 
     sealed class SideEffect {
-        data object NavigateToVoteStatus : SideEffect()
+        data class NavigateToVoteStatus(val meetingId: Long) : SideEffect()
     }
 }
 
