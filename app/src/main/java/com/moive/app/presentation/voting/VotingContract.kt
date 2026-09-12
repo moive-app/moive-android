@@ -17,13 +17,10 @@ interface VotingContract {
     @Immutable
     data class State(
         val step: Step = Step.RECOMMENDATION,
+        val recommendedAreaUiState: RecommendedAreaUiState = RecommendedAreaUiState.Idle,
         val isPlaceListVisible: Boolean = false,
         val selectedRegionName: String? = null,
-        val regionList: ImmutableList<RegionPinModel> = persistentListOf(
-            RegionPinModel(id = 1L, name = "신논현동", locationX = 127.0246, locationY = 37.5044),
-            RegionPinModel(id = 2L, name = "논현동", locationX = 127.0219, locationY = 37.5107),
-            RegionPinModel(id = 3L, name = "역삼동", locationX = 127.0364, locationY = 37.5000),
-        ),
+        val regionList: ImmutableList<RegionPinModel> = persistentListOf(),
         val placeList: PersistentList<PlaceRecommendationCardItemModel> = persistentListOf(
             PlaceRecommendationCardItemModel(
                 id = 1L,
@@ -111,4 +108,13 @@ interface VotingContract {
         RECOMMENDATION,
         DETAIL;
     }
+}
+
+sealed interface RecommendedAreaUiState {
+    data object Idle : RecommendedAreaUiState
+    data object Loading : RecommendedAreaUiState
+    data object Success : RecommendedAreaUiState
+    data class Failure(
+        val msg: String,
+    ) : RecommendedAreaUiState
 }
