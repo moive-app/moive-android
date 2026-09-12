@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.theme.MoiveTheme
-import com.moive.app.core.extensions.openKakaoMapRoute
+import com.moive.app.core.extensions.openUrl
 import com.moive.app.data.voting.model.RegionPinModel
 import com.moive.app.presentation.common.component.placedetail.PlaceDetailContent
 import com.moive.app.presentation.voting.VotingContract.Step
@@ -43,13 +43,7 @@ fun VotingRoute(
         onBackClick = navigateBack,
         onDetailBackClick = viewModel::backToPlaceList,
         onKakaoMapClick = {
-            val place = uiState.currentPlaceDetail
-            val opened = context.openKakaoMapRoute(
-                startLatitude = place.startPinLatLang.latitude,
-                startLongitude = place.startPinLatLang.longitude,
-                endLatitude = place.endPinLatLang.latitude,
-                endLongitude = place.endPinLatLang.longitude,
-            )
+            val opened = context.openUrl(uiState.currentPlaceDetail.landingUrl)
             viewModel.onKakaoMapRouteOpened(opened)
         },
         onSelectButtonClick = viewModel::onSelectButtonClick,

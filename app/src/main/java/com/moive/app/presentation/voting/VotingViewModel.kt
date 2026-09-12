@@ -112,28 +112,29 @@ class VotingViewModel @Inject constructor(
 
     fun onPlaceItemClick(placeId: Long) {
         _uiState.update { it.copy(step = Step.DETAIL, currentPlaceId = placeId) }
-        getRecommendedPlaceDetail(placeId)
+
+        viewModelScope.launch {
+            fetchRecommendedPlaceDetail(placeId)
+            fetchRecommendedPlaceRoute(placeId)
+        }
     }
 
-    private fun getRecommendedPlaceDetail(placeId: Long) = viewModelScope.launch {
-        val recommendedAreaId = _uiState.value.selectedRegionId ?: return@launch
+    private suspend fun fetchRecommendedPlaceDetail(placeId: Long) {
+        val recommendedAreaId = _uiState.value.selectedRegionId ?: return
 
         _uiState.update { it.copy(recommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Loading) }
 
-        votingRepository.getRecommendedPlaceDetail(meetingId, recommendedAreaId, placeId)
-            .onSuccess { detail ->
+        votingRepository.getRecommendedPlaceDetail(
+            meetingId = meetingId,
+            recommendedAreaId = recommendedAreaId,
+            recommendedPlaceId = placeId,
+            current = _uiState.value.currentPlaceDetail
+        )
+            .onSuccess { updated ->
                 _uiState.update {
                     it.copy(
                         recommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Success,
-                        currentPlaceDetail = it.currentPlaceDetail.copy(
-                            id = detail.id,
-                            placeName = detail.name,
-                            category = detail.category,
-                            address = detail.address,
-                            matchMemberCount = detail.preferenceMatchCnt,
-                            avgTravelMinutes = detail.averageTravelTime,
-                            imageList = detail.imageUrls,
-                        ),
+                        currentPlaceDetail = updated,
                     )
                 }
             }
@@ -142,6 +143,34 @@ class VotingViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         recommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Failure(
+                            error.message ?: UNKNOWN_ERROR_MESSAGE,
+                        ),
+                    )
+                }
+            }
+    }
+
+    private suspend fun fetchRecommendedPlaceRoute(placeId: Long) {
+        _uiState.update { it.copy(recommendedPlaceRouteUiState = RecommendedPlaceRouteUiState.Loading) }
+
+        votingRepository.getRecommendedPlaceRoute(
+            meetingId = meetingId,
+            recommendedPlaceId = placeId,
+            current = _uiState.value.currentPlaceDetail
+        )
+            .onSuccess { updated ->
+                _uiState.update {
+                    it.copy(
+                        recommendedPlaceRouteUiState = RecommendedPlaceRouteUiState.Success,
+                        currentPlaceDetail = updated,
+                    )
+                }
+            }
+            .onFailure { error ->
+                Timber.tag(TAG).e(error, RECOMMENDED_PLACE_ROUTE_FAILURE_MESSAGE)
+                _uiState.update {
+                    it.copy(
+                        recommendedPlaceRouteUiState = RecommendedPlaceRouteUiState.Failure(
                             error.message ?: UNKNOWN_ERROR_MESSAGE,
                         ),
                     )
@@ -174,6 +203,7 @@ class VotingViewModel @Inject constructor(
         private const val RECOMMENDED_AREA_FAILURE_MESSAGE = "추천 지역 조회에 실패했습니다."
         private const val RECOMMENDED_PLACE_FAILURE_MESSAGE = "추천 장소 조회에 실패했습니다."
         private const val RECOMMENDED_PLACE_DETAIL_FAILURE_MESSAGE = "추천 장소 상세 조회에 실패했습니다."
+        private const val RECOMMENDED_PLACE_ROUTE_FAILURE_MESSAGE = "이동 경로 조회에 실패했습니다."
         private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
     }
 }

@@ -18,6 +18,7 @@ interface VotingContract {
         val recommendedAreaUiState: RecommendedAreaUiState = RecommendedAreaUiState.Idle,
         val recommendedPlaceUiState: RecommendedPlaceUiState = RecommendedPlaceUiState.Idle,
         val recommendedPlaceDetailUiState: RecommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Idle,
+        val recommendedPlaceRouteUiState: RecommendedPlaceRouteUiState = RecommendedPlaceRouteUiState.Idle,
         val isPlaceListVisible: Boolean = false,
         val selectedRegionId: Long? = null,
         val selectedRegionName: String? = null,
@@ -92,4 +93,13 @@ sealed interface RecommendedPlaceDetailUiState {
     data class Failure(
         val msg: String,
     ) : RecommendedPlaceDetailUiState
+}
+
+sealed interface RecommendedPlaceRouteUiState {
+    data object Idle : RecommendedPlaceRouteUiState
+    data object Loading : RecommendedPlaceRouteUiState
+    data object Success : RecommendedPlaceRouteUiState
+    data class Failure(
+        val msg: String,
+    ) : RecommendedPlaceRouteUiState
 }
