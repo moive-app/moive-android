@@ -347,6 +347,7 @@ private fun PlaceDetailContentPreview() {
                 placeName = "장소명(상호명)",
                 category = "카페",
                 address = "서울시 강남구 워시기워시기 123",
+                areaName = "신논현동",
                 totalMemberCount = 7,
                 matchMemberCount = 4,
                 imageList = listOf(

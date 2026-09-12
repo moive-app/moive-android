@@ -9,6 +9,7 @@ data class PlaceDetailModel(
     val placeName: String,
     val category: String,
     val address: String,
+    val areaName: String,
     val totalMemberCount: Int,
     val matchMemberCount: Int,
     val imageList: List<String>,

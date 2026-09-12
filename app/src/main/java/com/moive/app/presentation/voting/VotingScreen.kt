@@ -89,7 +89,7 @@ private fun VotingScreen(
         Step.DETAIL -> PlaceDetailContent(
             innerPadding = innerPadding,
             place = uiState.currentPlaceDetail,
-            title = uiState.selectedRegionName ?: "추천 지역",
+            title = uiState.currentPlaceDetail.areaName,
             onBackClick = onDetailBackClick,
             onKakaoMapClick = onKakaoMapClick,
             showSelectButton = true,
