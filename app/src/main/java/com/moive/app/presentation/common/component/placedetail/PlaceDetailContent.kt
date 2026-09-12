@@ -66,7 +66,7 @@ fun PlaceDetailContent(
     modifier: Modifier = Modifier,
     onSelectButtonClick: () -> Unit = {},
 ) {
-    val mapView = rememberPlaceRouteMapView(place)
+    val mapView = rememberPlaceRouteMapView(place, cornerRadius = radius.lg)
 
     Column(
         modifier = modifier
@@ -194,9 +194,6 @@ fun PlaceDetailContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(180.dp)
-                            .clip(
-                                shape = RoundedCornerShape(radius.lg),
-                            )
                             .pointerInput(mapView) {
                                 awaitEachGesture {
                                     awaitFirstDown(requireUnconsumed = false)

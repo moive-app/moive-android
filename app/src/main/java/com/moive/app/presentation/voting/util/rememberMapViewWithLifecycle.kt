@@ -1,6 +1,8 @@
 package com.moive.app.presentation.voting.util
 
+import android.graphics.Outline
 import android.view.View
+import android.view.ViewOutlineProvider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -9,6 +11,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -32,11 +37,22 @@ fun rememberMapViewWithLifecycle(
     locationX: Double,
     locationY: Double,
     onMapReady: (KakaoMap) -> Unit,
+    cornerRadius: Dp = 0.dp,
 ): View {
     val context = LocalContext.current
+    val density = LocalDensity.current
     val mapView = remember {
         MapView(context).apply {
-            setFinishManually(true)
+            isFinishManually = true
+            if (cornerRadius > 0.dp) {
+                clipToOutline = true
+                outlineProvider = object : ViewOutlineProvider() {
+                    override fun getOutline(view: View, outline: Outline) {
+                        val radiusPx = with(density) { cornerRadius.toPx() }
+                        outline.setRoundRect(0, 0, view.width, view.height, radiusPx)
+                    }
+                }
+            }
         }
     }
     val lifecycle = LocalLifecycleOwner.current.lifecycle
