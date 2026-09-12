@@ -55,6 +55,7 @@ fun ConditionConfirmContent(
         MoiveSubTitleTopBar(
             title = "조건 확인",
             onBackClick = onBackClick,
+            hasIcon = false,
         )
 
         LazyColumn(

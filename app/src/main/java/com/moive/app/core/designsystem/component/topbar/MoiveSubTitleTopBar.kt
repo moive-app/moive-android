@@ -27,6 +27,7 @@ fun MoiveSubTitleTopBar(
     title: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    hasIcon: Boolean = true,
     backgroundColor: Color = colors.fill.default08,
 ) {
     Row(
@@ -38,15 +39,17 @@ fun MoiveSubTitleTopBar(
             .padding(horizontal = 20.dp, vertical = 15.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_chevron_left_24),
-            contentDescription = null,
-            tint = colors.icon.default,
-            modifier = Modifier
-                .noRippleClickable(onClick = onBackClick),
-        )
+        if (hasIcon){
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_chevron_left_24),
+                contentDescription = null,
+                tint = colors.icon.default,
+                modifier = Modifier
+                    .noRippleClickable(onClick = onBackClick),
+            )
 
-        Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
+        }
 
         Text(
             text = title,
