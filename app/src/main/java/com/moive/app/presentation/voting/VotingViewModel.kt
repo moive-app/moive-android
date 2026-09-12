@@ -111,7 +111,13 @@ class VotingViewModel @Inject constructor(
     }
 
     fun onPlaceItemClick(placeId: Long) {
-        _uiState.update { it.copy(step = Step.DETAIL, currentPlaceId = placeId) }
+        _uiState.update {
+            it.copy(
+                step = Step.DETAIL,
+                currentPlaceId = placeId,
+                isPlaceListVisible = false,
+            )
+        }
 
         viewModelScope.launch {
             fetchRecommendedPlaceDetail(placeId)

@@ -3,8 +3,11 @@ package com.moive.app.presentation.voting.util
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -20,6 +23,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import timber.log.Timber
+import kotlin.time.Duration.Companion.milliseconds
 
 private val isKakaoMapEngineBusy = MutableStateFlow(false)
 
@@ -37,12 +41,14 @@ fun rememberMapViewWithLifecycle(
     }
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val coroutineScope = rememberCoroutineScope()
+    var isMapStarted by remember { mutableStateOf(false) }
+    var isResumePending by remember { mutableStateOf(false) }
 
     DisposableEffect(lifecycle) {
         val observer = object : DefaultLifecycleObserver {
             override fun onCreate(owner: LifecycleOwner) {
                 coroutineScope.launch {
-                    withTimeoutOrNull(2_000) {
+                    withTimeoutOrNull(2_000.milliseconds) {
                         isKakaoMapEngineBusy.first { busy -> !busy }
                     }
 
@@ -67,6 +73,12 @@ fun rememberMapViewWithLifecycle(
                                 val cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(locationY, locationX), 13)
                                 kakaoMap.moveCamera(cameraUpdate)
 
+                                isMapStarted = true
+                                if (isResumePending) {
+                                    isResumePending = false
+                                    mapView.resume()
+                                }
+
                                 onMapReady(kakaoMap)
                             }
                         }
@@ -75,11 +87,18 @@ fun rememberMapViewWithLifecycle(
             }
 
             override fun onResume(owner: LifecycleOwner) {
-                mapView.resume()
+                if (isMapStarted) {
+                    mapView.resume()
+                } else {
+                    isResumePending = true
+                }
             }
 
             override fun onPause(owner: LifecycleOwner) {
-                mapView.pause()
+                isResumePending = false
+                if (isMapStarted) {
+                    mapView.pause()
+                }
             }
 
         }

@@ -1,7 +1,9 @@
 package com.moive.app.presentation.voting
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -68,8 +70,10 @@ private fun VotingScreen(
     onCompleteButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (uiState.step) {
-        Step.RECOMMENDATION -> PlaceListContent(
+    Box(modifier = modifier.fillMaxSize()) {
+        // 카카오맵 뷰를 step 전환마다 파괴/재생성하면 SDK가 새 엔진을 제대로 못 띄우는 문제가 있어,
+        // Detail로 넘어가도 이 맵은 계속 마운트된 채로 두고 위에 PlaceDetailContent를 덮어씌운다.
+        PlaceListContent(
             innerPadding = innerPadding,
             regionList = uiState.regionList,
             selectedRegionName = uiState.selectedRegionName,
@@ -83,19 +87,19 @@ private fun VotingScreen(
             onResetClick = onResetClick,
             onBackClick = onBackClick,
             onCompleteButtonClick = onCompleteButtonClick,
-            modifier = modifier,
         )
 
-        Step.DETAIL -> PlaceDetailContent(
-            innerPadding = innerPadding,
-            place = uiState.currentPlaceDetail,
-            title = uiState.currentPlaceDetail.areaName,
-            onBackClick = onDetailBackClick,
-            onKakaoMapClick = onKakaoMapClick,
-            showSelectButton = true,
-            onSelectButtonClick = onSelectButtonClick,
-            modifier = modifier,
-        )
+        if (uiState.step == Step.DETAIL) {
+            PlaceDetailContent(
+                innerPadding = innerPadding,
+                place = uiState.currentPlaceDetail,
+                title = uiState.currentPlaceDetail.areaName,
+                onBackClick = onDetailBackClick,
+                onKakaoMapClick = onKakaoMapClick,
+                showSelectButton = true,
+                onSelectButtonClick = onSelectButtonClick,
+            )
+        }
     }
 }
 
