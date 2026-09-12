@@ -32,7 +32,7 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubIconTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
-import com.moive.app.core.extensions.openKakaoMapRoute
+import com.moive.app.core.extensions.openUrl
 import com.moive.app.core.extensions.shareText
 import com.moive.app.presentation.common.component.ShadowButton
 import com.moive.app.presentation.common.component.placedetail.PlaceDetailContent
@@ -61,14 +61,11 @@ fun MeetingConfirmedRoute(
         onPlaceClick = viewModel::onPlaceClick,
         onDetailBackClick = viewModel::backToMain,
         onKakaoMapClick = {
-            val place = uiState.currentPlaceDetail
-            val opened = context.openKakaoMapRoute(
-                startLatitude = place.startPinLatLang.latitude,
-                startLongitude = place.startPinLatLang.longitude,
-                endLatitude = place.endPinLatLang.latitude,
-                endLongitude = place.endPinLatLang.longitude,
-            )
-            viewModel.onKakaoMapRouteOpened(opened)
+            val landingUrl = uiState.currentPlaceDetail.landingUrl
+            if (landingUrl.isNotBlank()) {
+                val opened = context.openUrl(landingUrl)
+                viewModel.onKakaoMapRouteOpened(opened)
+            }
         },
         onShareClick = { context.shareText("모임에 참여해보세요!\n${uiState.meetingLink}") },
         modifier = modifier,

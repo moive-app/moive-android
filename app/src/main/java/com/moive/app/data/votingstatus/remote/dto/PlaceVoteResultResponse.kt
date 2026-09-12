@@ -17,6 +17,8 @@ data class PlaceVoteResultResponse(
 data class PlaceVoteCandidateItem(
     @SerialName("placeId")
     val placeId: Long,
+    @SerialName("placeAreaId")
+    val placeAreaId: Long,
     @SerialName("placeName")
     val placeName: String?,
     @SerialName("voterCnt")

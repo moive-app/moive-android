@@ -17,18 +17,19 @@ interface VoteStatusContract {
         val isScheduleVoteSkipped: Boolean = false,
         val scheduleTotalVoterCount: Int? = 5,
         val scheduleCandidates: ImmutableList<ScheduleVoteCandidateModel> = persistentListOf(
-            ScheduleVoteCandidateModel(meetingDate = "2026-09-12", meetingTime = "18:00", voterCount = 4, isVotedByMe = true),
-            ScheduleVoteCandidateModel(meetingDate = "2026-09-08", meetingTime = "18:00", voterCount = 3, isVotedByMe = true),
-            ScheduleVoteCandidateModel(meetingDate = "2026-09-10", meetingTime = "18:00", voterCount = 3, isVotedByMe = false),
+            ScheduleVoteCandidateModel(meetingDate = "", meetingTime = "", voterCount = 0, isVotedByMe = true),
+            ScheduleVoteCandidateModel(meetingDate = "", meetingTime = "", voterCount = 0, isVotedByMe = true),
+            ScheduleVoteCandidateModel(meetingDate = "", meetingTime = "", voterCount = 0, isVotedByMe = false),
         ),
         val placeVoteResultUiState: PlaceVoteResultUiState = PlaceVoteResultUiState.Idle,
         val isPlaceVoteFinished: Boolean = false,
         val placeTotalVoterCount: Int = 4,
         val placeCandidates: ImmutableList<PlaceVoteCandidateModel> = persistentListOf(
-            PlaceVoteCandidateModel(id = 1L, placeName = "OOO 맛집", voterCount = 4, isVotedByMe = true),
-            PlaceVoteCandidateModel(id = 2L, placeName = "XXX 카페", voterCount = 3, isVotedByMe = true),
-            PlaceVoteCandidateModel(id = 3L, placeName = "ΔΔΔ 이자카야", voterCount = 2, isVotedByMe = false),
+            PlaceVoteCandidateModel(id = 1L, areaId = 1L, placeName = "", voterCount = 0, isVotedByMe = true),
+            PlaceVoteCandidateModel(id = 2L, areaId = 1L, placeName = "", voterCount = 0, isVotedByMe = true),
+            PlaceVoteCandidateModel(id = 3L, areaId = 1L, placeName = "", voterCount = 0, isVotedByMe = false),
         ),
+        val placeDetailUiState: PlaceDetailUiState = PlaceDetailUiState.Idle,
         val placeRouteUiState: PlaceRouteUiState = PlaceRouteUiState.Idle,
         val currentPlaceId: Long? = null,
         val currentPlaceDetail: PlaceDetailModel = PlaceDetailModel(
@@ -102,4 +103,13 @@ sealed interface PlaceRouteUiState {
     data class Failure(
         val msg: String,
     ) : PlaceRouteUiState
+}
+
+sealed interface PlaceDetailUiState {
+    data object Idle : PlaceDetailUiState
+    data object Loading : PlaceDetailUiState
+    data object Success : PlaceDetailUiState
+    data class Failure(
+        val msg: String,
+    ) : PlaceDetailUiState
 }
