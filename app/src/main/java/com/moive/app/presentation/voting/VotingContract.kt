@@ -1,7 +1,6 @@
 package com.moive.app.presentation.voting
 
 import androidx.compose.runtime.Immutable
-import com.moive.app.data.voting.model.PlaceDetailImageItemModel
 import com.moive.app.data.voting.model.PlaceDetailModel
 import com.moive.app.data.voting.model.PlaceDetailPinLatLang
 import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
@@ -18,7 +17,9 @@ interface VotingContract {
         val step: Step = Step.RECOMMENDATION,
         val recommendedAreaUiState: RecommendedAreaUiState = RecommendedAreaUiState.Idle,
         val recommendedPlaceUiState: RecommendedPlaceUiState = RecommendedPlaceUiState.Idle,
+        val recommendedPlaceDetailUiState: RecommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Idle,
         val isPlaceListVisible: Boolean = false,
+        val selectedRegionId: Long? = null,
         val selectedRegionName: String? = null,
         val regionList: ImmutableList<RegionPinModel> = persistentListOf(),
         val placeList: ImmutableList<PlaceRecommendedPlaceCardItemModel> = persistentListOf(),
@@ -32,11 +33,7 @@ interface VotingContract {
             address = "서울시 강남구 워시기워시기 123",
             totalMemberCount = 7,
             matchMemberCount = 4,
-            imageList = listOf(
-                PlaceDetailImageItemModel(id = 1L, imageUrl = ""),
-                PlaceDetailImageItemModel(id = 2L, imageUrl = ""),
-                PlaceDetailImageItemModel(id = 3L, imageUrl = ""),
-            ),
+            imageList = emptyList(),
             startPinLatLang = PlaceDetailPinLatLang(
                 latitude = 37.5044,
                 longitude = 127.0246,
@@ -86,4 +83,13 @@ sealed interface RecommendedPlaceUiState {
     data class Failure(
         val msg: String,
     ) : RecommendedPlaceUiState
+}
+
+sealed interface RecommendedPlaceDetailUiState {
+    data object Idle : RecommendedPlaceDetailUiState
+    data object Loading : RecommendedPlaceDetailUiState
+    data object Success : RecommendedPlaceDetailUiState
+    data class Failure(
+        val msg: String,
+    ) : RecommendedPlaceDetailUiState
 }

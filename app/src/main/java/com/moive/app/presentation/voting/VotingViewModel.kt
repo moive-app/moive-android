@@ -60,6 +60,7 @@ class VotingViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 isPlaceListVisible = true,
+                selectedRegionId = region.id,
                 selectedRegionName = region.name,
             )
         }
@@ -111,6 +112,41 @@ class VotingViewModel @Inject constructor(
 
     fun onPlaceItemClick(placeId: Long) {
         _uiState.update { it.copy(step = Step.DETAIL, currentPlaceId = placeId) }
+        getRecommendedPlaceDetail(placeId)
+    }
+
+    private fun getRecommendedPlaceDetail(placeId: Long) = viewModelScope.launch {
+        val recommendedAreaId = _uiState.value.selectedRegionId ?: return@launch
+
+        _uiState.update { it.copy(recommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Loading) }
+
+        votingRepository.getRecommendedPlaceDetail(meetingId, recommendedAreaId, placeId)
+            .onSuccess { detail ->
+                _uiState.update {
+                    it.copy(
+                        recommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Success,
+                        currentPlaceDetail = it.currentPlaceDetail.copy(
+                            id = detail.id,
+                            placeName = detail.name,
+                            category = detail.category,
+                            address = detail.address,
+                            matchMemberCount = detail.preferenceMatchCnt,
+                            avgTravelMinutes = detail.averageTravelTime,
+                            imageList = detail.imageUrls,
+                        ),
+                    )
+                }
+            }
+            .onFailure { error ->
+                Timber.tag(TAG).e(error, RECOMMENDED_PLACE_DETAIL_FAILURE_MESSAGE)
+                _uiState.update {
+                    it.copy(
+                        recommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Failure(
+                            error.message ?: UNKNOWN_ERROR_MESSAGE,
+                        ),
+                    )
+                }
+            }
     }
 
     fun onSelectButtonClick() {
@@ -137,6 +173,7 @@ class VotingViewModel @Inject constructor(
         private const val KAKAO_MAP_ERROR = "카카오 맵을 열 수 없습니다."
         private const val RECOMMENDED_AREA_FAILURE_MESSAGE = "추천 지역 조회에 실패했습니다."
         private const val RECOMMENDED_PLACE_FAILURE_MESSAGE = "추천 장소 조회에 실패했습니다."
+        private const val RECOMMENDED_PLACE_DETAIL_FAILURE_MESSAGE = "추천 장소 상세 조회에 실패했습니다."
         private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
     }
 }
