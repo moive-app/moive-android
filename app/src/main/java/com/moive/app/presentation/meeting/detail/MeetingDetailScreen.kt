@@ -55,7 +55,7 @@ import kotlinx.collections.immutable.persistentListOf
 fun MeetingDetailRoute(
     innerPadding: PaddingValues,
     navigateBack: () -> Unit,
-    navigateToCondition: () -> Unit,
+    navigateToCondition: (Boolean, String?, String?) -> Unit,
     navigateToVoting: () -> Unit,
     navigateToMeetingConfirmed: () -> Unit,
     navigateToMeetingComplete: () -> Unit,
@@ -89,7 +89,11 @@ fun MeetingDetailRoute(
         onInviteFriendClick = { context.shareText(uiState.inviteUrl) },
         onActionButtonClick = {
             when (uiState.status) {
-                MeetingStatus.CONDITION_INPUT -> navigateToCondition()
+                MeetingStatus.CONDITION_INPUT -> navigateToCondition(
+                    uiState.hasSchedule,
+                    uiState.scheduledDate,
+                    uiState.scheduledTime,
+                )
                 else -> Unit
             }
         },

@@ -11,6 +11,9 @@ interface MeetingDetailContract {
     data class State(
         val meetingDetailUiState: MeetingDetailUiState = MeetingDetailUiState.Idle,
         val status: MeetingStatus = MeetingStatus.CONDITION_INPUT,
+        val hasSchedule: Boolean = false,
+        val scheduledDate: String? = null,
+        val scheduledTime: String? = null,
         val meetingName: String = "",
         val meetingPurpose: String = "",
         val thumbnailUrl: String = "",

@@ -12,6 +12,9 @@ fun MeetingDetailResponse.toModel(): MeetingDetailModel =
         name = name,
         purposeType = MeetingPurposeType.entries.find { it.name == purposeType } ?: MeetingPurposeType.ETC,
         status = status.toMeetingStatus(),
+        hasSchedule = hasSchedule,
+        scheduledDate = scheduledDate,
+        scheduledTime = scheduledTime,
         inviteCode = inviteCode,
         inviteUrl = inviteUrl,
         participants = participants.mapIndexed { index, participant ->

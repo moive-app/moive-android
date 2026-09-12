@@ -13,6 +13,12 @@ data class MeetingDetailResponse(
     val purposeType: String,
     @SerialName("status")
     val status: String,
+    @SerialName("hasSchedule")
+    val hasSchedule: Boolean,
+    @SerialName("scheduledDate")
+    val scheduledDate: String?,
+    @SerialName("scheduledTime")
+    val scheduledTime: String?,
     @SerialName("inviteCode")
     val inviteCode: String,
     @SerialName("inviteUrl")
