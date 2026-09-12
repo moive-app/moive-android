@@ -24,8 +24,8 @@ fun MeetingItemResponse.toModel(): MeetingListCardItemModel =
         } else {
             null
         },
-        participantImageUrls = participantProfileImages.toImmutableList(),
+        participantImageUrls = participantImages.toImmutableList(),
         statusText = statusLabel,
         statusLabelType = status.toLabelType(),
-        extraParticipantCount = (participantCnt - participantProfileImages.size).coerceAtLeast(0),
+        extraParticipantCount = (participantCnt - participantImages.size).coerceAtLeast(0),
     )
