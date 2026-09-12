@@ -21,6 +21,10 @@ interface MeetingConfirmedContract {
         val placeAddress: String = "",
         val meetingDate: String = "",
         val meetingTime: String = "",
+        val placeId: Long? = null,
+        val areaId: Long? = null,
+        val placeDetailUiState: PlaceDetailUiState = PlaceDetailUiState.Idle,
+        val placeRouteUiState: PlaceRouteUiState = PlaceRouteUiState.Idle,
         val participants: ImmutableList<MeetingResultParticipantModel> = persistentListOf(
             MeetingResultParticipantModel(id = 1L, name = "", profileImageUrl = "", address = "", transferCount = 0, travelMinutes = 0),
             MeetingResultParticipantModel(id = 2L, name = "", profileImageUrl = "", address = "", transferCount = 0, travelMinutes = 0),
@@ -72,4 +76,22 @@ sealed interface MeetingResultUiState {
     data class Failure(
         val msg: String,
     ) : MeetingResultUiState
+}
+
+sealed interface PlaceDetailUiState {
+    data object Idle : PlaceDetailUiState
+    data object Loading : PlaceDetailUiState
+    data object Success : PlaceDetailUiState
+    data class Failure(
+        val msg: String,
+    ) : PlaceDetailUiState
+}
+
+sealed interface PlaceRouteUiState {
+    data object Idle : PlaceRouteUiState
+    data object Loading : PlaceRouteUiState
+    data object Success : PlaceRouteUiState
+    data class Failure(
+        val msg: String,
+    ) : PlaceRouteUiState
 }
