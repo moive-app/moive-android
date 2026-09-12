@@ -38,7 +38,7 @@ fun PlaceVoteSection(
         ) {
             top3.forEach { candidate ->
                 VoteOptionRow(
-                    text = candidate.placeName,
+                    text = candidate.placeName ?: "알 수 없는 장소",
                     voteRatio = voteRatio(candidate.voterCount, totalVoterCount),
                     isTopVote = candidate.voterCount == topVoterCount,
                     isVotedByMe = candidate.isVotedByMe,

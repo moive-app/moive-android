@@ -21,6 +21,8 @@ interface VoteStatusContract {
             ScheduleVoteCandidateModel(meetingDate = "2026-09-08", meetingTime = "18:00", voterCount = 3, isVotedByMe = true),
             ScheduleVoteCandidateModel(meetingDate = "2026-09-10", meetingTime = "18:00", voterCount = 3, isVotedByMe = false),
         ),
+        val placeVoteResultUiState: PlaceVoteResultUiState = PlaceVoteResultUiState.Idle,
+        val isPlaceVoteFinished: Boolean = false,
         val placeTotalVoterCount: Int = 4,
         val placeCandidates: ImmutableList<PlaceVoteCandidateModel> = persistentListOf(
             PlaceVoteCandidateModel(id = 1L, placeName = "OOO 맛집", voterCount = 4, isVotedByMe = true),
@@ -87,4 +89,13 @@ sealed interface ScheduleVoteResultUiState {
     data class Failure(
         val msg: String,
     ) : ScheduleVoteResultUiState
+}
+
+sealed interface PlaceVoteResultUiState {
+    data object Idle : PlaceVoteResultUiState
+    data object Loading : PlaceVoteResultUiState
+    data object Success : PlaceVoteResultUiState
+    data class Failure(
+        val msg: String,
+    ) : PlaceVoteResultUiState
 }

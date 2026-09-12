@@ -29,6 +29,7 @@ class VoteStatusViewModel @Inject constructor(
 
     init {
         getScheduleVoteResult()
+        getPlaceVoteResult()
     }
 
     private fun getScheduleVoteResult() = viewModelScope.launch {
@@ -57,6 +58,32 @@ class VoteStatusViewModel @Inject constructor(
             }
     }
 
+    private fun getPlaceVoteResult() = viewModelScope.launch {
+        _uiState.update { it.copy(placeVoteResultUiState = PlaceVoteResultUiState.Loading) }
+
+        voteStatusRepository.getPlaceVoteResult(meetingId)
+            .onSuccess { result ->
+                _uiState.update {
+                    it.copy(
+                        placeVoteResultUiState = PlaceVoteResultUiState.Success,
+                        isPlaceVoteFinished = result.isFinished,
+                        placeTotalVoterCount = result.totalVoterCount,
+                        placeCandidates = result.candidates.toImmutableList(),
+                    )
+                }
+            }
+            .onFailure { error ->
+                Timber.tag(TAG).e(error, PLACE_VOTE_RESULT_FAILURE_MESSAGE)
+                _uiState.update {
+                    it.copy(
+                        placeVoteResultUiState = PlaceVoteResultUiState.Failure(
+                            error.message ?: UNKNOWN_ERROR_MESSAGE,
+                        ),
+                    )
+                }
+            }
+    }
+
     fun onPlaceItemClick(placeId: Long) {
         _uiState.update { it.copy(step = Step.DETAIL, currentPlaceId = placeId) }
     }
@@ -74,6 +101,7 @@ class VoteStatusViewModel @Inject constructor(
         private const val TAG = "VoteStatus"
         private const val KAKAO_MAP_ERROR = "카카오 맵을 열 수 없습니다."
         private const val SCHEDULE_VOTE_RESULT_FAILURE_MESSAGE = "일정 투표 현황 조회에 실패했습니다."
+        private const val PLACE_VOTE_RESULT_FAILURE_MESSAGE = "장소 투표 현황 조회에 실패했습니다."
         private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
     }
 }
