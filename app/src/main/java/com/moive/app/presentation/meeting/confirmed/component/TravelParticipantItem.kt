@@ -22,11 +22,11 @@ import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
-import com.moive.app.data.meeting.model.TravelParticipantModel
+import com.moive.app.data.meeting.model.MeetingResultParticipantModel
 
 @Composable
 fun TravelParticipantItem(
-    participant: TravelParticipantModel,
+    participant: MeetingResultParticipantModel,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -95,7 +95,7 @@ fun TravelParticipantItem(
 private fun TravelParticipantItemPreview() {
     MoiveTheme {
         TravelParticipantItem(
-            participant = TravelParticipantModel(
+            participant = MeetingResultParticipantModel(
                 id = 1L,
                 name = "다인",
                 profileImageUrl = "",
