@@ -109,13 +109,6 @@ class ConditionViewModel @Inject constructor(
             it.year == state.calendarYear && it.month == state.calendarMonth && it.day == day
         }?.time
 
-        if (existingTime == null && state.confirmedDateTimes.size >= MAX_DATE_COUNT) {
-            viewModelScope.launch {
-                _sideEffect.send(SideEffect.OnShowToast(MAX_DATE_COUNT_MESSAGE, ToastType.CAUTION))
-            }
-            return
-        }
-
         _uiState.update { it.copy(pendingDay = day, pendingTime = existingTime) }
     }
 
@@ -139,6 +132,19 @@ class ConditionViewModel @Inject constructor(
     }
 
     fun onDateNextClick() {
+        val state = _uiState.value
+        val pending = state.pendingDateTime
+        val isNewDate = pending != null && state.confirmedDateTimes.none {
+            it.year == pending.year && it.month == pending.month && it.day == pending.day
+        }
+
+        if (isNewDate && state.confirmedDateTimes.size >= MAX_DATE_COUNT) {
+            viewModelScope.launch {
+                _sideEffect.send(SideEffect.OnShowToast(MAX_DATE_COUNT_MESSAGE, ToastType.CAUTION))
+            }
+            return
+        }
+
         _uiState.update {
             it.copy(
                 confirmedDateTimes = it.selectedDateTimes,
@@ -149,6 +155,19 @@ class ConditionViewModel @Inject constructor(
     }
 
     fun onDateSaveClick() {
+        val state = _uiState.value
+        val pending = state.pendingDateTime
+        val isNewDate = pending != null && state.confirmedDateTimes.none {
+            it.year == pending.year && it.month == pending.month && it.day == pending.day
+        }
+
+        if (isNewDate && state.confirmedDateTimes.size >= MAX_DATE_COUNT) {
+            viewModelScope.launch {
+                _sideEffect.send(SideEffect.OnShowToast(MAX_DATE_COUNT_MESSAGE, ToastType.CAUTION))
+            }
+            return
+        }
+
         _uiState.update {
             it.copy(
                 isDateBottomSheetVisible = false,
