@@ -21,18 +21,7 @@ data class PlaceDetailModel(
     val busMinutes: Int,
     val subwayMinutes: Int,
     val travelFare: Int,
-)
-
-@Immutable
-data class RecommendedPlaceDetailModel(
-    val id: Long,
-    val name: String,
-    val category: String,
-    val address: String,
-    val areaName: String,
-    val preferenceMatchCnt: Int,
-    val averageTravelTime: Int,
-    val imageUrls: List<String>,
+    val landingUrl: String = "",
 )
 
 @Immutable
@@ -46,5 +35,3 @@ data class PlaceDetailPinLatLang(
     val latitude: Double,
     val longitude: Double,
 )
-
-
