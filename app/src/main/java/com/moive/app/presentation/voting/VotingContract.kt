@@ -19,6 +19,7 @@ interface VotingContract {
         val recommendedPlaceUiState: RecommendedPlaceUiState = RecommendedPlaceUiState.Idle,
         val recommendedPlaceDetailUiState: RecommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Idle,
         val recommendedPlaceRouteUiState: RecommendedPlaceRouteUiState = RecommendedPlaceRouteUiState.Idle,
+        val placeVoteUiState: PlaceVoteUiState = PlaceVoteUiState.Idle,
         val isPlaceListVisible: Boolean = false,
         val selectedRegionId: Long? = null,
         val selectedRegionName: String? = null,
@@ -61,6 +62,10 @@ interface VotingContract {
         RECOMMENDATION,
         DETAIL;
     }
+
+    sealed class SideEffect {
+        data object NavigateToVoteStatus : SideEffect()
+    }
 }
 
 sealed interface RecommendedAreaUiState {
@@ -97,4 +102,13 @@ sealed interface RecommendedPlaceRouteUiState {
     data class Failure(
         val msg: String,
     ) : RecommendedPlaceRouteUiState
+}
+
+sealed interface PlaceVoteUiState {
+    data object Idle : PlaceVoteUiState
+    data object Loading : PlaceVoteUiState
+    data object Success : PlaceVoteUiState
+    data class Failure(
+        val msg: String,
+    ) : PlaceVoteUiState
 }

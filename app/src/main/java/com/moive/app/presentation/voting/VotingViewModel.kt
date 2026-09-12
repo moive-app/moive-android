@@ -13,8 +13,10 @@ import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -31,8 +33,12 @@ class VotingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(VotingContract.State())
     val uiState = _uiState.asStateFlow()
 
+    private val _sideEffect = Channel<VotingContract.SideEffect>(Channel.BUFFERED)
+    val sideEffect = _sideEffect.receiveAsFlow()
+
     private var recommendedPlacesJob: Job? = null
     private var placeDetailJob: Job? = null
+    private var placeVoteJob: Job? = null
 
     init {
         getRecommendedAreas()
@@ -226,6 +232,33 @@ class VotingViewModel @Inject constructor(
         Timber.tag(TAG).e(KAKAO_MAP_ERROR)
     }
 
+    fun onCompleteButtonClick() {
+        if (placeVoteJob?.isActive == true) return
+
+        val recommendedPlaceIds = _uiState.value.selectedPlaceList.toList()
+        if (recommendedPlaceIds.isEmpty()) return
+
+        placeVoteJob = viewModelScope.launch {
+            _uiState.update { it.copy(placeVoteUiState = PlaceVoteUiState.Loading) }
+
+            votingRepository.postPlaceVotes(meetingId, recommendedPlaceIds)
+                .onSuccess {
+                    _uiState.update { it.copy(placeVoteUiState = PlaceVoteUiState.Success) }
+                    _sideEffect.send(VotingContract.SideEffect.NavigateToVoteStatus)
+                }
+                .onFailure { error ->
+                    Timber.tag(TAG).e(error, PLACE_VOTE_FAILURE_MESSAGE)
+                    _uiState.update {
+                        it.copy(
+                            placeVoteUiState = PlaceVoteUiState.Failure(
+                                error.message ?: UNKNOWN_ERROR_MESSAGE,
+                            ),
+                        )
+                    }
+                }
+        }
+    }
+
     companion object {
         private const val TAG = "Voting"
         private const val KAKAO_MAP_ERROR = "카카오 맵을 열 수 없습니다."
@@ -233,6 +266,7 @@ class VotingViewModel @Inject constructor(
         private const val RECOMMENDED_PLACE_FAILURE_MESSAGE = "추천 장소 조회에 실패했습니다."
         private const val RECOMMENDED_PLACE_DETAIL_FAILURE_MESSAGE = "추천 장소 상세 조회에 실패했습니다."
         private const val RECOMMENDED_PLACE_ROUTE_FAILURE_MESSAGE = "이동 경로 조회에 실패했습니다."
+        private const val PLACE_VOTE_FAILURE_MESSAGE = "장소 투표에 실패했습니다."
         private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
     }
 }

@@ -5,12 +5,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.extensions.openUrl
 import com.moive.app.data.voting.model.RegionPinModel
@@ -29,9 +33,20 @@ fun VotingRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     BackHandler(enabled = uiState.step != Step.RECOMMENDATION) {
         viewModel.backToPlaceList()
+    }
+
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.sideEffect.collect { sideEffect ->
+                when (sideEffect) {
+                    VotingContract.SideEffect.NavigateToVoteStatus -> navigateToVoteStatus()
+                }
+            }
+        }
     }
 
     VotingScreen(
@@ -52,7 +67,7 @@ fun VotingRoute(
             }
         },
         onSelectButtonClick = viewModel::onSelectButtonClick,
-        onCompleteButtonClick = navigateToVoteStatus,
+        onCompleteButtonClick = viewModel::onCompleteButtonClick,
         modifier = modifier,
     )
 }
@@ -90,6 +105,7 @@ private fun VotingScreen(
             onResetClick = onResetClick,
             onBackClick = onBackClick,
             onCompleteButtonClick = onCompleteButtonClick,
+            isCompleteButtonLoading = uiState.placeVoteUiState is PlaceVoteUiState.Loading,
         )
 
         if (uiState.step == Step.DETAIL) {

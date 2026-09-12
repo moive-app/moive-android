@@ -66,6 +66,7 @@ fun PlaceListContent(
     onBackClick: () -> Unit,
     onCompleteButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isCompleteButtonLoading: Boolean = false,
 ) {
     var kakaoMapState by remember { mutableStateOf<KakaoMap?>(null) }
     var regionPinEntries by remember { mutableStateOf<List<Pair<Label, RegionPinModel>>>(emptyList()) }
@@ -176,6 +177,7 @@ fun PlaceListContent(
                             size = MoiveButtonSize.LARGE,
                             onClick = onCompleteButtonClick,
                             enabled = selectedPlaceIds.isNotEmpty(),
+                            isLoading = isCompleteButtonLoading,
                             modifier = Modifier.weight(1f),
                         )
                     }
