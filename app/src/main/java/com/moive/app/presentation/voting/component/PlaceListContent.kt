@@ -59,7 +59,7 @@ fun PlaceListContent(
     places: PersistentList<PlaceRecommendationCardItemModel>,
     selectedPlaceIds: PersistentSet<Long>,
     isPlaceListVisible: Boolean,
-    onRegionPinClick: (String) -> Unit,
+    onRegionPinClick: (RegionPinModel) -> Unit,
     onPlaceItemClick: (Long) -> Unit,
     onCheckboxClick: (Long) -> Unit,
     onBottomSheetDismiss: () -> Unit,
@@ -87,7 +87,7 @@ fun PlaceListContent(
                     CameraUpdateFactory.newCenterPosition(label.position, 16),
                     CameraAnimation.from(300),
                 )
-                clickedRegion?.let { onRegionPinClick(it.name) }
+                clickedRegion?.let { onRegionPinClick(it) }
                 true
             }
             kakaoMapState = kakaoMap
@@ -201,27 +201,19 @@ private fun PlaceListContentPreview() {
                     id = 1L,
                     name = "장소명(상호명) 1",
                     category = "카페",
-                    address = "서울시 강남구 워시기워시기 123",
                     matchRate = 60,
                     avgTravelMinutes = 36,
                     maxTravelMinutes = 41,
                     tasteMatchCount = 4,
-                    tasteMatchTotal = 7,
-                    totalTravelMinutes = 34,
-                    totalTravelFare = 1_650,
                 ),
                 PlaceRecommendationCardItemModel(
                     id = 2L,
                     name = "장소명(상호명) 2",
                     category = "식당",
-                    address = "서울시 강남구 워시기워시기 456",
                     matchRate = 50,
                     avgTravelMinutes = 36,
                     maxTravelMinutes = 41,
                     tasteMatchCount = 4,
-                    tasteMatchTotal = 7,
-                    totalTravelMinutes = 34,
-                    totalTravelFare = 1_650,
                 ),
             ),
             selectedPlaceIds = persistentSetOf(1L),
