@@ -11,8 +11,9 @@ import com.moive.app.presentation.meeting.confirmed.MeetingConfirmedRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToMeetingConfirmed(
+    meetingId: Long,
     navOptions: NavOptions? = null
-) = navigate(MeetingConfirmed, navOptions)
+) = navigate(MeetingConfirmed(meetingId), navOptions)
 
 fun NavGraphBuilder.meetingConfirmedGraph(
     navController: NavController,
@@ -27,4 +28,6 @@ fun NavGraphBuilder.meetingConfirmedGraph(
 }
 
 @Serializable
-data object MeetingConfirmed : Route
+data class MeetingConfirmed(
+    val meetingId: Long
+) : Route
