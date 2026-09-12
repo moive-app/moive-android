@@ -1,6 +1,6 @@
 package com.moive.app.data.voting.model
 
-data class PlaceRecommendationCardItemModel(
+data class PlaceRecommendedPlaceCardItemModel(
     val id: Long,
     val name: String,
     val category: String,

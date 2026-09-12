@@ -1,6 +1,6 @@
 package com.moive.app.data.voting.repository
 
-import com.moive.app.data.voting.model.PlaceRecommendationCardItemModel
+import com.moive.app.data.voting.model.PlaceRecommendedPlaceCardItemModel
 import com.moive.app.data.voting.model.RegionPinModel
 
 interface VotingRepository {
@@ -9,5 +9,5 @@ interface VotingRepository {
     suspend fun getRecommendedPlaces(
         meetingId: Long,
         recommendedAreaId: Long,
-    ): Result<List<PlaceRecommendationCardItemModel>>
+    ): Result<List<PlaceRecommendedPlaceCardItemModel>>
 }

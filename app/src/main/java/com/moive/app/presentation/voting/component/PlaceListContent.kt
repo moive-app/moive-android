@@ -40,12 +40,11 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.extensions.addBitmapMarker
-import com.moive.app.data.voting.model.PlaceRecommendationCardItemModel
+import com.moive.app.data.voting.model.PlaceRecommendedPlaceCardItemModel
 import com.moive.app.data.voting.model.RegionPinModel
 import com.moive.app.presentation.voting.util.rememberMapViewWithLifecycle
 import com.moive.app.presentation.voting.util.rememberRegionPinBitmap
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
@@ -56,7 +55,7 @@ fun PlaceListContent(
     innerPadding: PaddingValues,
     regionList: ImmutableList<RegionPinModel>,
     selectedRegionName: String?,
-    places: PersistentList<PlaceRecommendationCardItemModel>,
+    places: ImmutableList<PlaceRecommendedPlaceCardItemModel>,
     selectedPlaceIds: PersistentSet<Long>,
     isPlaceListVisible: Boolean,
     onRegionPinClick: (RegionPinModel) -> Unit,
@@ -197,7 +196,7 @@ private fun PlaceListContentPreview() {
             ),
             selectedRegionName = null,
             places = persistentListOf(
-                PlaceRecommendationCardItemModel(
+                PlaceRecommendedPlaceCardItemModel(
                     id = 1L,
                     name = "장소명(상호명) 1",
                     category = "카페",
@@ -206,7 +205,7 @@ private fun PlaceListContentPreview() {
                     maxTravelMinutes = 41,
                     tasteMatchCount = 4,
                 ),
-                PlaceRecommendationCardItemModel(
+                PlaceRecommendedPlaceCardItemModel(
                     id = 2L,
                     name = "장소명(상호명) 2",
                     category = "식당",
