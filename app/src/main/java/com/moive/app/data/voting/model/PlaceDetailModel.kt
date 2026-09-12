@@ -11,7 +11,7 @@ data class PlaceDetailModel(
     val address: String,
     val totalMemberCount: Int,
     val matchMemberCount: Int,
-    val imageList: List<PlaceDetailImageItemModel>,
+    val imageList: List<String>,
     val startPinLatLang: PlaceDetailPinLatLang,
     val endPinLatLang: PlaceDetailPinLatLang,
     val routeLatLang: PlaceDetailRouteLatLang,
@@ -24,9 +24,15 @@ data class PlaceDetailModel(
 )
 
 @Immutable
-data class PlaceDetailImageItemModel(
+data class RecommendedPlaceDetailModel(
     val id: Long,
-    val imageUrl: String,
+    val name: String,
+    val category: String,
+    val address: String,
+    val areaName: String,
+    val preferenceMatchCnt: Int,
+    val averageTravelTime: Int,
+    val imageUrls: List<String>,
 )
 
 @Immutable
