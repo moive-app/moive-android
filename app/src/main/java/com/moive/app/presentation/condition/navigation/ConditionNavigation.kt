@@ -12,8 +12,12 @@ import com.moive.app.presentation.meeting.detail.navigation.MeetingDetail
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToCondition(
-    navOptions: NavOptions? = null
-) = navigate(Condition, navOptions)
+    meetingId: Long,
+    hasSchedule: Boolean = false,
+    scheduledDate: String? = null,
+    scheduledTime: String? = null,
+    navOptions: NavOptions? = null,
+) = navigate(Condition(meetingId, hasSchedule, scheduledDate, scheduledTime), navOptions)
 
 fun NavGraphBuilder.conditionGraph(
     navController: NavController,
@@ -31,4 +35,9 @@ fun NavGraphBuilder.conditionGraph(
 }
 
 @Serializable
-data object Condition : Route
+data class Condition(
+    val meetingId: Long,
+    val hasSchedule: Boolean = false,
+    val scheduledDate: String? = null,
+    val scheduledTime: String? = null,
+) : Route
