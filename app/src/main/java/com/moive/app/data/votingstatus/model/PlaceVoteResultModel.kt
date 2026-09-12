@@ -8,6 +8,7 @@ data class PlaceVoteResultModel(
 
 data class PlaceVoteCandidateModel(
     val id: Long,
+    val areaId: Long,
     val placeName: String?,
     val voterCount: Int,
     val isVotedByMe: Boolean,
