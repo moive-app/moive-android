@@ -11,6 +11,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.extensions.openKakaoMapRoute
+import com.moive.app.data.voting.model.RegionPinModel
 import com.moive.app.presentation.common.component.placedetail.PlaceDetailContent
 import com.moive.app.presentation.voting.VotingContract.Step
 import com.moive.app.presentation.voting.component.PlaceListContent
@@ -61,7 +62,7 @@ fun VotingRoute(
 private fun VotingScreen(
     innerPadding: PaddingValues,
     uiState: VotingContract.State,
-    onRegionPinClick: (String) -> Unit,
+    onRegionPinClick: (RegionPinModel) -> Unit,
     onPlaceItemClick: (Long) -> Unit,
     onCheckboxClick: (Long) -> Unit,
     onBottomSheetDismiss: () -> Unit,

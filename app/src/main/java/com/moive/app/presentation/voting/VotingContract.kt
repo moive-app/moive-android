@@ -5,10 +5,9 @@ import com.moive.app.data.voting.model.PlaceDetailImageItemModel
 import com.moive.app.data.voting.model.PlaceDetailModel
 import com.moive.app.data.voting.model.PlaceDetailPinLatLang
 import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
-import com.moive.app.data.voting.model.PlaceRecommendationCardItemModel
+import com.moive.app.data.voting.model.PlaceRecommendedPlaceCardItemModel
 import com.moive.app.data.voting.model.RegionPinModel
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
@@ -18,50 +17,11 @@ interface VotingContract {
     data class State(
         val step: Step = Step.RECOMMENDATION,
         val recommendedAreaUiState: RecommendedAreaUiState = RecommendedAreaUiState.Idle,
+        val recommendedPlaceUiState: RecommendedPlaceUiState = RecommendedPlaceUiState.Idle,
         val isPlaceListVisible: Boolean = false,
         val selectedRegionName: String? = null,
         val regionList: ImmutableList<RegionPinModel> = persistentListOf(),
-        val placeList: PersistentList<PlaceRecommendationCardItemModel> = persistentListOf(
-            PlaceRecommendationCardItemModel(
-                id = 1L,
-                name = "장소명(상호명) 1",
-                category = "카페",
-                address = "서울시 강남구 워시기워시기 123",
-                matchRate = 60,
-                avgTravelMinutes = 36,
-                maxTravelMinutes = 41,
-                tasteMatchCount = 4,
-                tasteMatchTotal = 7,
-                totalTravelMinutes = 34,
-                totalTravelFare = 1_650,
-            ),
-            PlaceRecommendationCardItemModel(
-                id = 2L,
-                name = "장소명(상호명) 2",
-                category = "식당",
-                address = "서울시 강남구 워시기워시기 456",
-                matchRate = 50,
-                avgTravelMinutes = 36,
-                maxTravelMinutes = 41,
-                tasteMatchCount = 4,
-                tasteMatchTotal = 7,
-                totalTravelMinutes = 34,
-                totalTravelFare = 1650,
-            ),
-            PlaceRecommendationCardItemModel(
-                id = 3L,
-                name = "장소명(상호명) 3",
-                category = "카페",
-                address = "서울시 강남구 워시기워시기 789",
-                matchRate = 45,
-                avgTravelMinutes = 36,
-                maxTravelMinutes = 41,
-                tasteMatchCount = 4,
-                tasteMatchTotal = 7,
-                totalTravelMinutes = 34,
-                totalTravelFare = 1650,
-            ),
-        ),
+        val placeList: ImmutableList<PlaceRecommendedPlaceCardItemModel> = persistentListOf(),
         val selectedPlaceList: PersistentSet<Long> = persistentSetOf(),
         val currentPlaceId: Long? = null,
         val currentPlaceDetail: PlaceDetailModel = PlaceDetailModel(
@@ -117,4 +77,13 @@ sealed interface RecommendedAreaUiState {
     data class Failure(
         val msg: String,
     ) : RecommendedAreaUiState
+}
+
+sealed interface RecommendedPlaceUiState {
+    data object Idle : RecommendedPlaceUiState
+    data object Loading : RecommendedPlaceUiState
+    data object Success : RecommendedPlaceUiState
+    data class Failure(
+        val msg: String,
+    ) : RecommendedPlaceUiState
 }

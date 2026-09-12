@@ -4,12 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.moive.app.data.voting.model.RegionPinModel
 import com.moive.app.data.voting.repository.VotingRepository
 import com.moive.app.presentation.voting.VotingContract.Step
 import com.moive.app.presentation.voting.navigation.Voting
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -54,13 +56,38 @@ class VotingViewModel @Inject constructor(
             }
     }
 
-    fun onRegionPinClick(regionName: String) {
+    fun onRegionPinClick(region: RegionPinModel) {
         _uiState.update {
             it.copy(
                 isPlaceListVisible = true,
-                selectedRegionName = regionName,
+                selectedRegionName = region.name,
             )
         }
+        getRecommendedPlaces(region.id)
+    }
+
+    private fun getRecommendedPlaces(recommendedAreaId: Long) = viewModelScope.launch {
+        _uiState.update { it.copy(recommendedPlaceUiState = RecommendedPlaceUiState.Loading) }
+
+        votingRepository.getRecommendedPlaces(meetingId, recommendedAreaId)
+            .onSuccess { places ->
+                _uiState.update {
+                    it.copy(
+                        recommendedPlaceUiState = RecommendedPlaceUiState.Success,
+                        placeList = places.toImmutableList(),
+                    )
+                }
+            }
+            .onFailure { error ->
+                Timber.tag(TAG).e(error, RECOMMENDED_PLACE_FAILURE_MESSAGE)
+                _uiState.update {
+                    it.copy(
+                        recommendedPlaceUiState = RecommendedPlaceUiState.Failure(
+                            error.message ?: UNKNOWN_ERROR_MESSAGE,
+                        ),
+                    )
+                }
+            }
     }
 
     fun onBottomSheetDismiss() {
@@ -109,6 +136,7 @@ class VotingViewModel @Inject constructor(
         private const val TAG = "Voting"
         private const val KAKAO_MAP_ERROR = "카카오 맵을 열 수 없습니다."
         private const val RECOMMENDED_AREA_FAILURE_MESSAGE = "추천 지역 조회에 실패했습니다."
+        private const val RECOMMENDED_PLACE_FAILURE_MESSAGE = "추천 장소 조회에 실패했습니다."
         private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
     }
 }
