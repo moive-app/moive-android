@@ -108,6 +108,11 @@ fun PlaceListContent(
             ) ?: return@mapIndexedNotNull null
             label to region
         }
+
+        if (regionList.isNotEmpty()) {
+            val points = regionList.map { LatLng.from(it.locationY, it.locationX) }.toTypedArray()
+            kakaoMap.moveCamera(CameraUpdateFactory.fitMapPoints(points, MAP_BOUNDS_PADDING_PX))
+        }
     }
 
     Box(
@@ -182,6 +187,7 @@ fun PlaceListContent(
 
 private const val DEFAULT_LOCATION_X = 127.0246 // 신논현역
 private const val DEFAULT_LOCATION_Y = 37.5044 // 신논현역
+private const val MAP_BOUNDS_PADDING_PX = 300
 
 @Preview
 @Composable
