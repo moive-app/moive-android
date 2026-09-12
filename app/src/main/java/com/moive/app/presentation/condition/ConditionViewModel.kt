@@ -1,19 +1,30 @@
 package com.moive.app.presentation.condition
 
 import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.moive.app.core.designsystem.component.toast.ToastType
+import com.moive.app.data.condition.model.AvailableScheduleModel
+import com.moive.app.data.condition.repository.ConditionRepository
 import com.moive.app.data.condition.repository.PlaceRepository
+import com.moive.app.presentation.condition.ConditionContract.SideEffect
 import com.moive.app.presentation.condition.ConditionContract.Step
+import com.moive.app.presentation.condition.navigation.Condition
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -22,17 +33,49 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class ConditionViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val placeRepository: PlaceRepository,
+    private val conditionRepository: ConditionRepository,
 ) : ViewModel() {
+
+    private val condition: Condition = savedStateHandle.toRoute<Condition>()
+    private val meetingId: Long = condition.meetingId
 
     private val _uiState = MutableStateFlow(ConditionContract.State())
     val uiState = _uiState.asStateFlow()
 
+    private val _sideEffect = Channel<SideEffect>(Channel.BUFFERED)
+    val sideEffect = _sideEffect.receiveAsFlow()
+
+    private var job: Job? = null
+
     init {
         observePlaceSearchInput()
+        fetchScheduledDate()
+    }
+
+    private fun fetchScheduledDate() {
+        val scheduledDate = condition.scheduledDate ?: return
+        if (!condition.hasSchedule) return
+
+        val (year, month, day) = scheduledDate.split("-").map { it.toInt() }
+        _uiState.update {
+            it.copy(
+                isDateConfirmed = true,
+                confirmedDateTimes = persistentListOf(
+                    DateTimeSelection(
+                        year = year,
+                        month = month,
+                        day = day,
+                        time = condition.scheduledTime.orEmpty(),
+                    ),
+                ),
+            )
+        }
     }
 
     fun onDateBoxClick() {
+        if (_uiState.value.isDateConfirmed) return
         _uiState.update { it.copy(isDateBottomSheetVisible = true) }
     }
 
@@ -61,12 +104,19 @@ class ConditionViewModel @Inject constructor(
     }
 
     fun onCalendarDayClick(day: Int) {
-        _uiState.update { state ->
-            val existingTime = state.confirmedDateTimes.firstOrNull {
-                it.year == state.calendarYear && it.month == state.calendarMonth && it.day == day
-            }?.time
-            state.copy(pendingDay = day, pendingTime = existingTime)
+        val state = _uiState.value
+        val existingTime = state.confirmedDateTimes.firstOrNull {
+            it.year == state.calendarYear && it.month == state.calendarMonth && it.day == day
+        }?.time
+
+        if (existingTime == null && state.confirmedDateTimes.size >= MAX_DATE_COUNT) {
+            viewModelScope.launch {
+                _sideEffect.send(SideEffect.OnShowToast(MAX_DATE_COUNT_MESSAGE, ToastType.CAUTION))
+            }
+            return
         }
+
+        _uiState.update { it.copy(pendingDay = day, pendingTime = existingTime) }
     }
 
     fun onCalendarTimeClick(time: String) {
@@ -177,9 +227,57 @@ class ConditionViewModel @Inject constructor(
         _uiState.update { it.copy(step = Step.INPUT) }
     }
 
+    fun postCondition() {
+        if (job?.isActive == true) return
+
+        val currentState = _uiState.value
+        val selectedPlace = currentState.selectedPlace
+        val selectedTravelTime = currentState.selectedTravelTime
+
+        if (selectedPlace == null || selectedTravelTime == null) {
+            Timber.tag(TAG).e(CONDITION_SUBMIT_FAILURE_MESSAGE)
+            return
+        }
+
+        val availableSchedules = currentState.confirmedDateTimes.map {
+            AvailableScheduleModel(
+                date = "%04d-%02d-%02d".format(it.year, it.month, it.day),
+                time = it.time,
+            )
+        }
+        val activityTypes = currentState.selectedPreferences.mapNotNull { it.toActivityType() }
+
+        job = viewModelScope.launch {
+            _uiState.update { it.copy(conditionUiState = ConditionUiState.Loading) }
+
+            conditionRepository.postConditionInput(
+                meetingId = meetingId,
+                availableSchedules = availableSchedules,
+                departureName = selectedPlace.address,
+                departureLatitude = selectedPlace.latitude,
+                departureLongitude = selectedPlace.longitude,
+                maxTravelMinutes = selectedTravelTime.toMaxTravelMinutes(),
+                activityTypes = activityTypes,
+            )
+                .onSuccess {
+                    _uiState.update { it.copy(conditionUiState = ConditionUiState.Success) }
+                    _sideEffect.send(SideEffect.NavigateToMeetingDetail)
+                }
+                .onFailure { error ->
+                    Timber.tag(TAG).e(error, CONDITION_SUBMIT_FAILURE_MESSAGE)
+                    _uiState.update {
+                        it.copy(conditionUiState = ConditionUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE))
+                    }
+                }
+        }
+    }
+
     companion object {
         private const val TAG = "Condition"
         private const val SEARCH_NETWORK_DEBOUNCE = 300L
-
+        private const val CONDITION_SUBMIT_FAILURE_MESSAGE = "조건 입력에 실패했습니다."
+        private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
+        private const val MAX_DATE_COUNT = 5
+        private const val MAX_DATE_COUNT_MESSAGE = "날짜는 최대 5개까지 선택 가능합니다."
     }
 }

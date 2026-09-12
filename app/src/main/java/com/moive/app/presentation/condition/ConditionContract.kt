@@ -2,6 +2,8 @@ package com.moive.app.presentation.condition
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Immutable
+import com.moive.app.core.designsystem.component.toast.ToastType
+import com.moive.app.data.condition.mapper.ActivityType
 import com.moive.app.data.condition.model.PlaceSearchItemModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
@@ -13,6 +15,8 @@ interface ConditionContract {
     @Immutable
     data class State(
         val step: Step = Step.INPUT,
+        val conditionUiState: ConditionUiState = ConditionUiState.Idle,
+        val isDateConfirmed: Boolean = false,
         val isDateBottomSheetVisible: Boolean = false,
         val calendarYear: Int = Calendar.getInstance().get(Calendar.YEAR),
         val calendarMonth: Int = Calendar.getInstance().get(Calendar.MONTH) + 1,
@@ -89,12 +93,7 @@ interface ConditionContract {
         companion object {
             private val TIME_OPTIONS = buildTimeOptions()
 
-            private val TRAVEL_TIME_OPTIONS = persistentListOf(
-                "30분 이내",
-                "1시간 이내",
-                "1시간 30분 이내",
-                "상관 없어요",
-            )
+            private val TRAVEL_TIME_OPTIONS = TravelTime.entries.map { it.label }.toPersistentList()
 
             private val PREFERENCE_CATEGORIES = persistentListOf(
                 PreferenceCategory(
@@ -122,7 +121,34 @@ interface ConditionContract {
         SEARCH,
         CONFIRM;
     }
+
+    sealed class SideEffect {
+        data object NavigateToMeetingDetail : SideEffect()
+        data class OnShowToast(val message: String, val type: ToastType) : SideEffect()
+    }
 }
+
+sealed interface ConditionUiState {
+    data object Idle : ConditionUiState
+    data object Loading : ConditionUiState
+    data object Success : ConditionUiState
+    data class Failure(
+        val msg: String,
+    ) : ConditionUiState
+}
+
+enum class TravelTime(val label: String, val maxMinutes: Int?) {
+    WITHIN_30("30분 이내", 30),
+    WITHIN_60("1시간 이내", 60),
+    WITHIN_90("1시간 30분 이내", 90),
+    NO_PREFERENCE("상관 없어요", null),
+}
+
+fun String.toMaxTravelMinutes(): Int? =
+    TravelTime.entries.find { it.label == this }?.maxMinutes
+
+fun String.toActivityType(): ActivityType? =
+    ActivityType.entries.find { it.label == this }
 
 @Immutable
 data class PreferenceCategory(
