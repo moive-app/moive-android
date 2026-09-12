@@ -19,7 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
-import com.moive.app.core.extensions.openKakaoMapRoute
+import com.moive.app.core.extensions.openUrl
 import com.moive.app.data.votingstatus.model.ScheduleVoteCandidateModel
 import com.moive.app.presentation.common.component.placedetail.PlaceDetailContent
 import com.moive.app.presentation.votestatus.VoteStatusContract.Step
@@ -48,14 +48,11 @@ fun VoteStatusRoute(
         onPlaceItemClick = viewModel::onPlaceItemClick,
         onDetailBackClick = viewModel::backToList,
         onKakaoMapClick = {
-            val place = uiState.currentPlaceDetail
-            val opened = context.openKakaoMapRoute(
-                startLatitude = place.startPinLatLang.latitude,
-                startLongitude = place.startPinLatLang.longitude,
-                endLatitude = place.endPinLatLang.latitude,
-                endLongitude = place.endPinLatLang.longitude,
-            )
-            viewModel.onKakaoMapRouteOpened(opened)
+            val landingUrl = uiState.currentPlaceDetail.landingUrl
+            if (landingUrl.isNotBlank()) {
+                val opened = context.openUrl(landingUrl)
+                viewModel.onKakaoMapRouteOpened(opened)
+            }
         },
         modifier = modifier,
     )

@@ -4,11 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.moive.app.data.voting.repository.VotingRepository
 import com.moive.app.data.votingstatus.repository.VoteStatusRepository
 import com.moive.app.presentation.votestatus.VoteStatusContract.Step
 import com.moive.app.presentation.votestatus.navigation.VoteStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -20,12 +22,15 @@ import javax.inject.Inject
 class VoteStatusViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val voteStatusRepository: VoteStatusRepository,
+    private val votingRepository: VotingRepository,
 ) : ViewModel() {
 
     private val meetingId: Long = savedStateHandle.toRoute<VoteStatus>().meetingId
 
     private val _uiState = MutableStateFlow(VoteStatusContract.State())
     val uiState = _uiState.asStateFlow()
+
+    private var placeRouteJob: Job? = null
 
     init {
         getScheduleVoteResult()
@@ -85,7 +90,56 @@ class VoteStatusViewModel @Inject constructor(
     }
 
     fun onPlaceItemClick(placeId: Long) {
-        _uiState.update { it.copy(step = Step.DETAIL, currentPlaceId = placeId) }
+        placeRouteJob?.cancel()
+
+        val candidateName = _uiState.value.placeCandidates.firstOrNull { it.id == placeId }?.placeName
+
+        _uiState.update {
+            it.copy(
+                step = Step.DETAIL,
+                currentPlaceId = placeId,
+                currentPlaceDetail = it.currentPlaceDetail.copy(
+                    id = placeId,
+                    placeName = candidateName ?: UNKNOWN_PLACE_NAME,
+                ),
+            )
+        }
+
+        placeRouteJob = viewModelScope.launch {
+            fetchPlaceRoute(placeId)
+        }
+    }
+
+    private suspend fun fetchPlaceRoute(placeId: Long) {
+        _uiState.update { it.copy(placeRouteUiState = PlaceRouteUiState.Loading) }
+
+        votingRepository.getRecommendedPlaceRoute(
+            meetingId = meetingId,
+            recommendedPlaceId = placeId,
+            current = _uiState.value.currentPlaceDetail,
+        )
+            .onSuccess { updated ->
+                if (_uiState.value.currentPlaceId != placeId) return@onSuccess
+
+                _uiState.update {
+                    it.copy(
+                        placeRouteUiState = PlaceRouteUiState.Success,
+                        currentPlaceDetail = updated,
+                    )
+                }
+            }
+            .onFailure { error ->
+                if (_uiState.value.currentPlaceId != placeId) return@onFailure
+
+                Timber.tag(TAG).e(error, PLACE_ROUTE_FAILURE_MESSAGE)
+                _uiState.update {
+                    it.copy(
+                        placeRouteUiState = PlaceRouteUiState.Failure(
+                            error.message ?: UNKNOWN_ERROR_MESSAGE,
+                        ),
+                    )
+                }
+            }
     }
 
     fun backToList() {
@@ -102,6 +156,8 @@ class VoteStatusViewModel @Inject constructor(
         private const val KAKAO_MAP_ERROR = "카카오 맵을 열 수 없습니다."
         private const val SCHEDULE_VOTE_RESULT_FAILURE_MESSAGE = "일정 투표 현황 조회에 실패했습니다."
         private const val PLACE_VOTE_RESULT_FAILURE_MESSAGE = "장소 투표 현황 조회에 실패했습니다."
+        private const val PLACE_ROUTE_FAILURE_MESSAGE = "이동 경로 조회에 실패했습니다."
         private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
+        private const val UNKNOWN_PLACE_NAME = "알 수 없는 장소"
     }
 }
