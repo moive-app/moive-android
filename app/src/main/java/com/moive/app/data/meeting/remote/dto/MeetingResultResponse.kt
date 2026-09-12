@@ -21,6 +21,8 @@ data class MeetingResultResponse(
 data class MeetingResultPlaceResponse(
     @SerialName("id")
     val id: Long,
+    @SerialName("areaId")
+    val areaId: Long,
     @SerialName("isFetchFailed")
     val isFetchFailed: Boolean,
     @SerialName("name")
@@ -48,7 +50,7 @@ data class MeetingResultParticipantResponse(
     @SerialName("nickname")
     val nickname: String,
     @SerialName("address")
-    val address: String,
+    val address: String?,
     @SerialName("transferCnt")
     val transferCnt: Int?,
     @SerialName("totalTime")

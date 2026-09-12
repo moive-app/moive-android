@@ -18,6 +18,7 @@ fun MeetingResultResponse.toModel(): MeetingResultModel =
 fun MeetingResultPlaceResponse.toModel(): MeetingResultPlaceModel =
     MeetingResultPlaceModel(
         id = id,
+        areaId = areaId,
         name = name,
         address = address,
         category = category,
@@ -30,7 +31,7 @@ fun MeetingResultParticipantResponse.toModel(id: Long): MeetingResultParticipant
         id = id,
         name = nickname,
         profileImageUrl = profileImageUrl ?: "",
-        address = address,
+        address = address ?: "",
         transferCount = transferCnt ?: 0,
         travelMinutes = totalTime ?: 0,
     )

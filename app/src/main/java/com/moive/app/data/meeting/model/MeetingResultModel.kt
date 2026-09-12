@@ -13,6 +13,7 @@ data class MeetingResultModel(
 @Immutable
 data class MeetingResultPlaceModel(
     val id: Long,
+    val areaId: Long,
     val name: String,
     val address: String,
     val category: String,
