@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -29,6 +30,9 @@ class VotingViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(VotingContract.State())
     val uiState = _uiState.asStateFlow()
+
+    private var recommendedPlacesJob: Job? = null
+    private var placeDetailJob: Job? = null
 
     init {
         getRecommendedAreas()
@@ -57,6 +61,9 @@ class VotingViewModel @Inject constructor(
     }
 
     fun onRegionPinClick(region: RegionPinModel) {
+        recommendedPlacesJob?.cancel()
+        placeDetailJob?.cancel()
+
         _uiState.update {
             it.copy(
                 isPlaceListVisible = true,
@@ -64,7 +71,7 @@ class VotingViewModel @Inject constructor(
                 selectedRegionName = region.name,
             )
         }
-        getRecommendedPlaces(region.id)
+        recommendedPlacesJob = getRecommendedPlaces(region.id)
     }
 
     private fun getRecommendedPlaces(recommendedAreaId: Long) = viewModelScope.launch {
@@ -72,6 +79,8 @@ class VotingViewModel @Inject constructor(
 
         votingRepository.getRecommendedPlaces(meetingId, recommendedAreaId)
             .onSuccess { places ->
+                if (_uiState.value.selectedRegionId != recommendedAreaId) return@onSuccess
+
                 _uiState.update {
                     it.copy(
                         recommendedPlaceUiState = RecommendedPlaceUiState.Success,
@@ -80,6 +89,8 @@ class VotingViewModel @Inject constructor(
                 }
             }
             .onFailure { error ->
+                if (_uiState.value.selectedRegionId != recommendedAreaId) return@onFailure
+
                 Timber.tag(TAG).e(error, RECOMMENDED_PLACE_FAILURE_MESSAGE)
                 _uiState.update {
                     it.copy(
@@ -111,6 +122,8 @@ class VotingViewModel @Inject constructor(
     }
 
     fun onPlaceItemClick(placeId: Long) {
+        placeDetailJob?.cancel()
+
         _uiState.update {
             it.copy(
                 step = Step.DETAIL,
@@ -119,7 +132,7 @@ class VotingViewModel @Inject constructor(
             )
         }
 
-        viewModelScope.launch {
+        placeDetailJob = viewModelScope.launch {
             fetchRecommendedPlaceDetail(placeId)
             fetchRecommendedPlaceRoute(placeId)
         }
@@ -137,6 +150,9 @@ class VotingViewModel @Inject constructor(
             current = _uiState.value.currentPlaceDetail
         )
             .onSuccess { updated ->
+                val state = _uiState.value
+                if (state.selectedRegionId != recommendedAreaId || state.currentPlaceId != placeId) return@onSuccess
+
                 _uiState.update {
                     it.copy(
                         recommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Success,
@@ -145,6 +161,9 @@ class VotingViewModel @Inject constructor(
                 }
             }
             .onFailure { error ->
+                val state = _uiState.value
+                if (state.selectedRegionId != recommendedAreaId || state.currentPlaceId != placeId) return@onFailure
+
                 Timber.tag(TAG).e(error, RECOMMENDED_PLACE_DETAIL_FAILURE_MESSAGE)
                 _uiState.update {
                     it.copy(
@@ -165,6 +184,8 @@ class VotingViewModel @Inject constructor(
             current = _uiState.value.currentPlaceDetail
         )
             .onSuccess { updated ->
+                if (_uiState.value.currentPlaceId != placeId) return@onSuccess
+
                 _uiState.update {
                     it.copy(
                         recommendedPlaceRouteUiState = RecommendedPlaceRouteUiState.Success,
@@ -173,6 +194,8 @@ class VotingViewModel @Inject constructor(
                 }
             }
             .onFailure { error ->
+                if (_uiState.value.currentPlaceId != placeId) return@onFailure
+
                 Timber.tag(TAG).e(error, RECOMMENDED_PLACE_ROUTE_FAILURE_MESSAGE)
                 _uiState.update {
                     it.copy(
