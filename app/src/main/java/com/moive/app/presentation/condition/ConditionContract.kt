@@ -11,6 +11,8 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import java.util.Calendar
 
+const val MAX_DATE_COUNT = 5
+
 interface ConditionContract {
     @Immutable
     data class State(
@@ -56,7 +58,12 @@ interface ConditionContract {
         val selectedDateTimes: PersistentList<DateTimeSelection>
             get() {
                 val pending = pendingDateTime
-                val entries = if (pending == null) {
+                val isNewDate = pending != null && confirmedDateTimes.none {
+                    it.year == pending.year && it.month == pending.month && it.day == pending.day
+                }
+                val isOverLimit = isNewDate && confirmedDateTimes.size >= MAX_DATE_COUNT
+
+                val entries = if (pending == null || isOverLimit) {
                     confirmedDateTimes
                 } else {
                     confirmedDateTimes
@@ -124,7 +131,7 @@ interface ConditionContract {
 
     sealed class SideEffect {
         data object NavigateToMeetingDetail : SideEffect()
-        data class OnShowToast(val message: String, val type: ToastType) : SideEffect()
+        data class OnShowToast(val msg: String, val type: ToastType) : SideEffect()
     }
 }
 

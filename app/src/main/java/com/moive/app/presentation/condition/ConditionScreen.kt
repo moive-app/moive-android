@@ -41,7 +41,7 @@ fun ConditionRoute(
             viewModel.sideEffect.collect { sideEffect ->
                 when (sideEffect) {
                     SideEffect.NavigateToMeetingDetail -> navigateToMeetingDetail()
-                    is SideEffect.OnShowToast -> showToast.invoke(sideEffect.message, sideEffect.type)
+                    is SideEffect.OnShowToast -> showToast.invoke(sideEffect.msg, sideEffect.type)
                 }
             }
         }

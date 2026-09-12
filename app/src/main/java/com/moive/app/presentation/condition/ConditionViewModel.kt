@@ -155,19 +155,6 @@ class ConditionViewModel @Inject constructor(
     }
 
     fun onDateSaveClick() {
-        val state = _uiState.value
-        val pending = state.pendingDateTime
-        val isNewDate = pending != null && state.confirmedDateTimes.none {
-            it.year == pending.year && it.month == pending.month && it.day == pending.day
-        }
-
-        if (isNewDate && state.confirmedDateTimes.size >= MAX_DATE_COUNT) {
-            viewModelScope.launch {
-                _sideEffect.send(SideEffect.OnShowToast(MAX_DATE_COUNT_MESSAGE, ToastType.CAUTION))
-            }
-            return
-        }
-
         _uiState.update {
             it.copy(
                 isDateBottomSheetVisible = false,
@@ -296,7 +283,6 @@ class ConditionViewModel @Inject constructor(
         private const val SEARCH_NETWORK_DEBOUNCE = 300L
         private const val CONDITION_SUBMIT_FAILURE_MESSAGE = "조건 입력에 실패했습니다."
         private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
-        private const val MAX_DATE_COUNT = 5
         private const val MAX_DATE_COUNT_MESSAGE = "날짜는 최대 5개까지 선택 가능합니다."
     }
 }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -24,8 +23,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.moive.app.core.designsystem.component.toast.LocalSnackbarHostState
 import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
-import com.moive.app.core.designsystem.component.toast.MoiveToast
+import com.moive.app.core.designsystem.component.toast.MoiveSnackbarHost
 import com.moive.app.core.designsystem.component.toast.MoiveToastVisuals
 import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.presentation.main.component.MainBottomBar
@@ -75,6 +75,7 @@ fun MainScreen(
 
     CompositionLocalProvider(
         LocalToastTrigger provides onShowToast,
+        LocalSnackbarHostState provides snackbarHostState,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Scaffold(
@@ -112,7 +113,7 @@ fun MainScreen(
                 )
             }
 
-            SnackbarHost(
+            MoiveSnackbarHost(
                 hostState = snackbarHostState,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -120,18 +121,7 @@ fun MainScreen(
                         bottom = bottomBarHeight + 12.dp
                     )
                     .navigationBarsPadding(),
-            ) { data ->
-
-                val moiveToastVisuals = data.visuals as MoiveToastVisuals
-
-                MoiveToast(
-                    text = moiveToastVisuals.message,
-                    type = moiveToastVisuals.type,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 80.dp),
-                )
-            }
+            )
         }
     }
 }
