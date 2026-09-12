@@ -74,17 +74,28 @@ fun TravelParticipantItem(
         Column(
             horizontalAlignment = Alignment.End,
         ) {
-            Text(
-                text = if (participant.transferCount <= 0) "환승 없음" else "환승 ${participant.transferCount}회",
-                color = colors.text.default,
-                style = typography.label.xxsR,
-            )
+            val transferCount = participant.transferCount
+            val travelMinutes = participant.travelMinutes
 
-            Text(
-                text = "${participant.travelMinutes}분",
-                color = colors.text.tertiary,
-                style = typography.label.xxsR,
-            )
+            if (transferCount == null || travelMinutes == null) {
+                Text(
+                    text = "위치 정보 없음",
+                    color = colors.text.tertiary,
+                    style = typography.label.xxsR,
+                )
+            } else {
+                Text(
+                    text = if (transferCount <= 0) "환승 없음" else "환승 ${transferCount}회",
+                    color = colors.text.default,
+                    style = typography.label.xxsR,
+                )
+
+                Text(
+                    text = "${travelMinutes}분",
+                    color = colors.text.tertiary,
+                    style = typography.label.xxsR,
+                )
+            }
         }
     }
 }
@@ -102,6 +113,23 @@ private fun TravelParticipantItemPreview() {
                 address = "서울시 구로구 머시기",
                 transferCount = 1,
                 travelMinutes = 32,
+            ),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TravelParticipantItemNoLocationPreview() {
+    MoiveTheme {
+        TravelParticipantItem(
+            participant = MeetingResultParticipantModel(
+                id = 1L,
+                name = "새로 참여한 사람",
+                profileImageUrl = "",
+                address = "",
+                transferCount = null,
+                travelMinutes = null,
             ),
         )
     }

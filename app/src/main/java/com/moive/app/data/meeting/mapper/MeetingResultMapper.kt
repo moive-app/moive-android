@@ -32,6 +32,6 @@ fun MeetingResultParticipantResponse.toModel(id: Long): MeetingResultParticipant
         name = nickname,
         profileImageUrl = profileImageUrl ?: "",
         address = address ?: "",
-        transferCount = transferCnt ?: 0,
-        travelMinutes = totalTime ?: 0,
+        transferCount = transferCnt,
+        travelMinutes = totalTime,
     )

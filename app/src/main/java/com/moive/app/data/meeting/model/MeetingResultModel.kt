@@ -27,6 +27,6 @@ data class MeetingResultParticipantModel(
     val name: String,
     val profileImageUrl: String,
     val address: String,
-    val transferCount: Int,
-    val travelMinutes: Int,
+    val transferCount: Int?,
+    val travelMinutes: Int?,
 )
