@@ -11,8 +11,9 @@ import com.moive.app.presentation.votestatus.VoteStatusRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToVoteStatus(
+    meetingId: Long,
     navOptions: NavOptions? = null
-) = navigate(VoteStatus, navOptions)
+) = navigate(VoteStatus(meetingId), navOptions)
 
 fun NavGraphBuilder.voteStatusGraph(
     navController: NavController,
@@ -27,4 +28,6 @@ fun NavGraphBuilder.voteStatusGraph(
 }
 
 @Serializable
-data object VoteStatus : Route
+data class VoteStatus(
+    val meetingId: Long
+) : Route

@@ -13,6 +13,7 @@ interface VoteStatusContract {
     @Immutable
     data class State(
         val step: Step = Step.LIST,
+        val scheduleVoteResultUiState: ScheduleVoteResultUiState = ScheduleVoteResultUiState.Idle,
         val isScheduleVoteSkipped: Boolean = false,
         val scheduleTotalVoterCount: Int? = 5,
         val scheduleCandidates: ImmutableList<ScheduleVoteCandidateModel> = persistentListOf(
@@ -20,47 +21,44 @@ interface VoteStatusContract {
             ScheduleVoteCandidateModel(meetingDate = "2026-09-08", meetingTime = "18:00", voterCount = 3, isVotedByMe = true),
             ScheduleVoteCandidateModel(meetingDate = "2026-09-10", meetingTime = "18:00", voterCount = 3, isVotedByMe = false),
         ),
+        val placeVoteResultUiState: PlaceVoteResultUiState = PlaceVoteResultUiState.Idle,
+        val isPlaceVoteFinished: Boolean = false,
         val placeTotalVoterCount: Int = 4,
         val placeCandidates: ImmutableList<PlaceVoteCandidateModel> = persistentListOf(
             PlaceVoteCandidateModel(id = 1L, placeName = "OOO 맛집", voterCount = 4, isVotedByMe = true),
             PlaceVoteCandidateModel(id = 2L, placeName = "XXX 카페", voterCount = 3, isVotedByMe = true),
             PlaceVoteCandidateModel(id = 3L, placeName = "ΔΔΔ 이자카야", voterCount = 2, isVotedByMe = false),
         ),
+        val placeRouteUiState: PlaceRouteUiState = PlaceRouteUiState.Idle,
         val currentPlaceId: Long? = null,
         val currentPlaceDetail: PlaceDetailModel = PlaceDetailModel(
             id = 1L,
-            userName = "모이브",
-            placeName = "장소명(상호명)",
-            category = "카페",
-            address = "서울시 강남구 워시기워시기 123",
-            areaName = "신논현동",
-            totalMemberCount = 7,
-            matchMemberCount = 4,
+            userName = "",
+            placeName = "",
+            category = "",
+            address = "",
+            areaName = "",
+            totalMemberCount = 0,
+            matchMemberCount = 0,
             imageList = emptyList(),
             startPinLatLang = PlaceDetailPinLatLang(
-                latitude = 37.5044,
-                longitude = 127.0246,
+                latitude = 0.0,
+                longitude = 0.0,
             ),
             endPinLatLang = PlaceDetailPinLatLang(
-                latitude = 37.5089,
-                longitude = 127.0632,
+                latitude = 0.0,
+                longitude = 0.0,
             ),
             routeLatLang = PlaceDetailRouteLatLang(
-                latitude = listOf(
-                    37.5044, 37.5054217, 37.505525, 37.5049788, 37.50665,
-                    37.5083212, 37.507775, 37.5078783, 37.5089,
-                ),
-                longitude = listOf(
-                    127.0246, 127.0291954, 127.03425, 127.0396293, 127.0439,
-                    127.0481707, 127.05355, 127.0586046, 127.0632,
-                ),
+                latitude = listOf(0.0, 0.0),
+                longitude = listOf(0.0, 0.0),
             ),
-            totalTravelMinutes = 34,
-            avgTravelMinutes = 36,
-            walkMinutes = 10,
-            busMinutes = 15,
-            subwayMinutes = 9,
-            travelFare = 1_650,
+            totalTravelMinutes = 0,
+            avgTravelMinutes = 0,
+            walkMinutes = 0,
+            busMinutes = 0,
+            subwayMinutes = 0,
+            travelFare = 0,
         ),
     ) {
         val scheduleTopVoterCount: Int
@@ -77,4 +75,31 @@ interface VoteStatusContract {
         LIST,
         DETAIL;
     }
+}
+
+sealed interface ScheduleVoteResultUiState {
+    data object Idle : ScheduleVoteResultUiState
+    data object Loading : ScheduleVoteResultUiState
+    data object Success : ScheduleVoteResultUiState
+    data class Failure(
+        val msg: String,
+    ) : ScheduleVoteResultUiState
+}
+
+sealed interface PlaceVoteResultUiState {
+    data object Idle : PlaceVoteResultUiState
+    data object Loading : PlaceVoteResultUiState
+    data object Success : PlaceVoteResultUiState
+    data class Failure(
+        val msg: String,
+    ) : PlaceVoteResultUiState
+}
+
+sealed interface PlaceRouteUiState {
+    data object Idle : PlaceRouteUiState
+    data object Loading : PlaceRouteUiState
+    data object Success : PlaceRouteUiState
+    data class Failure(
+        val msg: String,
+    ) : PlaceRouteUiState
 }

@@ -2,12 +2,14 @@ package com.moive.app.data.voting.repository
 
 import com.moive.app.core.utils.suspendRunCatching
 import com.moive.app.data.common.dto.checkData
+import com.moive.app.data.common.dto.checkSuccess
 import com.moive.app.data.voting.mapper.applyTo
 import com.moive.app.data.voting.mapper.toModel
 import com.moive.app.data.voting.model.PlaceDetailModel
 import com.moive.app.data.voting.model.PlaceRecommendedPlaceCardItemModel
 import com.moive.app.data.voting.model.RegionPinModel
 import com.moive.app.data.voting.remote.datasource.VotingRemoteDataSource
+import com.moive.app.data.voting.remote.dto.PlaceVoteRequest
 import javax.inject.Inject
 
 class VotingRepositoryImpl @Inject constructor(
@@ -54,5 +56,14 @@ class VotingRepositoryImpl @Inject constructor(
             votingRemoteDataSource.getRecommendedPlaceRoute(meetingId, recommendedPlaceId)
                 .checkData()
                 .applyTo(current)
+        }
+
+    override suspend fun postPlaceVotes(
+        meetingId: Long,
+        recommendedPlaceIds: List<Long>,
+    ): Result<Unit> =
+        suspendRunCatching {
+            votingRemoteDataSource.postPlaceVotes(meetingId, PlaceVoteRequest(recommendedPlaceIds))
+                .checkSuccess()
         }
 }

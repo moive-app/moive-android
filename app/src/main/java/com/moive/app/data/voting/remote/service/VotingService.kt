@@ -1,11 +1,14 @@
 package com.moive.app.data.voting.remote.service
 
 import com.moive.app.data.common.dto.BaseResponse
+import com.moive.app.data.voting.remote.dto.PlaceVoteRequest
 import com.moive.app.data.voting.remote.dto.RecommendedAreaListResponse
 import com.moive.app.data.voting.remote.dto.RecommendedPlaceDetailResponse
 import com.moive.app.data.voting.remote.dto.RecommendedPlaceListResponse
 import com.moive.app.data.voting.remote.dto.RecommendedPlaceRouteResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface VotingService {
@@ -33,4 +36,10 @@ interface VotingService {
         @Path("meetingId") meetingId: Long,
         @Path("recommendedPlaceId") recommendedPlaceId: Long,
     ): BaseResponse<RecommendedPlaceRouteResponse>
+
+    @POST("meetings/{meetingId}/place-votes")
+    suspend fun postPlaceVotes(
+        @Path("meetingId") meetingId: Long,
+        @Body request: PlaceVoteRequest,
+    ): BaseResponse<Unit>
 }

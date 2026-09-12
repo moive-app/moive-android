@@ -1,6 +1,7 @@
 package com.moive.app.data.voting.remote.datasource
 
 import com.moive.app.data.common.dto.BaseResponse
+import com.moive.app.data.voting.remote.dto.PlaceVoteRequest
 import com.moive.app.data.voting.remote.dto.RecommendedAreaListResponse
 import com.moive.app.data.voting.remote.dto.RecommendedPlaceDetailResponse
 import com.moive.app.data.voting.remote.dto.RecommendedPlaceListResponse
@@ -33,4 +34,10 @@ class VotingRemoteDataSourceImpl @Inject constructor(
         recommendedPlaceId: Long,
     ): BaseResponse<RecommendedPlaceRouteResponse> =
         votingService.getRecommendedPlaceRoute(meetingId, recommendedPlaceId)
+
+    override suspend fun postPlaceVotes(
+        meetingId: Long,
+        request: PlaceVoteRequest,
+    ): BaseResponse<Unit> =
+        votingService.postPlaceVotes(meetingId, request)
 }

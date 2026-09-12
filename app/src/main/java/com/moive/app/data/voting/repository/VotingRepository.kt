@@ -24,4 +24,9 @@ interface VotingRepository {
         recommendedPlaceId: Long,
         current: PlaceDetailModel,
     ): Result<PlaceDetailModel>
+
+    suspend fun postPlaceVotes(
+        meetingId: Long,
+        recommendedPlaceIds: List<Long>,
+    ): Result<Unit>
 }
