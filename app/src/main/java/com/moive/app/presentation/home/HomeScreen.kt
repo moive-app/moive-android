@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,9 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,9 +40,8 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.noRippleClickable
-import com.moive.app.presentation.common.component.TabChipList
 import com.moive.app.presentation.common.component.MyMeetingCardItem
-import com.moive.app.presentation.home.component.HomeEmptyMeetingList
+import com.moive.app.presentation.common.component.TabChipList
 import com.moive.app.presentation.home.component.ConfirmedMeetingPager
 import kotlinx.collections.immutable.persistentListOf
 

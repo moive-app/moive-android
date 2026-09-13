@@ -35,7 +35,6 @@ import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.isNotificationEnabled
 import com.moive.app.core.extensions.navigateToAppNotificationSettings
 import com.moive.app.data.notification.model.NotificationItemModel
-import com.moive.app.presentation.notification.component.EmptyNotificationContent
 import com.moive.app.presentation.notification.component.NotificationListItem
 import com.moive.app.presentation.notification.component.NotificationSettingButton
 import kotlinx.collections.immutable.ImmutableList
