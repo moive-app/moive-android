@@ -34,6 +34,7 @@ fun PlaceVoteResultResponse.toModel(): PlaceVoteResultModel =
 fun PlaceVoteCandidateItem.toModel(): PlaceVoteCandidateModel =
     PlaceVoteCandidateModel(
         id = placeId,
+        areaId = placeAreaId,
         placeName = placeName,
         voterCount = voterCnt,
         isVotedByMe = isVotedByMe,

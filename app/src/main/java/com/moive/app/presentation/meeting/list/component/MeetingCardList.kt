@@ -21,7 +21,7 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun MeetingCardList(
     meetings: ImmutableList<MeetingListCardItemModel>,
-    onMeetingClick: (Long) -> Unit,
+    onMeetingClick: (Long, LabelType) -> Unit,
     isLoading: Boolean,
     onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
@@ -51,7 +51,7 @@ fun MeetingCardList(
                 extraCount = meeting.extraParticipantCount,
                 statusText = meeting.statusText,
                 statusLabelType = meeting.statusLabelType,
-                onCardClick = { onMeetingClick(meeting.id) },
+                onCardClick = { onMeetingClick(meeting.id, meeting.statusLabelType) },
             )
         }
     }
@@ -89,7 +89,7 @@ private fun MeetingCardListPreview() {
                     statusLabelType = LabelType.CONFIRMED,
                 ),
             ),
-            onMeetingClick = {},
+            onMeetingClick = { _, _ -> },
             isLoading = false,
             onLoadMore = {},
             modifier = Modifier.padding(20.dp),

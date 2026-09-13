@@ -32,7 +32,7 @@ class VoteStatusViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(VoteStatusContract.State())
     val uiState = _uiState.asStateFlow()
 
-    private var placeRouteJob: Job? = null
+    private var placeDetailJob: Job? = null
 
     init {
         getScheduleVoteResult()
@@ -92,9 +92,9 @@ class VoteStatusViewModel @Inject constructor(
     }
 
     fun onPlaceItemClick(placeId: Long) {
-        placeRouteJob?.cancel()
+        placeDetailJob?.cancel()
 
-        val candidateName = _uiState.value.placeCandidates.firstOrNull { it.id == placeId }?.placeName
+        val candidate = _uiState.value.placeCandidates.firstOrNull { it.id == placeId }
 
         _uiState.update {
             it.copy(
@@ -102,8 +102,14 @@ class VoteStatusViewModel @Inject constructor(
                 currentPlaceId = placeId,
                 currentPlaceDetail = it.currentPlaceDetail.copy(
                     id = placeId,
-                    placeName = candidateName ?: UNKNOWN_PLACE_NAME,
+                    placeName = candidate?.placeName ?: UNKNOWN_PLACE_NAME,
                     userName = "",
+                    category = "",
+                    address = "",
+                    areaName = "",
+                    totalMemberCount = 0,
+                    matchMemberCount = 0,
+                    imageList = emptyList(),
                     startPinLatLang = PlaceDetailPinLatLang(latitude = 0.0, longitude = 0.0),
                     endPinLatLang = PlaceDetailPinLatLang(latitude = 0.0, longitude = 0.0),
                     routeLatLang = PlaceDetailRouteLatLang(latitude = listOf(0.0, 0.0), longitude = listOf(0.0, 0.0)),
@@ -118,9 +124,45 @@ class VoteStatusViewModel @Inject constructor(
             )
         }
 
-        placeRouteJob = viewModelScope.launch {
+        val areaId = candidate?.areaId ?: return
+
+        placeDetailJob = viewModelScope.launch {
+            fetchPlaceDetail(areaId, placeId)
             fetchPlaceRoute(placeId)
         }
+    }
+
+    private suspend fun fetchPlaceDetail(areaId: Long, placeId: Long) {
+        _uiState.update { it.copy(placeDetailUiState = PlaceDetailUiState.Loading) }
+
+        votingRepository.getRecommendedPlaceDetail(
+            meetingId = meetingId,
+            recommendedAreaId = areaId,
+            recommendedPlaceId = placeId,
+            current = _uiState.value.currentPlaceDetail,
+        )
+            .onSuccess { updated ->
+                if (_uiState.value.currentPlaceId != placeId) return@onSuccess
+
+                _uiState.update {
+                    it.copy(
+                        placeDetailUiState = PlaceDetailUiState.Success,
+                        currentPlaceDetail = updated,
+                    )
+                }
+            }
+            .onFailure { error ->
+                if (_uiState.value.currentPlaceId != placeId) return@onFailure
+
+                Timber.tag(TAG).e(error, PLACE_DETAIL_FAILURE_MESSAGE)
+                _uiState.update {
+                    it.copy(
+                        placeDetailUiState = PlaceDetailUiState.Failure(
+                            error.message ?: UNKNOWN_ERROR_MESSAGE,
+                        ),
+                    )
+                }
+            }
     }
 
     private suspend fun fetchPlaceRoute(placeId: Long) {
@@ -169,6 +211,7 @@ class VoteStatusViewModel @Inject constructor(
         private const val KAKAO_MAP_ERROR = "카카오 맵을 열 수 없습니다."
         private const val SCHEDULE_VOTE_RESULT_FAILURE_MESSAGE = "일정 투표 현황 조회에 실패했습니다."
         private const val PLACE_VOTE_RESULT_FAILURE_MESSAGE = "장소 투표 현황 조회에 실패했습니다."
+        private const val PLACE_DETAIL_FAILURE_MESSAGE = "장소 상세 조회에 실패했습니다."
         private const val PLACE_ROUTE_FAILURE_MESSAGE = "이동 경로 조회에 실패했습니다."
         private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
         private const val UNKNOWN_PLACE_NAME = "알 수 없는 장소"

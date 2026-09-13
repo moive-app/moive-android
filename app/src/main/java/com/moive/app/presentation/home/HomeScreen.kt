@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.moive.app.R
+import com.moive.app.core.designsystem.component.chip.LabelType
 import com.moive.app.core.designsystem.component.topbar.MoiveMainTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
@@ -51,6 +52,7 @@ fun HomeRoute(
     innerPadding: PaddingValues,
     navigateToMeetingList: () -> Unit,
     navigateToMeetingDetail: (Long) -> Unit,
+    navigateToMeetingComplete: (Long) -> Unit,
     navigateToMeetingCreation: () -> Unit,
     navigateToNotification: () -> Unit,
     modifier: Modifier = Modifier,
@@ -71,6 +73,13 @@ fun HomeRoute(
         onTabClick = viewModel::postMeetingFilter,
         onShowListClick = navigateToMeetingList,
         onMeetingClick = navigateToMeetingDetail,
+        onMyMeetingClick = { meetingId, statusLabelType ->
+            if (statusLabelType == LabelType.COMPLETE) {
+                navigateToMeetingComplete(meetingId)
+            } else {
+                navigateToMeetingDetail(meetingId)
+            }
+        },
         onAddMeetingClick = navigateToMeetingCreation,
         onNotificationClick = navigateToNotification,
         modifier = modifier,
@@ -84,6 +93,7 @@ private fun HomeScreen(
     onTabClick: (String) -> Unit,
     onShowListClick: () -> Unit,
     onMeetingClick: (Long) -> Unit,
+    onMyMeetingClick: (Long, LabelType) -> Unit,
     onAddMeetingClick: () -> Unit,
     onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -200,7 +210,7 @@ private fun HomeScreen(
                         extraCount = meeting.extraParticipantCount,
                         statusText = meeting.statusText,
                         statusLabelType = meeting.statusLabelType,
-                        onCardClick = { onMeetingClick(meeting.id) },
+                        onCardClick = { onMyMeetingClick(meeting.id, meeting.statusLabelType) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp, vertical = 6.dp),
@@ -221,6 +231,7 @@ private fun HomeScreenPreview() {
             onTabClick = {},
             onShowListClick = {},
             onMeetingClick = {},
+            onMyMeetingClick = { _, _ -> },
             onAddMeetingClick = {},
             onNotificationClick = {},
         )
@@ -240,6 +251,7 @@ private fun HomeScreenEmptyPreview() {
             onTabClick = {},
             onShowListClick = {},
             onMeetingClick = {},
+            onMyMeetingClick = { _, _ -> },
             onAddMeetingClick = {},
             onNotificationClick = {},
         )

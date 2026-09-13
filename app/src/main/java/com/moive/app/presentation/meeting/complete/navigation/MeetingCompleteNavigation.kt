@@ -11,8 +11,9 @@ import com.moive.app.presentation.meeting.complete.MeetingCompleteRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToMeetingComplete(
+    meetingId: Long,
     navOptions: NavOptions? = null
-) = navigate(MeetingComplete, navOptions)
+) = navigate(MeetingComplete(meetingId), navOptions)
 
 fun NavGraphBuilder.meetingCompleteGraph(
     navController: NavController,
@@ -27,4 +28,6 @@ fun NavGraphBuilder.meetingCompleteGraph(
 }
 
 @Serializable
-data object MeetingComplete : Route
+data class MeetingComplete(
+    val meetingId: Long
+) : Route

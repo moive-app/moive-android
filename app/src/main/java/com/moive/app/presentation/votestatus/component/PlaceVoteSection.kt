@@ -61,9 +61,9 @@ fun PlaceVoteSection(
 private fun PlaceVoteSectionPreview() {
     MoiveTheme {
         val candidates = persistentListOf(
-            PlaceVoteCandidateModel(id = 1L, placeName = "OOO 맛집", voterCount = 4, isVotedByMe = true),
-            PlaceVoteCandidateModel(id = 2L, placeName = "XXX 카페", voterCount = 3, isVotedByMe = true),
-            PlaceVoteCandidateModel(id = 3L, placeName = "ΔΔΔ 이자카야", voterCount = 2, isVotedByMe = false),
+            PlaceVoteCandidateModel(id = 1L, areaId = 1L, placeName = "OOO 맛집", voterCount = 4, isVotedByMe = true),
+            PlaceVoteCandidateModel(id = 2L, areaId = 1L, placeName = "XXX 카페", voterCount = 3, isVotedByMe = true),
+            PlaceVoteCandidateModel(id = 3L, areaId = 1L, placeName = "ΔΔΔ 이자카야", voterCount = 2, isVotedByMe = false),
         )
         PlaceVoteSection(
             totalVoterCount = 4,

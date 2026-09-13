@@ -17,13 +17,13 @@ import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
-import com.moive.app.data.meeting.model.TravelParticipantModel
+import com.moive.app.data.meeting.model.MeetingResultParticipantModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun TravelTimeCard(
-    participants: ImmutableList<TravelParticipantModel>,
+    participants: ImmutableList<MeetingResultParticipantModel>,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -61,11 +61,11 @@ private fun TravelTimeCardPreview() {
     MoiveTheme {
         TravelTimeCard(
             participants = persistentListOf(
-                TravelParticipantModel(id = 1L, name = "다인", profileImageUrl = "", address = "서울시 구로구 머시기", transferCount = 1, travelMinutes = 32),
-                TravelParticipantModel(id = 2L, name = "수현", profileImageUrl = "", address = "경기도 수원시 고색동", transferCount = 2, travelMinutes = 38),
-                TravelParticipantModel(id = 3L, name = "민주", profileImageUrl = "", address = "경기도 수원시 OO동", transferCount = 2, travelMinutes = 52),
-                TravelParticipantModel(id = 4L, name = "혜지", profileImageUrl = "", address = "서울시 구로구 머시기", transferCount = 0, travelMinutes = 48),
-                TravelParticipantModel(id = 5L, name = "지민", profileImageUrl = "", address = "서울시 구로구 머시기", transferCount = 0, travelMinutes = 50),
+                MeetingResultParticipantModel(id = 1L, name = "다인", profileImageUrl = "", address = "서울시 구로구 머시기", transferCount = 1, travelMinutes = 32),
+                MeetingResultParticipantModel(id = 2L, name = "수현", profileImageUrl = "", address = "경기도 수원시 고색동", transferCount = 2, travelMinutes = 38),
+                MeetingResultParticipantModel(id = 3L, name = "민주", profileImageUrl = "", address = "경기도 수원시 OO동", transferCount = 2, travelMinutes = 52),
+                MeetingResultParticipantModel(id = 4L, name = "혜지", profileImageUrl = "", address = "서울시 구로구 머시기", transferCount = 0, travelMinutes = 48),
+                MeetingResultParticipantModel(id = 5L, name = "지민", profileImageUrl = "", address = "서울시 구로구 머시기", transferCount = 0, travelMinutes = 50),
             ),
         )
     }

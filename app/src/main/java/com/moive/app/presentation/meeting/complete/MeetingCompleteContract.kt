@@ -8,20 +8,30 @@ import kotlinx.collections.immutable.persistentListOf
 interface MeetingCompleteContract {
     @Immutable
     data class State(
+        val meetingResultUiState: MeetingResultUiState = MeetingResultUiState.Idle,
         val isPlaceConfirmed: Boolean = true,
-        val placeName: String = "장소명(상호명)",
-        val placeCategory: String = "카페",
-        val placeAddress: String = "서울시 강남구 OO동",
+        val placeName: String = "",
+        val placeCategory: String = "",
+        val placeAddress: String = "",
         val latitude: Double = 37.5510324090502,
         val longitude: Double = 126.91228338125131,
-        val meetingDate: String = "9월 18일",
-        val meetingTime: String = "오후 6:00",
+        val meetingDate: String = "",
+        val meetingTime: String = "0",
         val participants: ImmutableList<CompletedParticipantItemModel> = persistentListOf(
-            CompletedParticipantItemModel(id = 1L, name = "다인", profileImageUrl = "", address = "서울시 구로구 머시기"),
-            CompletedParticipantItemModel(id = 2L, name = "수현", profileImageUrl = "", address = "경기도 수원시 고색동"),
-            CompletedParticipantItemModel(id = 3L, name = "민주", profileImageUrl = "", address = "경기도 수원시 OO동"),
-            CompletedParticipantItemModel(id = 4L, name = "혜지", profileImageUrl = "", address = "서울시 구로구 머시기"),
-            CompletedParticipantItemModel(id = 5L, name = "지민", profileImageUrl = "", address = "서울시 구로구 머시기"),
+            CompletedParticipantItemModel(id = 1L, name = "", profileImageUrl = "", address = ""),
+            CompletedParticipantItemModel(id = 2L, name = "", profileImageUrl = "", address = ""),
+            CompletedParticipantItemModel(id = 3L, name = "", profileImageUrl = "", address = ""),
+            CompletedParticipantItemModel(id = 4L, name = "", profileImageUrl = "", address = ""),
+            CompletedParticipantItemModel(id = 5L, name = "", profileImageUrl = "", address = ""),
         ),
     )
+}
+
+sealed interface MeetingResultUiState {
+    data object Idle : MeetingResultUiState
+    data object Loading : MeetingResultUiState
+    data object Success : MeetingResultUiState
+    data class Failure(
+        val msg: String,
+    ) : MeetingResultUiState
 }
