@@ -2,6 +2,7 @@ package com.moive.app.presentation.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -126,18 +128,30 @@ private fun HomeScreen(
 
             item {
                 if (uiState.upcomingMeetings.isEmpty()) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_launcher_background),
-                        contentDescription = null,
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .aspectRatio(320f / 220f)
                             .padding(horizontal = 20.dp)
-                            .clip(
+                            .background(
+                                color = colors.fill.default06,
                                 shape = RoundedCornerShape(radius.xxl)
-                            ),
-                        contentScale = ContentScale.Crop,
-                    )
+                            )
+                            .padding(top = 26.dp, bottom = 32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.img_character_empty_home),
+                            contentDescription = null,
+                            modifier = Modifier.size(80.dp)
+                        )
+
+                        Text(
+                            text = "아직 확정된 모임이 없어요.",
+                            color = colors.text.tertiary,
+                            style = typography.body.smNormalR,
+                        )
+                    }
                 } else {
                     ConfirmedMeetingPager(
                         meetings = uiState.upcomingMeetings,
@@ -193,9 +207,29 @@ private fun HomeScreen(
 
             if (uiState.displayedMyMeetingList.isEmpty()) {
                 item {
-                    HomeEmptyMeetingList(
+                    /*HomeEmptyMeetingList(
                         modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-                    )
+                    )*/
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 34.dp, bottom = 48.dp)
+                            .padding(horizontal = 20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.img_character_empty_default),
+                            contentDescription = null,
+                            modifier = Modifier.size(80.dp)
+                        )
+
+                        Text(
+                            text = "아직 참여 중인 모임이 없어요.",
+                            color = colors.text.subtle,
+                            style = typography.body.smNormalR,
+                        )
+                    }
                 }
             } else {
                 items(
