@@ -107,7 +107,6 @@ private fun HomeScreen(
             .padding(innerPadding),
     ) {
         MoiveMainTopBar(
-            title = "MOIVE",
             isAlarmUnRead = uiState.isAlarmUnRead,
             onNotificationClick = onNotificationClick,
         )
