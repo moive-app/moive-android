@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
@@ -127,17 +128,22 @@ private fun MeetingConfirmedScreen(
                     textAlign = TextAlign.Center,
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
                 Image(
-                    painter = painterResource(R.drawable.ic_launcher_background),
+                    painter = painterResource(
+                        if (uiState.isPlaceConfirmed) R.drawable.img_character_crop_congratulation
+                        else R.drawable.img_character_congratulation
+                    ),
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(
-                            if (uiState.isPlaceConfirmed) 320f / 167f else 320f / 247f
+                        .size(
+                            width = 240.dp,
+                            height = if (uiState.isPlaceConfirmed) 167.dp else 240.dp
                         )
+                        .padding(
+                            top = if (uiState.isPlaceConfirmed) 12.dp else 36.dp
+                        )
+                        .padding(horizontal = 20.dp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
