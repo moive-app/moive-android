@@ -25,8 +25,8 @@ fun String.parseDate(): String {
 
 fun String.parseTime(): String {
     val (hour, minute) = split(":").takeIf { it.size == 2 } ?: return this
-    val hourNumber = hour.toIntOrNull() ?: return this
-    val minuteNumber = minute.toIntOrNull() ?: return this
+    val hourNumber = hour.toIntOrNull()?.takeIf { it in 0..23 } ?: return this
+    val minuteNumber = minute.toIntOrNull()?.takeIf { it in 0..59 } ?: return this
     val period = if (hourNumber < 12) "오전" else "오후"
     val displayHour = when {
         hourNumber == 0 -> 12
