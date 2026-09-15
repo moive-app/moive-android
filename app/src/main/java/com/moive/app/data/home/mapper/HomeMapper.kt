@@ -13,6 +13,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 fun HomeResponse.toModel(): HomeModel =
     HomeModel(
+        nickname = nickname,
         confirmedMeetings = confirmedMeetings.map { it.toModel() }.toImmutableList(),
         myMeetings = myMeetings.map { it.toModel() }.toImmutableList(),
     )

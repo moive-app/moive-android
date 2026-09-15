@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Immutable
 import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.data.condition.mapper.ActivityType
+import com.moive.app.data.condition.mapper.TravelTime
 import com.moive.app.data.condition.model.PlaceSearchItemModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
@@ -39,6 +40,12 @@ interface ConditionContract {
 
         val calendarDays: ImmutableList<CalendarDay>
             get() = buildCalendarDays(calendarYear, calendarMonth)
+
+        val hasPreviousMonth: Boolean
+            get() = previousMonth(calendarYear, calendarMonth).let { (year, month) -> monthHasSelectableDay(year, month) }
+
+        val hasNextMonth: Boolean
+            get() = nextMonth(calendarYear, calendarMonth).let { (year, month) -> monthHasSelectableDay(year, month) }
 
         val timeOptions: ImmutableList<String>
             get() = TIME_OPTIONS
@@ -142,13 +149,6 @@ sealed interface ConditionUiState {
     data class Failure(
         val msg: String,
     ) : ConditionUiState
-}
-
-enum class TravelTime(val label: String, val maxMinutes: Int?) {
-    WITHIN_30("30분 이내", 30),
-    WITHIN_60("1시간 이내", 60),
-    WITHIN_90("1시간 30분 이내", 90),
-    NO_PREFERENCE("상관 없어요", null),
 }
 
 fun String.toMaxTravelMinutes(): Int? =

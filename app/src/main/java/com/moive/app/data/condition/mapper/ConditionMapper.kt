@@ -19,6 +19,13 @@ fun ConditionResponse.toModel(): ConditionModel =
 fun AvailableScheduleModel.toRequest(): AvailableScheduleRequest =
     AvailableScheduleRequest(date = date, time = time)
 
+enum class TravelTime(val label: String, val maxMinutes: Int?) {
+    WITHIN_30("30분 이내", 30),
+    WITHIN_60("1시간 이내", 60),
+    WITHIN_90("1시간 30분 이내", 90),
+    NO_PREFERENCE("상관 없어요", null),
+}
+
 @Serializable
 enum class ActivityType(val label: String) {
     BOARD_GAME("보드게임"),

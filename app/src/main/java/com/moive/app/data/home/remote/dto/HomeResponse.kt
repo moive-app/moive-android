@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class HomeResponse(
+    @SerialName("nickname")
+    val nickname: String,
     @SerialName("confirmedMeetings")
     val confirmedMeetings: List<ConfirmedMeetingResponse>,
     @SerialName("myMeetings")
