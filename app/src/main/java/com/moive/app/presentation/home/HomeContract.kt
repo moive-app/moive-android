@@ -11,7 +11,7 @@ import kotlinx.collections.immutable.toImmutableList
 interface HomeContract {
     @Immutable
     data class State(
-        val userName: String = "수현",
+        val userName: String = "",
         val isAlarmUnRead: Boolean = false,
         val selectedTab: String = MeetingTab.ALL.label,
         val homeUiState: HomeUiState = HomeUiState.Idle,
