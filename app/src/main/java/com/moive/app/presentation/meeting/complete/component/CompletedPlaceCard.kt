@@ -56,6 +56,7 @@ fun CompletedPlaceCard(
         ) {
             if (isPlaceConfirmed) {
                 Row(
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
@@ -65,6 +66,7 @@ fun CompletedPlaceCard(
                         style = typography.title.mdSb,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
                     )
 
                     MoiveLabelChip(
@@ -74,6 +76,7 @@ fun CompletedPlaceCard(
                 }
 
                 Row(
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
@@ -89,6 +92,7 @@ fun CompletedPlaceCard(
                         style = typography.label.xsR,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
                     )
                 }
             } else {
@@ -105,6 +109,8 @@ fun CompletedPlaceCard(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.width(24.dp))
 
         VerticalDivider(
             modifier = Modifier.height(44.dp),
