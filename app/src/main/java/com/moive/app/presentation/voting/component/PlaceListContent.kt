@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -70,6 +71,8 @@ fun PlaceListContent(
 ) {
     var kakaoMapState by remember { mutableStateOf<KakaoMap?>(null) }
     var regionPinEntries by remember { mutableStateOf<List<Pair<Label, RegionPinModel>>>(emptyList()) }
+    var bottomSheetHeightPx by remember { mutableStateOf(0) }
+    var pendingCameraTarget by remember { mutableStateOf<LatLng?>(null) }
 
     val regionPinBitmaps = List(regionList.size) { index -> rememberRegionPinBitmap(rank = index) }
 
@@ -80,13 +83,10 @@ fun PlaceListContent(
         locationX = mapCenterX,
         locationY = mapCenterY,
         onMapReady = { kakaoMap ->
-            kakaoMap.setOnLabelClickListener { map, _, label ->
+            kakaoMap.setOnLabelClickListener { _, _, label ->
                 val clickedRegion = regionPinEntries.firstOrNull { it.first == label }?.second
 
-                map.moveCamera(
-                    CameraUpdateFactory.newCenterPosition(label.position, 16),
-                    CameraAnimation.from(300),
-                )
+                pendingCameraTarget = label.position
                 clickedRegion?.let { onRegionPinClick(it) }
                 true
             }
@@ -116,6 +116,25 @@ fun PlaceListContent(
         }
     }
 
+    LaunchedEffect(kakaoMapState, isPlaceListVisible, bottomSheetHeightPx, places, pendingCameraTarget) {
+        val kakaoMap = kakaoMapState ?: return@LaunchedEffect
+        val bottomPadding = if (isPlaceListVisible) {
+            (bottomSheetHeightPx - PIN_DOWN_ADJUST_PX).coerceAtLeast(0)
+        } else {
+            0
+        }
+        kakaoMap.setPadding(0, 0, 0, bottomPadding)
+
+        val target = pendingCameraTarget ?: return@LaunchedEffect
+        if (places.isEmpty()) return@LaunchedEffect
+
+        kakaoMap.moveCamera(
+            CameraUpdateFactory.newCenterPosition(target, 16),
+            CameraAnimation.from(300),
+        )
+        pendingCameraTarget = null
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -141,6 +160,9 @@ fun PlaceListContent(
                 title = "추천 장소",
                 onDismissRequest = onBottomSheetDismiss,
                 showScrim = false,
+                modifier = Modifier.onGloballyPositioned { coordinates ->
+                    bottomSheetHeightPx = coordinates.size.height
+                },
                 content = {
                     LazyColumn (
                         contentPadding = PaddingValues(vertical = 12.dp),
@@ -190,6 +212,7 @@ fun PlaceListContent(
 private const val DEFAULT_LOCATION_X = 127.0246 // 신논현역
 private const val DEFAULT_LOCATION_Y = 37.5044 // 신논현역
 private const val MAP_BOUNDS_PADDING_PX = 300
+private const val PIN_DOWN_ADJUST_PX = 350
 
 @Preview
 @Composable
