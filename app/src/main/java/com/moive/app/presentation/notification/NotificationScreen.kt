@@ -91,46 +91,39 @@ private fun NotificationScreen(
             backgroundColor = colors.background.default02,
         )
 
-        LazyColumn(
-            modifier = Modifier,
-            contentPadding = PaddingValues(vertical = 24.dp, horizontal = 20.dp),
-        ) {
-            item {
-                NotificationSettingButton(
-                    isNotificationPermissionGranted = isNotificationPermissionGranted,
-                    onSettingClick = onNotificationSettingClick,
+        NotificationSettingButton(
+            isNotificationPermissionGranted = isNotificationPermissionGranted,
+            onSettingClick = onNotificationSettingClick,
+            modifier = Modifier.padding(bottom = 5.dp)
+        )
+
+        if (notifications.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.img_character_empty_default),
+                    contentDescription = null,
+                    modifier = Modifier.size(80.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "새로운 알림이 없어요.",
+                    color = colors.text.tertiary,
+                    style = typography.body.smNormalR,
                 )
             }
-
-            if (notifications.isEmpty()) {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 20.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.img_character_empty_default),
-                            contentDescription = null,
-                            modifier = Modifier.size(80.dp)
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = "새로운 알림이 없어요.",
-                            color = colors.text.tertiary,
-                            style = typography.body.smNormalR,
-                        )
-                    }
-                }
-            } else {
-                item {
-                    Spacer(modifier = modifier.height(28.dp))
-                }
-
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(vertical = 23.dp, horizontal = 20.dp),
+            ) {
                 items(
                     items = notifications,
                     key = { it.id },
@@ -153,7 +146,7 @@ private fun NotificationScreenListPreview() {
     MoiveTheme {
         NotificationScreen(
             innerPadding = PaddingValues(),
-            notifications = persistentListOf(),//NotificationContract.State().notifications,
+            notifications = NotificationContract.State().notifications,
             isNotificationPermissionGranted = true,
             onBackClick = {},
             onNotificationItemClick = {},
