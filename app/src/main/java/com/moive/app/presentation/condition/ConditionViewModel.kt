@@ -92,6 +92,7 @@ class ConditionViewModel @Inject constructor(
     fun onCalendarPrevMonthClick() {
         _uiState.update {
             val (year, month) = previousMonth(it.calendarYear, it.calendarMonth)
+            if (!monthHasSelectableDay(year, month)) return@update it
             it.copy(calendarYear = year, calendarMonth = month, pendingDay = null)
         }
     }
@@ -99,6 +100,7 @@ class ConditionViewModel @Inject constructor(
     fun onCalendarNextMonthClick() {
         _uiState.update {
             val (year, month) = nextMonth(it.calendarYear, it.calendarMonth)
+            if (!monthHasSelectableDay(year, month)) return@update it
             it.copy(calendarYear = year, calendarMonth = month, pendingDay = null)
         }
     }
