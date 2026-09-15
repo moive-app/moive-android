@@ -84,63 +84,59 @@ class MeetingConfirmedViewModel @Inject constructor(
         }
     }
 
-    private fun fetchPlaceDetail(areaId: Long, placeId: Long) {
+    private suspend fun fetchPlaceDetail(areaId: Long, placeId: Long) {
         _uiState.update { it.copy(placeDetailUiState = PlaceDetailUiState.Loading) }
-        viewModelScope.launch {
-            votingRepository.getRecommendedPlaceDetail(
-                meetingId = meetingId,
-                recommendedAreaId = areaId,
-                recommendedPlaceId = placeId,
-                current = _uiState.value.currentPlaceDetail,
-            )
-                .onSuccess { updated ->
-                    _uiState.update {
-                        it.copy(
-                            placeDetailUiState = PlaceDetailUiState.Success,
-                            currentPlaceDetail = updated,
-                        )
-                    }
+        votingRepository.getRecommendedPlaceDetail(
+            meetingId = meetingId,
+            recommendedAreaId = areaId,
+            recommendedPlaceId = placeId,
+            current = _uiState.value.currentPlaceDetail,
+        )
+            .onSuccess { updated ->
+                _uiState.update {
+                    it.copy(
+                        placeDetailUiState = PlaceDetailUiState.Success,
+                        currentPlaceDetail = updated,
+                    )
                 }
-                .onFailure { error ->
-                    Timber.tag(TAG).e(error, PLACE_DETAIL_FAILURE_MESSAGE)
-                    _uiState.update {
-                        it.copy(
-                            placeDetailUiState = PlaceDetailUiState.Failure(
-                                error.message ?: UNKNOWN_ERROR_MESSAGE,
-                            ),
-                        )
-                    }
+            }
+            .onFailure { error ->
+                Timber.tag(TAG).e(error, PLACE_DETAIL_FAILURE_MESSAGE)
+                _uiState.update {
+                    it.copy(
+                        placeDetailUiState = PlaceDetailUiState.Failure(
+                            error.message ?: UNKNOWN_ERROR_MESSAGE,
+                        ),
+                    )
                 }
-        }
+            }
     }
 
-    private fun fetchPlaceRoute(placeId: Long) {
+    private suspend fun fetchPlaceRoute(placeId: Long) {
         _uiState.update { it.copy(placeRouteUiState = PlaceRouteUiState.Loading) }
-        viewModelScope.launch {
-            votingRepository.getRecommendedPlaceRoute(
-                meetingId = meetingId,
-                recommendedPlaceId = placeId,
-                current = _uiState.value.currentPlaceDetail,
-            )
-                .onSuccess { updated ->
-                    _uiState.update {
-                        it.copy(
-                            placeRouteUiState = PlaceRouteUiState.Success,
-                            currentPlaceDetail = updated,
-                        )
-                    }
+        votingRepository.getRecommendedPlaceRoute(
+            meetingId = meetingId,
+            recommendedPlaceId = placeId,
+            current = _uiState.value.currentPlaceDetail,
+        )
+            .onSuccess { updated ->
+                _uiState.update {
+                    it.copy(
+                        placeRouteUiState = PlaceRouteUiState.Success,
+                        currentPlaceDetail = updated,
+                    )
                 }
-                .onFailure { error ->
-                    Timber.tag(TAG).e(error, PLACE_ROUTE_FAILURE_MESSAGE)
-                    _uiState.update {
-                        it.copy(
-                            placeRouteUiState = PlaceRouteUiState.Failure(
-                                error.message ?: UNKNOWN_ERROR_MESSAGE,
-                            ),
-                        )
-                    }
+            }
+            .onFailure { error ->
+                Timber.tag(TAG).e(error, PLACE_ROUTE_FAILURE_MESSAGE)
+                _uiState.update {
+                    it.copy(
+                        placeRouteUiState = PlaceRouteUiState.Failure(
+                            error.message ?: UNKNOWN_ERROR_MESSAGE,
+                        ),
+                    )
                 }
-        }
+            }
     }
 
     fun backToMain() {

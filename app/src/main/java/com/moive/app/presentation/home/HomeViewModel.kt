@@ -35,6 +35,7 @@ class HomeViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             homeUiState = HomeUiState.Success,
+                            userName = home.nickname,
                             upcomingMeetings = home.confirmedMeetings,
                             myMeetingList = home.myMeetings,
                         )
