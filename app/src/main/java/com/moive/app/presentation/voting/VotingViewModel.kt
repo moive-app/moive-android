@@ -215,16 +215,18 @@ class VotingViewModel @Inject constructor(
 
     fun onSelectButtonClick() {
         _uiState.update { state ->
-            val viewingPlaceId = state.currentPlaceId ?: return@update state.copy(step = Step.RECOMMENDATION)
+            val viewingPlaceId = state.currentPlaceId
+                ?: return@update state.copy(step = Step.RECOMMENDATION, isPlaceListVisible = true)
             state.copy(
                 step = Step.RECOMMENDATION,
+                isPlaceListVisible = true,
                 selectedPlaceList = state.selectedPlaceList.add(viewingPlaceId),
             )
         }
     }
 
     fun backToPlaceList() {
-        _uiState.update { it.copy(step = Step.RECOMMENDATION) }
+        _uiState.update { it.copy(step = Step.RECOMMENDATION, isPlaceListVisible = true) }
     }
 
     fun onKakaoMapRouteOpened(opened: Boolean) {
