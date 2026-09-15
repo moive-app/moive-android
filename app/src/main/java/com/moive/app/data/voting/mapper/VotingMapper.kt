@@ -37,6 +37,7 @@ fun RecommendedPlaceDetailResponse.applyTo(place: PlaceDetailModel): PlaceDetail
         category = category,
         address = address,
         areaName = areaName,
+        totalMemberCount = participantCnt,
         matchMemberCount = preferenceMatchCnt,
         avgTravelMinutes = averageTravelTime,
         imageList = imageUrls,

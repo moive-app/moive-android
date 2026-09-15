@@ -15,6 +15,8 @@ data class RecommendedPlaceDetailResponse(
     val address: String,
     @SerialName("areaName")
     val areaName: String,
+    @SerialName("participantCnt")
+    val participantCnt: Int,
     @SerialName("preferenceMatchCnt")
     val preferenceMatchCnt: Int,
     @SerialName("averageTravelTime")
