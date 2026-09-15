@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.moive.app.R
 import com.moive.app.core.designsystem.component.image.UrlImage
@@ -38,7 +39,7 @@ fun ProfileCard(
                 .size(52.dp)
                 .clip(shape = RoundedCornerShape(radius.circular)),
             contentScale = ContentScale.Crop,
-            placeholder = R.drawable.img_avatar_placeholder,
+            placeholder = painterResource(R.drawable.img_avatar_placeholder),
         )
 
         Column(
