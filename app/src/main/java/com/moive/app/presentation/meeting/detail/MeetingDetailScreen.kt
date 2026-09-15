@@ -86,7 +86,9 @@ fun MeetingDetailRoute(
         innerPadding = innerPadding,
         uiState = uiState,
         onBackClick = navigateBack,
-        onInviteFriendClick = { context.shareText(uiState.inviteUrl) },
+        onInviteFriendClick = {
+            context.shareText("새로운 모임에 초대되었어요!🎉 아래 링크에서 모임을 확인해보세요.\n${uiState.inviteUrl}")
+        },
         onActionButtonClick = {
             when (uiState.status) {
                 MeetingStatus.CONDITION_INPUT -> navigateToCondition(

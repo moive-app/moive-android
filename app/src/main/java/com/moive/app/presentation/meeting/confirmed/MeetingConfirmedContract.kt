@@ -14,7 +14,7 @@ interface MeetingConfirmedContract {
         val step: Step = Step.MAIN,
         val meetingResultUiState: MeetingResultUiState = MeetingResultUiState.Idle,
         val myProfileImageUrl: String = "",
-        val meetingLink: String = "",
+        val inviteUrl: String = "",
         val isPlaceConfirmed: Boolean = true,
         val placeName: String = "",
         val placeCategory: String = "",
