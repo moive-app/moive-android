@@ -36,7 +36,8 @@ fun ConfirmedMeetingPager(
 ) {
     val pageCount = if (meetings.size == 1) 2 else meetings.size
     val pagerState = rememberPagerState(pageCount = { pageCount })
-    val cardColors = persistentListOf(colors.primary.default, colors.secondary.default, colors.fill.default02)
+    val cardColors =
+        persistentListOf(colors.primary.default, colors.secondary.default, colors.fill.default02)
 
 
     Column(
@@ -48,23 +49,20 @@ fun ConfirmedMeetingPager(
             contentPadding = PaddingValues(horizontal = 20.dp),
             pageSpacing = 12.dp,
         ) { page ->
-            if (page < meetings.size) {
-                val meeting = meetings[page]
-                val cardColor = cardColors[page % cardColors.size]
 
-                ConfirmedMeetingCardItem(
-                    title = meeting.title,
-                    dateTime = meeting.dateTime,
-                    location = meeting.location,
-                    participantImageList = meeting.participantImageList,
-                    extraCount = meeting.extraCount,
-                    dDayText = meeting.dDayText,
-                    cardColor = cardColor,
-                    onCardClick = { onMeetingClick(meeting.id) },
-                )
-            } else {
-                AddMeetingCard(onAddClick = onAddMeetingClick)
-            }
+            val meeting = meetings[page]
+            val cardColor = cardColors[page % cardColors.size]
+
+            ConfirmedMeetingCardItem(
+                title = meeting.title,
+                dateTime = meeting.dateTime,
+                location = meeting.location,
+                participantImageList = meeting.participantImageList,
+                extraCount = meeting.extraCount,
+                dDayText = meeting.dDayText,
+                cardColor = cardColor,
+                onCardClick = { onMeetingClick(meeting.id) },
+            )
         }
 
         if (pageCount > 1) {

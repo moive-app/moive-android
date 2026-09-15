@@ -87,7 +87,7 @@ fun ConfirmedMeetingCardItem(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Icon(
