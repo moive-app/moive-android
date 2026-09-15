@@ -135,6 +135,9 @@ class VotingViewModel @Inject constructor(
                 step = Step.DETAIL,
                 currentPlaceId = placeId,
                 isPlaceListVisible = false,
+                currentPlaceDetail = VotingContract.State().currentPlaceDetail,
+                recommendedPlaceDetailUiState = RecommendedPlaceDetailUiState.Loading,
+                recommendedPlaceRouteUiState = RecommendedPlaceRouteUiState.Loading,
             )
         }
 
