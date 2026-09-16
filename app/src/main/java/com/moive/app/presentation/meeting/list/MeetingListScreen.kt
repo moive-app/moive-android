@@ -87,41 +87,47 @@ private fun MeetingListScreen(
         )
 
 
-        if (uiState.meetingList.isEmpty()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.img_character_empty_default),
-                    contentDescription = null,
-                    modifier = Modifier.size(80.dp)
-                )
+        when {
+            uiState.meetingListUiState is MeetingListUiState.Loading && uiState.meetingList.isEmpty() -> Unit
 
-                Spacer(modifier = Modifier.height(16.dp))
+            uiState.meetingList.isEmpty() -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.img_character_empty_default),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
 
-                Text(
-                    text = "아직 참여 중인 모임이 없어요.",
-                    color = colors.text.subtle,
-                    style = typography.body.smNormalR,
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "아직 참여 중인 모임이 없어요.",
+                        color = colors.text.subtle,
+                        style = typography.body.smNormalR,
+                    )
+                }
+            }
+
+            else -> {
+                Spacer(modifier = Modifier.height(10.dp))
+
+                MeetingCardList(
+                    meetings = uiState.meetingList,
+                    onMeetingClick = onMeetingClick,
+                    isLoading = uiState.meetingListUiState is MeetingListUiState.Loading,
+                    onLoadMore = onLoadMore,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(horizontal = 20.dp),
                 )
             }
-        } else {
-            Spacer(modifier = Modifier.height(10.dp))
-
-            MeetingCardList(
-                meetings = uiState.meetingList,
-                onMeetingClick = onMeetingClick,
-                isLoading = uiState.meetingListUiState is MeetingListUiState.Loading,
-                onLoadMore = onLoadMore,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(horizontal = 20.dp),
-            )
         }
     }
 }

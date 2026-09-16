@@ -123,37 +123,41 @@ private fun HomeScreen(
             }
 
             item {
-                if (uiState.upcomingMeetings.isEmpty()) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp)
-                            .background(
-                                color = colors.fill.default06,
-                                shape = RoundedCornerShape(radius.xxl)
+                when {
+                    uiState.homeUiState is HomeUiState.Loading -> Unit
+                    uiState.upcomingMeetings.isEmpty() -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp)
+                                .background(
+                                    color = colors.fill.default06,
+                                    shape = RoundedCornerShape(radius.xxl)
+                                )
+                                .padding(top = 26.dp, bottom = 32.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.img_character_empty_home),
+                                contentDescription = null,
+                                modifier = Modifier.size(80.dp)
                             )
-                            .padding(top = 26.dp, bottom = 32.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.img_character_empty_home),
-                            contentDescription = null,
-                            modifier = Modifier.size(80.dp)
-                        )
 
-                        Text(
-                            text = "아직 확정된 모임이 없어요.",
-                            color = colors.text.tertiary,
-                            style = typography.body.smNormalR,
+                            Text(
+                                text = "아직 확정된 모임이 없어요.",
+                                color = colors.text.tertiary,
+                                style = typography.body.smNormalR,
+                            )
+                        }
+                    }
+
+                    else -> {
+                        ConfirmedMeetingPager(
+                            meetings = uiState.upcomingMeetings,
+                            onMeetingClick = onMeetingClick,
                         )
                     }
-                } else {
-                    ConfirmedMeetingPager(
-                        meetings = uiState.upcomingMeetings,
-                        onMeetingClick = onMeetingClick,
-                        onAddMeetingClick = onAddMeetingClick,
-                    )
                 }
             }
 
@@ -201,49 +205,51 @@ private fun HomeScreen(
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
-            if (uiState.displayedMyMeetingList.isEmpty()) {
-                item {
-                    /*HomeEmptyMeetingList(
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-                    )*/
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 34.dp, bottom = 48.dp)
-                            .padding(horizontal = 20.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.img_character_empty_default),
-                            contentDescription = null,
-                            modifier = Modifier.size(80.dp)
-                        )
+            when {
+                uiState.homeUiState is HomeUiState.Loading -> Unit
+                uiState.displayedMyMeetingList.isEmpty() -> {
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 34.dp, bottom = 48.dp)
+                                .padding(horizontal = 20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.img_character_empty_default),
+                                contentDescription = null,
+                                modifier = Modifier.size(80.dp)
+                            )
 
-                        Text(
-                            text = "아직 참여 중인 모임이 없어요.",
-                            color = colors.text.subtle,
-                            style = typography.body.smNormalR,
-                        )
+                            Text(
+                                text = "아직 참여 중인 모임이 없어요.",
+                                color = colors.text.subtle,
+                                style = typography.body.smNormalR,
+                            )
+                        }
                     }
                 }
-            } else {
-                items(
-                    items = uiState.displayedMyMeetingList,
-                    key = { it.id },
-                ) { meeting ->
-                    MyMeetingCardItem(
-                        title = meeting.title,
-                        dateTime = meeting.dateTime ?: "일정 미정",
-                        participantImageList = meeting.participantImageUrls,
-                        extraCount = meeting.extraParticipantCount,
-                        statusText = meeting.statusText,
-                        statusLabelType = meeting.statusLabelType,
-                        onCardClick = { onMyMeetingClick(meeting.id, meeting.statusLabelType) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp, vertical = 6.dp),
-                    )
+
+                else -> {
+                    items(
+                        items = uiState.displayedMyMeetingList,
+                        key = { it.id },
+                    ) { meeting ->
+                        MyMeetingCardItem(
+                            title = meeting.title,
+                            dateTime = meeting.dateTime ?: "일정 미정",
+                            participantImageList = meeting.participantImageUrls,
+                            extraCount = meeting.extraParticipantCount,
+                            statusText = meeting.statusText,
+                            statusLabelType = meeting.statusLabelType,
+                            onCardClick = { onMyMeetingClick(meeting.id, meeting.statusLabelType) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp, vertical = 6.dp),
+                        )
+                    }
                 }
             }
         }
