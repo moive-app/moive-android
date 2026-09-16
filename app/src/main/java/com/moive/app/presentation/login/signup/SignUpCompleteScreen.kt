@@ -59,7 +59,7 @@ private fun SignUpCompleteScreen(
         Spacer(modifier = Modifier.weight(184f))
 
         Image(
-            painter = painterResource(R.drawable.ic_launcher_background),
+            painter = painterResource(R.drawable.img_character_congratulation),
             contentDescription = null,
             modifier = Modifier.size(240.dp),
         )

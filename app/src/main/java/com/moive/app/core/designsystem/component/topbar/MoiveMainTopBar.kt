@@ -2,6 +2,7 @@ package com.moive.app.core.designsystem.component.topbar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +31,6 @@ import com.moive.app.core.extensions.noRippleClickable
 
 @Composable
 fun MoiveMainTopBar(
-    title: String,
     isAlarmUnRead: Boolean,
     onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -43,24 +43,16 @@ fun MoiveMainTopBar(
             )
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Image(
-            painter = painterResource(R.drawable.ic_launcher_background),
+            painter = painterResource(R.drawable.img_moive_symbol_name),
             contentDescription = null,
             modifier = Modifier
-                .size(32.dp)
-                .clip(
-                    shape = RoundedCornerShape(radius.circular),
+                .size(
+                    width = 96.dp,
+                    height = 32.dp,
                 )
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Text(
-            text = title,
-            color = colors.text.default,
-            style = typography.title.lgB,
-            modifier = Modifier.weight(1f),
         )
 
         Icon(
@@ -79,7 +71,6 @@ fun MoiveMainTopBar(
 private fun MoiveMainTopBarPreview() {
     MoiveTheme {
         MoiveMainTopBar(
-            title = "title",
             isAlarmUnRead = true,
             onNotificationClick = {},
         )

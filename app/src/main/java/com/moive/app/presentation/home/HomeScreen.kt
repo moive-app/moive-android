@@ -2,43 +2,46 @@ package com.moive.app.presentation.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.moive.app.R
+import com.moive.app.core.designsystem.component.chip.LabelType
 import com.moive.app.core.designsystem.component.topbar.MoiveMainTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 import com.moive.app.core.extensions.noRippleClickable
-import com.moive.app.presentation.common.component.TabChipList
 import com.moive.app.presentation.common.component.MyMeetingCardItem
-import com.moive.app.presentation.home.component.HomeEmptyMeetingList
+import com.moive.app.presentation.common.component.TabChipList
 import com.moive.app.presentation.home.component.ConfirmedMeetingPager
 import kotlinx.collections.immutable.persistentListOf
 
@@ -46,13 +49,21 @@ import kotlinx.collections.immutable.persistentListOf
 fun HomeRoute(
     innerPadding: PaddingValues,
     navigateToMeetingList: () -> Unit,
-    navigateToMeetingDetail: () -> Unit,
+    navigateToMeetingDetail: (Long) -> Unit,
+    navigateToMeetingComplete: (Long) -> Unit,
     navigateToMeetingCreation: () -> Unit,
     navigateToNotification: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.getHome(uiState.selectedTab)
+        }
+    }
 
     HomeScreen(
         innerPadding = innerPadding,
@@ -60,6 +71,13 @@ fun HomeRoute(
         onTabClick = viewModel::postMeetingFilter,
         onShowListClick = navigateToMeetingList,
         onMeetingClick = navigateToMeetingDetail,
+        onMyMeetingClick = { meetingId, statusLabelType ->
+            if (statusLabelType == LabelType.COMPLETE) {
+                navigateToMeetingComplete(meetingId)
+            } else {
+                navigateToMeetingDetail(meetingId)
+            }
+        },
         onAddMeetingClick = navigateToMeetingCreation,
         onNotificationClick = navigateToNotification,
         modifier = modifier,
@@ -72,7 +90,8 @@ private fun HomeScreen(
     uiState: HomeContract.State,
     onTabClick: (String) -> Unit,
     onShowListClick: () -> Unit,
-    onMeetingClick: () -> Unit,
+    onMeetingClick: (Long) -> Unit,
+    onMyMeetingClick: (Long, LabelType) -> Unit,
     onAddMeetingClick: () -> Unit,
     onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -86,13 +105,13 @@ private fun HomeScreen(
             .padding(innerPadding),
     ) {
         MoiveMainTopBar(
-            title = "MOIVE",
             isAlarmUnRead = uiState.isAlarmUnRead,
             onNotificationClick = onNotificationClick,
         )
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 48.dp)
         ) {
             item {
                 Text(
@@ -104,25 +123,41 @@ private fun HomeScreen(
             }
 
             item {
-                if (uiState.upcomingMeetings.isEmpty()) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_launcher_background),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(320f / 220f)
-                            .padding(horizontal = 20.dp)
-                            .clip(
-                                shape = RoundedCornerShape(radius.xxl)
-                            ),
-                        contentScale = ContentScale.Crop,
-                    )
-                } else {
-                    ConfirmedMeetingPager(
-                        meetings = uiState.upcomingMeetings,
-                        onMeetingClick = { onMeetingClick() },
-                        onAddMeetingClick = onAddMeetingClick,
-                    )
+                when {
+                    uiState.homeUiState is HomeUiState.Loading -> Unit
+                    uiState.upcomingMeetings.isEmpty() -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp)
+                                .background(
+                                    color = colors.fill.default06,
+                                    shape = RoundedCornerShape(radius.xxl)
+                                )
+                                .padding(top = 26.dp, bottom = 32.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.img_character_empty_home),
+                                contentDescription = null,
+                                modifier = Modifier.size(80.dp)
+                            )
+
+                            Text(
+                                text = "아직 확정된 모임이 없어요.",
+                                color = colors.text.tertiary,
+                                style = typography.body.smNormalR,
+                            )
+                        }
+                    }
+
+                    else -> {
+                        ConfirmedMeetingPager(
+                            meetings = uiState.upcomingMeetings,
+                            onMeetingClick = onMeetingClick,
+                        )
+                    }
                 }
             }
 
@@ -170,29 +205,51 @@ private fun HomeScreen(
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
-            if (uiState.myMeetingList.isEmpty()) {
-                item {
-                    HomeEmptyMeetingList(
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-                    )
+            when {
+                uiState.homeUiState is HomeUiState.Loading -> Unit
+                uiState.displayedMyMeetingList.isEmpty() -> {
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 34.dp, bottom = 48.dp)
+                                .padding(horizontal = 20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.img_character_empty_default),
+                                contentDescription = null,
+                                modifier = Modifier.size(80.dp)
+                            )
+
+                            Text(
+                                text = "아직 참여 중인 모임이 없어요.",
+                                color = colors.text.subtle,
+                                style = typography.body.smNormalR,
+                            )
+                        }
+                    }
                 }
-            } else {
-                items(
-                    items = uiState.myMeetingList,
-                    key = { it.id },
-                ) { meeting ->
-                    MyMeetingCardItem(
-                        title = meeting.title,
-                        dateTime = meeting.dateTime,
-                        participantImageList = meeting.participantImageUrls,
-                        extraCount = meeting.extraParticipantCount,
-                        statusText = meeting.statusText,
-                        statusLabelType = meeting.statusLabelType,
-                        onCardClick = onMeetingClick ,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp, vertical = 6.dp),
-                    )
+
+                else -> {
+                    items(
+                        items = uiState.displayedMyMeetingList,
+                        key = { it.id },
+                    ) { meeting ->
+                        MyMeetingCardItem(
+                            title = meeting.title,
+                            dateTime = meeting.dateTime ?: "일정 미정",
+                            participantImageList = meeting.participantImageUrls,
+                            extraCount = meeting.extraParticipantCount,
+                            statusText = meeting.statusText,
+                            statusLabelType = meeting.statusLabelType,
+                            onCardClick = { onMyMeetingClick(meeting.id, meeting.statusLabelType) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp, vertical = 6.dp),
+                        )
+                    }
                 }
             }
         }
@@ -209,6 +266,7 @@ private fun HomeScreenPreview() {
             onTabClick = {},
             onShowListClick = {},
             onMeetingClick = {},
+            onMyMeetingClick = { _, _ -> },
             onAddMeetingClick = {},
             onNotificationClick = {},
         )
@@ -228,6 +286,7 @@ private fun HomeScreenEmptyPreview() {
             onTabClick = {},
             onShowListClick = {},
             onMeetingClick = {},
+            onMyMeetingClick = { _, _ -> },
             onAddMeetingClick = {},
             onNotificationClick = {},
         )

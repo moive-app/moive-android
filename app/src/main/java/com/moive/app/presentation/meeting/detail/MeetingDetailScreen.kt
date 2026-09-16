@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -23,11 +24,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.moive.app.R
 import com.moive.app.core.designsystem.component.button.MoiveButton
 import com.moive.app.core.designsystem.component.button.MoiveButtonSize
@@ -37,43 +42,69 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubIconTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.core.extensions.shareText
+import com.moive.app.data.meeting.mapper.MeetingStatus
 import com.moive.app.data.meeting.model.ParticipantItemModel
 import com.moive.app.presentation.common.component.ShadowButton
-import com.moive.app.presentation.meeting.detail.MeetingDetailContract.MeetingStatus
 import com.moive.app.presentation.meeting.detail.component.LeaveMeetingDialog
 import com.moive.app.presentation.meeting.detail.component.MeetingInfoRow
 import com.moive.app.presentation.meeting.detail.component.ParticipantItem
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MeetingDetailRoute(
     innerPadding: PaddingValues,
     navigateBack: () -> Unit,
-    navigateToCondition: () -> Unit,
+    navigateToCondition: (Boolean, String?, String?) -> Unit,
     navigateToVoting: () -> Unit,
     navigateToMeetingConfirmed: () -> Unit,
+    navigateToMeetingComplete: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MeetingDetailViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
+
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.getMeetingDetail()
+        }
+    }
+
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.sideEffect.collect { sideEffect ->
+                when (sideEffect) {
+                    MeetingDetailContract.SideEffect.NavigateBack -> navigateBack()
+                }
+            }
+        }
+    }
 
     MeetingDetailScreen(
         innerPadding = innerPadding,
         uiState = uiState,
         onBackClick = navigateBack,
-        onInviteFriendClick = {},
+        onInviteFriendClick = {
+            context.shareText("새로운 모임에 초대되었어요!🎉 아래 링크에서 모임을 확인해보세요.\n${uiState.inviteUrl}")
+        },
         onActionButtonClick = {
             when (uiState.status) {
-                MeetingStatus.INPUTTING -> navigateToCondition()
+                MeetingStatus.CONDITION_INPUT -> navigateToCondition(
+                    uiState.hasSchedule,
+                    uiState.scheduledDate,
+                    uiState.scheduledTime,
+                )
                 else -> Unit
             }
         },
-        onBottomButtonClick = {
+        onPrimaryActionClick = {
             when (uiState.status) {
-                MeetingStatus.INPUTTING -> navigateToVoting()
+                MeetingStatus.CONDITION_INPUT -> navigateToVoting()
                 MeetingStatus.VOTING -> navigateToVoting()
                 MeetingStatus.CONFIRMED -> navigateToMeetingConfirmed()
+                MeetingStatus.COMPLETED -> navigateToMeetingComplete()
             }
         },
         onMoreClick = viewModel::showLeaveMeetingDialog,
@@ -81,7 +112,6 @@ fun MeetingDetailRoute(
         onLeaveMeetingClick = {
             viewModel.dismissLeaveMeetingDialog()
             viewModel.deleteMeeting()
-            navigateBack()
         },
         modifier = modifier,
     )
@@ -95,7 +125,7 @@ private fun MeetingDetailScreen(
     onMoreClick: () -> Unit,
     onInviteFriendClick: () -> Unit,
     onActionButtonClick: () -> Unit,
-    onBottomButtonClick: () -> Unit,
+    onPrimaryActionClick: () -> Unit,
     onLeaveMeetingDialogDismiss: () -> Unit,
     onLeaveMeetingClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -175,9 +205,9 @@ private fun MeetingDetailScreen(
             }
         }
 
-        if (uiState.status != MeetingStatus.INPUTTING || !uiState.isAllParticipantsDone) {
+        if (uiState.toolTipMessage.isNotEmpty()) {
             MoiveToolTip(
-                text = statusTooltipText(uiState.status),
+                text = uiState.toolTipMessage,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .zIndex(1f)
@@ -186,9 +216,9 @@ private fun MeetingDetailScreen(
         }
 
         ShadowButton(
-            text = statusBottomButtonText(uiState.status),
-            isEnabled = uiState.isAllParticipantsDone,
-            onClick = onBottomButtonClick,
+            text = uiState.primaryActionLabel,
+            isEnabled = uiState.primaryActionEnabled,
+            onClick = onPrimaryActionClick,
             showShadow = isContentScrollable,
         )
     }
@@ -209,13 +239,34 @@ private fun MeetingDetailScreenPreview() {
         MeetingDetailScreen(
             innerPadding = PaddingValues(),
             uiState = MeetingDetailContract.State(
-                status = MeetingStatus.INPUTTING,
+                status = MeetingStatus.CONDITION_INPUT,
+                toolTipMessage = "아직 조건 입력 중이에요!",
+                primaryActionLabel = "추천 장소 확인",
+                primaryActionEnabled = false,
+                participants = persistentListOf(
+                    ParticipantItemModel(
+                        id = 1L,
+                        name = "사용자",
+                        profileImageUrl = null,
+                        statusLabel = "조건 입력 전",
+                        isMe = true,
+                        isDone = false,
+                    ),
+                    ParticipantItemModel(
+                        id = 2L,
+                        name = "참여자1",
+                        profileImageUrl = null,
+                        statusLabel = "조건 입력 완료",
+                        isMe = false,
+                        isDone = true,
+                    ),
+                ),
             ),
             onBackClick = {},
             onMoreClick = {},
             onInviteFriendClick = {},
             onActionButtonClick = {},
-            onBottomButtonClick = {},
+            onPrimaryActionClick = {},
             onLeaveMeetingDialogDismiss = {},
             onLeaveMeetingClick = {},
         )

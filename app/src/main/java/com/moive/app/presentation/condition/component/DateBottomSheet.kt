@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -22,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -62,6 +60,7 @@ fun DateBottomSheet(
     onTimeClick: (String) -> Unit,
     onSaveDateClick: () -> Unit,
     onNextDateClick: () -> Unit,
+    onDateTimeChipClick: (DateTimeSelection) -> Unit,
     modifier: Modifier = Modifier,
     bottomSheetState: SheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
@@ -79,6 +78,7 @@ fun DateBottomSheet(
                 onNextMonthClick = onNextMonthClick,
                 onDayClick = onDayClick,
                 onTimeClick = onTimeClick,
+                onDateTimeChipClick = onDateTimeChipClick,
             )
         },
         buttonContent = {
@@ -113,6 +113,7 @@ private fun DateBottomSheetContent(
     onNextMonthClick: () -> Unit,
     onDayClick: (Int) -> Unit,
     onTimeClick: (String) -> Unit,
+    onDateTimeChipClick: (DateTimeSelection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -129,8 +130,12 @@ private fun DateBottomSheetContent(
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_chevron_left_20),
                 contentDescription = null,
-                tint = colors.icon.default,
-                modifier = Modifier.noRippleClickable(onClick = onPrevMonthClick),
+                tint = if (uiState.hasPreviousMonth) colors.icon.default else colors.icon.disabled,
+                modifier = if (uiState.hasPreviousMonth) {
+                    Modifier.noRippleClickable(onClick = onPrevMonthClick)
+                } else {
+                    Modifier
+                },
             )
 
             Text(
@@ -143,8 +148,12 @@ private fun DateBottomSheetContent(
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_chevron_right_20),
                 contentDescription = null,
-                tint = colors.icon.default,
-                modifier = Modifier.noRippleClickable(onClick = onNextMonthClick),
+                tint = if (uiState.hasNextMonth) colors.icon.default else colors.icon.disabled,
+                modifier = if (uiState.hasNextMonth) {
+                    Modifier.noRippleClickable(onClick = onNextMonthClick)
+                } else {
+                    Modifier
+                },
             )
         }
 
@@ -184,7 +193,7 @@ private fun DateBottomSheetContent(
                 week.forEach { calendarDay ->
                     CalendarDayCell(
                         calendarDay = calendarDay,
-                        isSelected = calendarDay.isCurrentMonth && calendarDay.day == uiState.pendingDay,
+                        isSelected = calendarDay.isSelectable && calendarDay.day == uiState.pendingDay,
                         onClick = { onDayClick(calendarDay.day) },
                         modifier = Modifier.weight(1f),
                     )
@@ -250,7 +259,10 @@ private fun DateBottomSheetContent(
                         items = uiState.selectedDateTimes,
                         key = { "${it.year}-${it.month}-${it.day}-${it.time}" }
                     ) { item ->
-                        DateTimeChip(entry = item)
+                        DateTimeChip(
+                            entry = item,
+                            onClick = { onDateTimeChipClick(item) },
+                        )
                     }
                 }
             }
@@ -270,7 +282,7 @@ private fun CalendarDayCell(
         modifier = modifier
             .aspectRatio(1f)
             .then(
-                if (calendarDay.isCurrentMonth) {
+                if (calendarDay.isSelectable) {
                     Modifier.noRippleClickable(onClick = onClick)
                 } else {
                     Modifier
@@ -282,7 +294,7 @@ private fun CalendarDayCell(
             text = calendarDay.day.toString(),
             color = when {
                 isSelected -> colors.text.onBg
-                calendarDay.isCurrentMonth -> colors.text.default
+                calendarDay.isSelectable -> colors.text.default
                 else -> colors.text.tertiary
             },
             style = typography.label.mdM,
@@ -305,6 +317,7 @@ private fun CalendarDayCell(
 @Composable
 private fun DateTimeChip(
     entry: DateTimeSelection,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -318,6 +331,7 @@ private fun DateTimeChip(
                 color = colors.primary.sub03,
                 shape = RoundedCornerShape(radius.sm),
             )
+            .noRippleClickable(onClick = onClick)
             .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -345,6 +359,7 @@ private fun DateBottomSheetContentPreview() {
             onNextMonthClick = {},
             onDayClick = {},
             onTimeClick = {},
+            onDateTimeChipClick = {},
         )
     }
 }

@@ -1,11 +1,11 @@
 package com.moive.app.presentation.meeting.confirmed
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,7 +18,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -31,8 +30,11 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubIconTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.core.extensions.openUrl
 import com.moive.app.core.extensions.shareText
 import com.moive.app.presentation.common.component.ShadowButton
+import com.moive.app.presentation.common.component.placedetail.PlaceDetailContent
+import com.moive.app.presentation.meeting.confirmed.MeetingConfirmedContract.Step
 import com.moive.app.presentation.meeting.confirmed.component.PlaceTimeRow
 import com.moive.app.presentation.meeting.confirmed.component.TravelTimeCard
 
@@ -46,12 +48,26 @@ fun MeetingConfirmedRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
+    BackHandler(enabled = uiState.step != Step.MAIN) {
+        viewModel.backToMain()
+    }
+
     MeetingConfirmedScreen(
         innerPadding = innerPadding,
         uiState = uiState,
         onBackClick = navigateBack,
-        onPlaceClick = {},
-        onShareClick = { context.shareText("모임에 참여해보세요!\n${uiState.meetingLink}") },
+        onPlaceClick = viewModel::onPlaceClick,
+        onDetailBackClick = viewModel::backToMain,
+        onKakaoMapClick = {
+            val landingUrl = uiState.currentPlaceDetail.landingUrl
+            if (landingUrl.isNotBlank()) {
+                val opened = context.openUrl(landingUrl)
+                viewModel.onKakaoMapRouteOpened(opened)
+            }
+        },
+        onShareClick = {
+            context.shareText("새로운 모임에 초대되었어요!🎉 아래 링크에서 모임을 확인해보세요.\n${uiState.inviteUrl}")
+        },
         modifier = modifier,
     )
 }
@@ -62,9 +78,24 @@ private fun MeetingConfirmedScreen(
     uiState: MeetingConfirmedContract.State,
     onBackClick: () -> Unit,
     onPlaceClick: () -> Unit,
+    onDetailBackClick: () -> Unit,
+    onKakaoMapClick: () -> Unit,
     onShareClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (uiState.step == Step.DETAIL) {
+        PlaceDetailContent(
+            innerPadding = innerPadding,
+            place = uiState.currentPlaceDetail,
+            title = uiState.currentPlaceDetail.placeName,
+            onBackClick = onDetailBackClick,
+            onKakaoMapClick = onKakaoMapClick,
+            showSelectButton = false,
+            modifier = modifier,
+        )
+        return
+    }
+
     val lazyListState = rememberLazyListState()
     val isContentScrollable by remember {
         derivedStateOf { lazyListState.canScrollForward || lazyListState.canScrollBackward }
@@ -96,17 +127,18 @@ private fun MeetingConfirmedScreen(
                     textAlign = TextAlign.Center,
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
                 Image(
-                    painter = painterResource(R.drawable.ic_launcher_background),
+                    painter = painterResource(
+                        if (uiState.isPlaceConfirmed) R.drawable.img_character_crop_congratulation
+                        else R.drawable.img_character_congratulation
+                    ),
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(
-                            if (uiState.isPlaceConfirmed) 320f / 167f else 320f / 247f
+                        .padding(
+                            top = if (uiState.isPlaceConfirmed) 12.dp else 36.dp
                         )
+                        .padding(horizontal = 20.dp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -149,6 +181,8 @@ private fun MeetingConfirmedScreenPreview() {
             uiState = MeetingConfirmedContract.State(),
             onBackClick = {},
             onPlaceClick = {},
+            onDetailBackClick = {},
+            onKakaoMapClick = {},
             onShareClick = {},
         )
     }
@@ -165,6 +199,8 @@ private fun MeetingConfirmedScreenPlaceUndecidedPreview() {
             ),
             onBackClick = {},
             onPlaceClick = {},
+            onDetailBackClick = {},
+            onKakaoMapClick = {},
             onShareClick = {},
         )
     }

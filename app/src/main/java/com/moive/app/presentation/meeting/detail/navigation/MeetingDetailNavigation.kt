@@ -5,32 +5,42 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.moive.app.core.extensions.safePopBackStack
 import com.moive.app.core.navigation.Route
 import com.moive.app.presentation.condition.navigation.navigateToCondition
+import com.moive.app.presentation.meeting.complete.navigation.navigateToMeetingComplete
 import com.moive.app.presentation.meeting.confirmed.navigation.navigateToMeetingConfirmed
 import com.moive.app.presentation.meeting.detail.MeetingDetailRoute
 import com.moive.app.presentation.voting.navigation.navigateToVoting
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToMeetingDetail(
-    navOptions: NavOptions? = null
-) = navigate(MeetingDetail, navOptions)
+    meetingId: Long,
+    navOptions: NavOptions? = null,
+) = navigate(MeetingDetail(meetingId), navOptions)
 
 fun NavGraphBuilder.meetingDetailGraph(
     navController: NavController,
     innerPadding: PaddingValues,
 ) {
-    composable<MeetingDetail> {
+    composable<MeetingDetail> { backStackEntry ->
+        val meetingId = backStackEntry.toRoute<MeetingDetail>().meetingId
+
         MeetingDetailRoute(
             navigateBack = navController.safePopBackStack(),
-            navigateToCondition = navController::navigateToCondition,
-            navigateToVoting = navController::navigateToVoting,
-            navigateToMeetingConfirmed = navController::navigateToMeetingConfirmed,
+            navigateToCondition = { hasSchedule, scheduledDate, scheduledTime ->
+                navController.navigateToCondition(meetingId, hasSchedule, scheduledDate, scheduledTime)
+            },
+            navigateToVoting = { navController.navigateToVoting(meetingId) },
+            navigateToMeetingConfirmed = { navController.navigateToMeetingConfirmed(meetingId) },
+            navigateToMeetingComplete = { navController.navigateToMeetingComplete(meetingId) },
             innerPadding = innerPadding,
         )
     }
 }
 
 @Serializable
-data object MeetingDetail : Route
+data class MeetingDetail(
+    val meetingId: Long
+) : Route

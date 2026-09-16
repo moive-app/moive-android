@@ -2,6 +2,9 @@ package com.moive.app.presentation.condition
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Immutable
+import com.moive.app.core.designsystem.component.toast.ToastType
+import com.moive.app.data.condition.mapper.ActivityType
+import com.moive.app.data.condition.mapper.TravelTime
 import com.moive.app.data.condition.model.PlaceSearchItemModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
@@ -9,10 +12,14 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import java.util.Calendar
 
+const val MAX_DATE_COUNT = 5
+
 interface ConditionContract {
     @Immutable
     data class State(
         val step: Step = Step.INPUT,
+        val conditionUiState: ConditionUiState = ConditionUiState.Idle,
+        val isDateConfirmed: Boolean = false,
         val isDateBottomSheetVisible: Boolean = false,
         val calendarYear: Int = Calendar.getInstance().get(Calendar.YEAR),
         val calendarMonth: Int = Calendar.getInstance().get(Calendar.MONTH) + 1,
@@ -34,6 +41,12 @@ interface ConditionContract {
         val calendarDays: ImmutableList<CalendarDay>
             get() = buildCalendarDays(calendarYear, calendarMonth)
 
+        val hasPreviousMonth: Boolean
+            get() = previousMonth(calendarYear, calendarMonth).let { (year, month) -> monthHasSelectableDay(year, month) }
+
+        val hasNextMonth: Boolean
+            get() = nextMonth(calendarYear, calendarMonth).let { (year, month) -> monthHasSelectableDay(year, month) }
+
         val timeOptions: ImmutableList<String>
             get() = TIME_OPTIONS
 
@@ -52,7 +65,12 @@ interface ConditionContract {
         val selectedDateTimes: PersistentList<DateTimeSelection>
             get() {
                 val pending = pendingDateTime
-                val entries = if (pending == null) {
+                val isNewDate = pending != null && confirmedDateTimes.none {
+                    it.year == pending.year && it.month == pending.month && it.day == pending.day
+                }
+                val isOverLimit = isNewDate && confirmedDateTimes.size >= MAX_DATE_COUNT
+
+                val entries = if (pending == null || isOverLimit) {
                     confirmedDateTimes
                 } else {
                     confirmedDateTimes
@@ -89,12 +107,7 @@ interface ConditionContract {
         companion object {
             private val TIME_OPTIONS = buildTimeOptions()
 
-            private val TRAVEL_TIME_OPTIONS = persistentListOf(
-                "30분 이내",
-                "1시간 이내",
-                "1시간 30분 이내",
-                "상관 없어요",
-            )
+            private val TRAVEL_TIME_OPTIONS = TravelTime.entries.map { it.label }.toPersistentList()
 
             private val PREFERENCE_CATEGORIES = persistentListOf(
                 PreferenceCategory(
@@ -122,7 +135,27 @@ interface ConditionContract {
         SEARCH,
         CONFIRM;
     }
+
+    sealed class SideEffect {
+        data object NavigateToMeetingDetail : SideEffect()
+        data class OnShowToast(val msg: String, val type: ToastType) : SideEffect()
+    }
 }
+
+sealed interface ConditionUiState {
+    data object Idle : ConditionUiState
+    data object Loading : ConditionUiState
+    data object Success : ConditionUiState
+    data class Failure(
+        val msg: String,
+    ) : ConditionUiState
+}
+
+fun String.toMaxTravelMinutes(): Int? =
+    TravelTime.entries.find { it.label == this }?.maxMinutes
+
+fun String.toActivityType(): ActivityType? =
+    ActivityType.entries.find { it.label == this }
 
 @Immutable
 data class PreferenceCategory(

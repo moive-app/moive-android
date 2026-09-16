@@ -123,7 +123,7 @@ private fun LoginScreen(
         Spacer(modifier = Modifier.weight(140f))
 
         Image(
-            painter = painterResource(R.drawable.ic_launcher_background),
+            painter = painterResource(R.drawable.img_logo_white_bg),
             contentDescription = null,
             modifier = Modifier.size(128.dp),
         )

@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,12 +41,11 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.extensions.addBitmapMarker
-import com.moive.app.data.voting.model.PlaceRecommendationCardItemModel
+import com.moive.app.data.voting.model.PlaceRecommendedPlaceCardItemModel
 import com.moive.app.data.voting.model.RegionPinModel
 import com.moive.app.presentation.voting.util.rememberMapViewWithLifecycle
 import com.moive.app.presentation.voting.util.rememberRegionPinBitmap
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
@@ -56,10 +56,10 @@ fun PlaceListContent(
     innerPadding: PaddingValues,
     regionList: ImmutableList<RegionPinModel>,
     selectedRegionName: String?,
-    places: PersistentList<PlaceRecommendationCardItemModel>,
+    places: ImmutableList<PlaceRecommendedPlaceCardItemModel>,
     selectedPlaceIds: PersistentSet<Long>,
     isPlaceListVisible: Boolean,
-    onRegionPinClick: (String) -> Unit,
+    onRegionPinClick: (RegionPinModel) -> Unit,
     onPlaceItemClick: (Long) -> Unit,
     onCheckboxClick: (Long) -> Unit,
     onBottomSheetDismiss: () -> Unit,
@@ -67,9 +67,12 @@ fun PlaceListContent(
     onBackClick: () -> Unit,
     onCompleteButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isCompleteButtonLoading: Boolean = false,
 ) {
     var kakaoMapState by remember { mutableStateOf<KakaoMap?>(null) }
     var regionPinEntries by remember { mutableStateOf<List<Pair<Label, RegionPinModel>>>(emptyList()) }
+    var bottomSheetHeightPx by remember { mutableStateOf(0) }
+    var pendingCameraTarget by remember { mutableStateOf<LatLng?>(null) }
 
     val regionPinBitmaps = List(regionList.size) { index -> rememberRegionPinBitmap(rank = index) }
 
@@ -80,14 +83,11 @@ fun PlaceListContent(
         locationX = mapCenterX,
         locationY = mapCenterY,
         onMapReady = { kakaoMap ->
-            kakaoMap.setOnLabelClickListener { map, _, label ->
+            kakaoMap.setOnLabelClickListener { _, _, label ->
                 val clickedRegion = regionPinEntries.firstOrNull { it.first == label }?.second
 
-                map.moveCamera(
-                    CameraUpdateFactory.newCenterPosition(label.position, 16),
-                    CameraAnimation.from(300),
-                )
-                clickedRegion?.let { onRegionPinClick(it.name) }
+                pendingCameraTarget = label.position
+                clickedRegion?.let { onRegionPinClick(it) }
                 true
             }
             kakaoMapState = kakaoMap
@@ -109,6 +109,30 @@ fun PlaceListContent(
             ) ?: return@mapIndexedNotNull null
             label to region
         }
+
+        if (regionList.isNotEmpty()) {
+            val points = regionList.map { LatLng.from(it.locationY, it.locationX) }.toTypedArray()
+            kakaoMap.moveCamera(CameraUpdateFactory.fitMapPoints(points, MAP_BOUNDS_PADDING_PX))
+        }
+    }
+
+    LaunchedEffect(kakaoMapState, isPlaceListVisible, bottomSheetHeightPx, places, pendingCameraTarget) {
+        val kakaoMap = kakaoMapState ?: return@LaunchedEffect
+        val bottomPadding = if (isPlaceListVisible) {
+            (bottomSheetHeightPx - PIN_DOWN_ADJUST_PX).coerceAtLeast(0)
+        } else {
+            0
+        }
+        kakaoMap.setPadding(0, 0, 0, bottomPadding)
+
+        val target = pendingCameraTarget ?: return@LaunchedEffect
+        if (places.isEmpty()) return@LaunchedEffect
+
+        kakaoMap.moveCamera(
+            CameraUpdateFactory.newCenterPosition(target, 16),
+            CameraAnimation.from(300),
+        )
+        pendingCameraTarget = null
     }
 
     Box(
@@ -136,6 +160,9 @@ fun PlaceListContent(
                 title = "추천 장소",
                 onDismissRequest = onBottomSheetDismiss,
                 showScrim = false,
+                modifier = Modifier.onGloballyPositioned { coordinates ->
+                    bottomSheetHeightPx = coordinates.size.height
+                },
                 content = {
                     LazyColumn (
                         contentPadding = PaddingValues(vertical = 12.dp),
@@ -172,6 +199,7 @@ fun PlaceListContent(
                             size = MoiveButtonSize.LARGE,
                             onClick = onCompleteButtonClick,
                             enabled = selectedPlaceIds.isNotEmpty(),
+                            isLoading = isCompleteButtonLoading,
                             modifier = Modifier.weight(1f),
                         )
                     }
@@ -183,6 +211,8 @@ fun PlaceListContent(
 
 private const val DEFAULT_LOCATION_X = 127.0246 // 신논현역
 private const val DEFAULT_LOCATION_Y = 37.5044 // 신논현역
+private const val MAP_BOUNDS_PADDING_PX = 300
+private const val PIN_DOWN_ADJUST_PX = 350
 
 @Preview
 @Composable
@@ -197,31 +227,23 @@ private fun PlaceListContentPreview() {
             ),
             selectedRegionName = null,
             places = persistentListOf(
-                PlaceRecommendationCardItemModel(
+                PlaceRecommendedPlaceCardItemModel(
                     id = 1L,
                     name = "장소명(상호명) 1",
                     category = "카페",
-                    address = "서울시 강남구 워시기워시기 123",
                     matchRate = 60,
                     avgTravelMinutes = 36,
                     maxTravelMinutes = 41,
                     tasteMatchCount = 4,
-                    tasteMatchTotal = 7,
-                    totalTravelMinutes = 34,
-                    totalTravelFare = 1_650,
                 ),
-                PlaceRecommendationCardItemModel(
+                PlaceRecommendedPlaceCardItemModel(
                     id = 2L,
                     name = "장소명(상호명) 2",
                     category = "식당",
-                    address = "서울시 강남구 워시기워시기 456",
                     matchRate = 50,
                     avgTravelMinutes = 36,
                     maxTravelMinutes = 41,
                     tasteMatchCount = 4,
-                    tasteMatchTotal = 7,
-                    totalTravelMinutes = 34,
-                    totalTravelFare = 1_650,
                 ),
             ),
             selectedPlaceIds = persistentSetOf(1L),

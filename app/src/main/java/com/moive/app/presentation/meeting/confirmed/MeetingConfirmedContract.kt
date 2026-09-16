@@ -1,27 +1,97 @@
 package com.moive.app.presentation.meeting.confirmed
 
 import androidx.compose.runtime.Immutable
-import com.moive.app.data.meeting.model.TravelParticipantModel
+import com.moive.app.data.meeting.model.MeetingResultParticipantModel
+import com.moive.app.data.voting.model.PlaceDetailModel
+import com.moive.app.data.voting.model.PlaceDetailPinLatLang
+import com.moive.app.data.voting.model.PlaceDetailRouteLatLang
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 interface MeetingConfirmedContract {
     @Immutable
     data class State(
+        val step: Step = Step.MAIN,
+        val meetingResultUiState: MeetingResultUiState = MeetingResultUiState.Idle,
         val myProfileImageUrl: String = "",
-        val meetingLink: String = "https://moive.app/meeting/1",
+        val inviteUrl: String = "",
         val isPlaceConfirmed: Boolean = true,
-        val placeName: String = "장소명(상호명)",
-        val placeCategory: String = "카페",
-        val placeAddress: String = "서울시 강남구 OO동",
-        val meetingDate: String = "9월 18일",
-        val meetingTime: String = "오후 6:00",
-        val participants: ImmutableList<TravelParticipantModel> = persistentListOf(
-            TravelParticipantModel(id = 1L, name = "다인", profileImageUrl = "", address = "서울시 구로구 머시기", transferCount = 1, travelMinutes = 32),
-            TravelParticipantModel(id = 2L, name = "수현", profileImageUrl = "", address = "경기도 수원시 고색동", transferCount = 2, travelMinutes = 38),
-            TravelParticipantModel(id = 3L, name = "민주", profileImageUrl = "", address = "경기도 수원시 OO동", transferCount = 2, travelMinutes = 52),
-            TravelParticipantModel(id = 4L, name = "혜지", profileImageUrl = "", address = "서울시 OO구 머시기", transferCount = 0, travelMinutes = 48),
-            TravelParticipantModel(id = 5L, name = "지민", profileImageUrl = "", address = "서울시 구로구 OO동", transferCount = 0, travelMinutes = 50),
+        val placeName: String = "",
+        val placeCategory: String = "",
+        val placeAddress: String = "",
+        val meetingDate: String = "",
+        val meetingTime: String = "",
+        val placeId: Long? = null,
+        val areaId: Long? = null,
+        val placeDetailUiState: PlaceDetailUiState = PlaceDetailUiState.Idle,
+        val placeRouteUiState: PlaceRouteUiState = PlaceRouteUiState.Idle,
+        val participants: ImmutableList<MeetingResultParticipantModel> = persistentListOf(
+            MeetingResultParticipantModel(id = 1L, name = "", profileImageUrl = "", address = "", transferCount = 0, travelMinutes = 0),
+            MeetingResultParticipantModel(id = 2L, name = "", profileImageUrl = "", address = "", transferCount = 0, travelMinutes = 0),
+            MeetingResultParticipantModel(id = 3L, name = "", profileImageUrl = "", address = "", transferCount = 0, travelMinutes = 0),
+            MeetingResultParticipantModel(id = 4L, name = "", profileImageUrl = "", address = "", transferCount = 0, travelMinutes = 0),
+            MeetingResultParticipantModel(id = 5L, name = "", profileImageUrl = "", address = "", transferCount = 0, travelMinutes = 0),
+        ),
+        val currentPlaceDetail: PlaceDetailModel = PlaceDetailModel(
+            id = 1L,
+            userName = "",
+            placeName = "",
+            category = "",
+            address = "",
+            areaName = "",
+            totalMemberCount = 0,
+            matchMemberCount = 0,
+            imageList = emptyList(),
+            startPinLatLang = PlaceDetailPinLatLang(
+                latitude = 0.0,
+                longitude = 0.0,
+            ),
+            endPinLatLang = PlaceDetailPinLatLang(
+                latitude = 0.0,
+                longitude = 0.0,
+            ),
+            routeLatLang = PlaceDetailRouteLatLang(
+                latitude = listOf(0.0, 0.0),
+                longitude = listOf(0.0, 0.0),
+            ),
+            totalTravelMinutes = 0,
+            avgTravelMinutes = 0,
+            walkMinutes = 0,
+            busMinutes = 0,
+            subwayMinutes = 0,
+            travelFare = 0,
         ),
     )
+
+    enum class Step {
+        MAIN,
+        DETAIL;
+    }
+}
+
+sealed interface MeetingResultUiState {
+    data object Idle : MeetingResultUiState
+    data object Loading : MeetingResultUiState
+    data object Success : MeetingResultUiState
+    data class Failure(
+        val msg: String,
+    ) : MeetingResultUiState
+}
+
+sealed interface PlaceDetailUiState {
+    data object Idle : PlaceDetailUiState
+    data object Loading : PlaceDetailUiState
+    data object Success : PlaceDetailUiState
+    data class Failure(
+        val msg: String,
+    ) : PlaceDetailUiState
+}
+
+sealed interface PlaceRouteUiState {
+    data object Idle : PlaceRouteUiState
+    data object Loading : PlaceRouteUiState
+    data object Success : PlaceRouteUiState
+    data class Failure(
+        val msg: String,
+    ) : PlaceRouteUiState
 }

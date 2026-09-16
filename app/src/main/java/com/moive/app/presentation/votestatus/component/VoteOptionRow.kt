@@ -1,6 +1,7 @@
 package com.moive.app.presentation.votestatus.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ fun VoteOptionRow(
     isTopVote: Boolean,
     isVotedByMe: Boolean,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
@@ -43,7 +45,8 @@ fun VoteOptionRow(
             )
             .background(
                 color = if (isTopVote) colors.primary.sub03 else colors.background.default02
-            ),
+            )
+            .clickable(onClick = onClick),
     ) {
 
         Box(
@@ -99,15 +102,17 @@ private fun VoteOptionRowPreview() {
                 text = "성수동 카페",
                 voteRatio = 0.25f,
                 isTopVote = false,
-                isVotedByMe = false
+                isVotedByMe = false,
+                onClick = {},
             )
             VoteOptionRow(
                 text = "역삼동 이자카야",
                 voteRatio = 0.25f,
                 isTopVote = false,
-                isVotedByMe = true
+                isVotedByMe = true,
+                onClick = {},
             )
-            VoteOptionRow(text = "역삼동 카페", voteRatio = 0.5f, isTopVote = true, isVotedByMe = true)
+            VoteOptionRow(text = "역삼동 카페", voteRatio = 0.5f, isTopVote = true, isVotedByMe = true, onClick = {})
         }
     }
 }

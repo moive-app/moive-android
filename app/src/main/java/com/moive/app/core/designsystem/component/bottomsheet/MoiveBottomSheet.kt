@@ -15,9 +15,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +35,8 @@ import com.moive.app.R
 import com.moive.app.core.designsystem.component.button.MoiveButton
 import com.moive.app.core.designsystem.component.button.MoiveButtonSize
 import com.moive.app.core.designsystem.component.button.MoiveButtonType
+import com.moive.app.core.designsystem.component.toast.LocalSnackbarHostState
+import com.moive.app.core.designsystem.component.toast.MoiveSnackbarHost
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
@@ -64,12 +68,19 @@ fun MoiveBottomSheet(
         scrimColor = if (showScrim) colors.dim.default else Color.Transparent,
         dragHandle = null,
         content = {
-            BottomSheetContent(
-                title = title,
-                onCloseClick = onDismissRequest,
-                content = content,
-                buttonContent = buttonContent,
-            )
+            Box {
+                BottomSheetContent(
+                    title = title,
+                    onCloseClick = onDismissRequest,
+                    content = content,
+                    buttonContent = buttonContent,
+                )
+
+                MoiveSnackbarHost(
+                    hostState = LocalSnackbarHostState.current,
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                )
+            }
         }
     )
 }
@@ -127,35 +138,38 @@ private fun BottomSheetContent(
 private fun MoiveBottomSheetPreview() {
     MoiveTheme {
         var showBottomSheet by remember { mutableStateOf(false) }
+        val snackbarHostState = remember { SnackbarHostState() }
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            MoiveButton(
-                text = "바텀시트 열기",
-                type = MoiveButtonType.PRIMARY,
-                size = MoiveButtonSize.LARGE,
-                onClick = { showBottomSheet = true },
-            )
-        }
+        CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                MoiveButton(
+                    text = "바텀시트 열기",
+                    type = MoiveButtonType.PRIMARY,
+                    size = MoiveButtonSize.LARGE,
+                    onClick = { showBottomSheet = true },
+                )
+            }
 
-        if (showBottomSheet) {
-            MoiveBottomSheet(
-                title = "타이틀",
-                onDismissRequest = { showBottomSheet = false },
-                content = {
-                    Spacer(modifier = Modifier.height(300.dp))
-                },
-                buttonContent = {
-                    MoiveButton(
-                        text = "다음",
-                        type = MoiveButtonType.PRIMARY,
-                        size = MoiveButtonSize.LARGE,
-                        onClick = {},
-                    )
-                }
-            )
+            if (showBottomSheet) {
+                MoiveBottomSheet(
+                    title = "타이틀",
+                    onDismissRequest = { showBottomSheet = false },
+                    content = {
+                        Spacer(modifier = Modifier.height(300.dp))
+                    },
+                    buttonContent = {
+                        MoiveButton(
+                            text = "다음",
+                            type = MoiveButtonType.PRIMARY,
+                            size = MoiveButtonSize.LARGE,
+                            onClick = {},
+                        )
+                    }
+                )
+            }
         }
     }
 }

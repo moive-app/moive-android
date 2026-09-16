@@ -7,6 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.moive.app.core.extensions.safePopBackStack
 import com.moive.app.core.navigation.Route
+import com.moive.app.presentation.meeting.complete.navigation.navigateToMeetingComplete
 import com.moive.app.presentation.meeting.detail.navigation.navigateToMeetingDetail
 import com.moive.app.presentation.meeting.list.MeetingListRoute
 import kotlinx.serialization.Serializable
@@ -23,6 +24,7 @@ fun NavGraphBuilder.meetingListGraph(
         MeetingListRoute(
             navigateBack = navController.safePopBackStack(),
             navigateToMeetingDetail = navController::navigateToMeetingDetail,
+            navigateToMeetingComplete = { meetingId -> navController.navigateToMeetingComplete(meetingId) },
             innerPadding = innerPadding,
         )
     }

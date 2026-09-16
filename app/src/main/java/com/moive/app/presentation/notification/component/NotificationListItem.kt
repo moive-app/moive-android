@@ -109,6 +109,7 @@ private fun NotificationListItemPreview() {
         NotificationListItem(
             item = NotificationItemModel(
                 id = 1L,
+                meetingId = 1L,
                 title = "조건 입력을 완료해주세요",
                 description = "'주말 맛집 모임'의 조건을 아직 입력하지 않았어요.",
                 time = "10분 전",

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -24,17 +23,23 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.moive.app.core.designsystem.component.toast.LocalSnackbarHostState
 import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
-import com.moive.app.core.designsystem.component.toast.MoiveToast
+import com.moive.app.core.designsystem.component.toast.MoiveSnackbarHost
 import com.moive.app.core.designsystem.component.toast.MoiveToastVisuals
 import com.moive.app.core.designsystem.component.toast.ToastType
+import com.moive.app.core.extensions.clearBackStackNavOptions
+import com.moive.app.presentation.home.navigation.navigateToHome
+import com.moive.app.presentation.login.navigation.navigateToLogin
 import com.moive.app.presentation.main.component.MainBottomBar
 import com.moive.app.presentation.main.component.MainTab
 import com.moive.app.presentation.meeting.create.navigation.navigateToMeetingCreation
+import com.moive.app.presentation.splash.SplashOverlay
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val TOAST_DURATION = 3000L
 
@@ -59,7 +64,7 @@ fun MainScreen(
             snackbarHostState.currentSnackbarData?.dismiss()
 
             launch {
-                delay(TOAST_DURATION)
+                delay(TOAST_DURATION.milliseconds)
                 snackbarHostState.currentSnackbarData?.dismiss()
             }
 
@@ -75,6 +80,7 @@ fun MainScreen(
 
     CompositionLocalProvider(
         LocalToastTrigger provides onShowToast,
+        LocalSnackbarHostState provides snackbarHostState,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Scaffold(
@@ -112,7 +118,7 @@ fun MainScreen(
                 )
             }
 
-            SnackbarHost(
+            MoiveSnackbarHost(
                 hostState = snackbarHostState,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -120,18 +126,21 @@ fun MainScreen(
                         bottom = bottomBarHeight + 12.dp
                     )
                     .navigationBarsPadding(),
-            ) { data ->
+            )
 
-                val moiveToastVisuals = data.visuals as MoiveToastVisuals
-
-                MoiveToast(
-                    text = moiveToastVisuals.message,
-                    type = moiveToastVisuals.type,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 80.dp),
-                )
-            }
+            SplashOverlay(
+                navigateToHome = {
+                    appState.navController.navigateToHome(
+                        navOptions = appState.navController.clearBackStackNavOptions(),
+                    )
+                },
+                navigateToLogin = {
+                    appState.navController.navigateToLogin(
+                        navOptions = appState.navController.clearBackStackNavOptions(),
+                    )
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 }

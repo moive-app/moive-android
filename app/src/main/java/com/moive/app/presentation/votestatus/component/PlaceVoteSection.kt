@@ -21,6 +21,7 @@ fun PlaceVoteSection(
     totalVoterCount: Int,
     candidates: ImmutableList<PlaceVoteCandidateModel>,
     topVoterCount: Int,
+    onPlaceClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val top3 = candidates.take(TOP_RANK_COUNT)
@@ -37,10 +38,11 @@ fun PlaceVoteSection(
         ) {
             top3.forEach { candidate ->
                 VoteOptionRow(
-                    text = candidate.placeName,
+                    text = candidate.placeName ?: "알 수 없는 장소",
                     voteRatio = voteRatio(candidate.voterCount, totalVoterCount),
                     isTopVote = candidate.voterCount == topVoterCount,
                     isVotedByMe = candidate.isVotedByMe,
+                    onClick = { onPlaceClick(candidate.id) },
                 )
             }
         }
@@ -59,14 +61,15 @@ fun PlaceVoteSection(
 private fun PlaceVoteSectionPreview() {
     MoiveTheme {
         val candidates = persistentListOf(
-            PlaceVoteCandidateModel(placeName = "OOO 맛집", voterCount = 4, isVotedByMe = true),
-            PlaceVoteCandidateModel(placeName = "XXX 카페", voterCount = 3, isVotedByMe = true),
-            PlaceVoteCandidateModel(placeName = "ΔΔΔ 이자카야", voterCount = 2, isVotedByMe = false),
+            PlaceVoteCandidateModel(id = 1L, areaId = 1L, placeName = "OOO 맛집", voterCount = 4, isVotedByMe = true),
+            PlaceVoteCandidateModel(id = 2L, areaId = 1L, placeName = "XXX 카페", voterCount = 3, isVotedByMe = true),
+            PlaceVoteCandidateModel(id = 3L, areaId = 1L, placeName = "ΔΔΔ 이자카야", voterCount = 2, isVotedByMe = false),
         )
         PlaceVoteSection(
             totalVoterCount = 4,
             candidates = candidates,
             topVoterCount = candidates.maxOf { it.voterCount },
+            onPlaceClick = {},
         )
     }
 }

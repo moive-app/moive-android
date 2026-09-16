@@ -21,10 +21,9 @@ import com.moive.app.core.designsystem.component.image.UrlImage
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.data.meeting.mapper.MeetingStatus
 import com.moive.app.data.meeting.model.ParticipantItemModel
-import com.moive.app.presentation.meeting.detail.MeetingDetailContract.MeetingStatus
 import com.moive.app.presentation.meeting.detail.statusActionButtonText
-import com.moive.app.presentation.meeting.detail.statusParticipantLabel
 
 @Composable
 fun ParticipantItem(
@@ -49,7 +48,7 @@ fun ParticipantItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             UrlImage(
-                url = participant.profileImageUrl,
+                url = participant.profileImageUrl ?: "",
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(radius.circular)),
@@ -66,7 +65,7 @@ fun ParticipantItem(
                 )
 
                 Text(
-                    text = statusParticipantLabel(status, participant.isDone),
+                    text = participant.statusLabel,
                     color = colors.text.tertiary,
                     style = typography.label.smR,
                 )
@@ -78,7 +77,7 @@ fun ParticipantItem(
                 text = statusActionButtonText(status, participant.isDone),
                 type = MoiveButtonType.SECONDARY,
                 size = MoiveButtonSize.XSMALL,
-                enabled = if (status == MeetingStatus.INPUTTING) !participant.isDone else false,
+                enabled = if (status == MeetingStatus.CONDITION_INPUT) !participant.isDone else false,
                 onClick = onActionButtonClick,
                 modifier = Modifier.fillMaxWidth(),
             )

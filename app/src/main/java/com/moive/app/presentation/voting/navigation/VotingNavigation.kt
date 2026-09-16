@@ -14,8 +14,9 @@ import com.moive.app.presentation.votestatus.navigation.navigateToVoteStatus
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToVoting(
+    meetingId: Long,
     navOptions: NavOptions? = null
-) = navigate(Voting, navOptions)
+) = navigate(Voting(meetingId), navOptions)
 
 fun NavGraphBuilder.votingGraph(
     navController: NavController,
@@ -24,8 +25,9 @@ fun NavGraphBuilder.votingGraph(
     composable<Voting> {
         VotingRoute(
             navigateBack = navController.safePopBackStack(),
-            navigateToVoteStatus = {
+            navigateToVoteStatus = { meetingId ->
                 navController.navigateToVoteStatus(
+                    meetingId = meetingId,
                     navOptions = navOptions {
                         popUpTo<MeetingDetail> {
                             inclusive = false
@@ -39,4 +41,6 @@ fun NavGraphBuilder.votingGraph(
 }
 
 @Serializable
-data object Voting : Route
+data class Voting(
+    val meetingId: Long
+) : Route

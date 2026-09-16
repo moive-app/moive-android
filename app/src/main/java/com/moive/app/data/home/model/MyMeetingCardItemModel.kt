@@ -6,7 +6,7 @@ import kotlinx.collections.immutable.ImmutableList
 data class MyMeetingCardItemModel(
     val id: Long,
     val title: String,
-    val dateTime: String,
+    val dateTime: String?,
     val participantImageUrls: ImmutableList<String>,
     val statusText: String,
     val statusLabelType: LabelType,
