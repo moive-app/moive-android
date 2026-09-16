@@ -31,10 +31,9 @@ import kotlinx.collections.immutable.persistentListOf
 fun ConfirmedMeetingPager(
     meetings: ImmutableList<ConfirmedMeetingItemModel>,
     onMeetingClick: (Long) -> Unit,
-    onAddMeetingClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val pageCount = if (meetings.size == 1) 2 else meetings.size
+    val pageCount = meetings.size
     val pagerState = rememberPagerState(pageCount = { pageCount })
     val cardColors =
         persistentListOf(colors.primary.default, colors.secondary.default, colors.fill.default02)
@@ -147,7 +146,6 @@ private fun ConfirmedMeetingPagerPreview() {
                 ),
             ),
             onMeetingClick = {},
-            onAddMeetingClick = {},
             modifier = Modifier.padding(vertical = 20.dp),
         )
     }
