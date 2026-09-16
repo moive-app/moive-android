@@ -1,26 +1,21 @@
 package com.moive.app.presentation.splash.navigation
 
-import androidx.navigation.NavController
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.moive.app.core.extensions.clearBackStackNavOptions
+import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.navigation.Route
-import com.moive.app.presentation.home.navigation.navigateToHome
-import com.moive.app.presentation.login.navigation.navigateToLogin
-import com.moive.app.presentation.splash.SplashRoute
 import kotlinx.serialization.Serializable
 
-fun NavGraphBuilder.splashGraph(
-    navController: NavController,
-) {
+fun NavGraphBuilder.splashGraph() {
     composable<Splash> {
-        SplashRoute(
-            navigateToLogin = navController::navigateToLogin,
-            navigateToHome = {
-                navController.navigateToHome(
-                    navOptions = navController.clearBackStackNavOptions()
-                )
-            },
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = colors.primary.default),
         )
     }
 }

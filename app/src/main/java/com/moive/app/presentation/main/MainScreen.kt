@@ -28,13 +28,18 @@ import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
 import com.moive.app.core.designsystem.component.toast.MoiveSnackbarHost
 import com.moive.app.core.designsystem.component.toast.MoiveToastVisuals
 import com.moive.app.core.designsystem.component.toast.ToastType
+import com.moive.app.core.extensions.clearBackStackNavOptions
+import com.moive.app.presentation.home.navigation.navigateToHome
+import com.moive.app.presentation.login.navigation.navigateToLogin
 import com.moive.app.presentation.main.component.MainBottomBar
 import com.moive.app.presentation.main.component.MainTab
 import com.moive.app.presentation.meeting.create.navigation.navigateToMeetingCreation
+import com.moive.app.presentation.splash.SplashOverlay
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val TOAST_DURATION = 3000L
 
@@ -59,7 +64,7 @@ fun MainScreen(
             snackbarHostState.currentSnackbarData?.dismiss()
 
             launch {
-                delay(TOAST_DURATION)
+                delay(TOAST_DURATION.milliseconds)
                 snackbarHostState.currentSnackbarData?.dismiss()
             }
 
@@ -121,6 +126,20 @@ fun MainScreen(
                         bottom = bottomBarHeight + 12.dp
                     )
                     .navigationBarsPadding(),
+            )
+
+            SplashOverlay(
+                navigateToHome = {
+                    appState.navController.navigateToHome(
+                        navOptions = appState.navController.clearBackStackNavOptions(),
+                    )
+                },
+                navigateToLogin = {
+                    appState.navController.navigateToLogin(
+                        navOptions = appState.navController.clearBackStackNavOptions(),
+                    )
+                },
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }

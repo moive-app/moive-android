@@ -9,6 +9,7 @@ import com.moive.app.data.voting.repository.VotingRepository
 import com.moive.app.presentation.voting.VotingContract.Step
 import com.moive.app.presentation.voting.navigation.Voting
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -81,7 +82,12 @@ class VotingViewModel @Inject constructor(
     }
 
     private fun getRecommendedPlaces(recommendedAreaId: Long) = viewModelScope.launch {
-        _uiState.update { it.copy(recommendedPlaceUiState = RecommendedPlaceUiState.Loading) }
+        _uiState.update {
+            it.copy(
+                recommendedPlaceUiState = RecommendedPlaceUiState.Loading,
+                placeList = persistentListOf(),
+            )
+        }
 
         votingRepository.getRecommendedPlaces(meetingId, recommendedAreaId)
             .onSuccess { places ->

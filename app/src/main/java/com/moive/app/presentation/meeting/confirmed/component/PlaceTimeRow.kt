@@ -59,6 +59,7 @@ fun PlaceTimeRow(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
@@ -68,6 +69,7 @@ fun PlaceTimeRow(
                     style = typography.title.mdSb,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false),
                 )
 
                 if(isPlaceConfirmed){
@@ -80,7 +82,9 @@ fun PlaceTimeRow(
 
             if (isPlaceConfirmed){
                 Row(
-                    modifier = Modifier.noRippleClickable(onClick = onPlaceClick),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .noRippleClickable(onClick = onPlaceClick),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
@@ -97,6 +101,7 @@ fun PlaceTimeRow(
                         style = typography.label.xsR,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
                     )
 
                     Icon(
@@ -113,6 +118,8 @@ fun PlaceTimeRow(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.width(24.dp))
 
         VerticalDivider(
             modifier = Modifier.height(44.dp),

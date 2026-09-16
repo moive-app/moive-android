@@ -1,19 +1,21 @@
 package com.moive.app.core.designsystem.component.image
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.moive.app.R
+import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 
 @Composable
 fun UrlImage(
@@ -21,23 +23,23 @@ fun UrlImage(
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
     contentDescription: String? = null,
-    @DrawableRes placeholder: Int = R.drawable.ic_launcher_background,
+    placeholder: Painter = ColorPainter(colors.background.default03),
 ) {
     if (LocalInspectionMode.current) {
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.ic_launcher_background),
             contentDescription = contentDescription,
             contentScale = contentScale,
-            modifier = modifier
+            modifier = modifier,
         )
     } else {
         AsyncImage(
             model = url,
             contentDescription = contentDescription,
             contentScale = contentScale,
-            placeholder = painterResource(placeholder),
-            error = painterResource(placeholder),
-            modifier = modifier
+            modifier = modifier.fillMaxSize(),
+            placeholder = placeholder,
+            error = placeholder,
         )
     }
 }

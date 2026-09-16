@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.moive.app.core.utils.suspendRunCatching
 import com.moive.app.data.auth.repository.AuthRepository
 import com.moive.app.presentation.splash.SplashContract.SideEffect.NavigateToHome
-import com.moive.app.presentation.splash.SplashContract.SideEffect.NavigateToLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,8 +23,15 @@ class SplashViewModel @Inject constructor(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
 
+    private val _uiState = MutableStateFlow(SplashContract.State())
+    val uiState = _uiState.asStateFlow()
+
     private val _sideEffect = Channel<SplashContract.SideEffect>(Channel.BUFFERED)
     val sideEffect = _sideEffect.receiveAsFlow()
+
+    fun onReady() {
+        _uiState.update { it.copy(isSplashReady = true) }
+    }
 
     fun tryAutoLogin() {
         viewModelScope.launch {
@@ -35,15 +44,16 @@ class SplashViewModel @Inject constructor(
             }
 
             delayTime.await()
-            reissueToken.await()
+            val isAutoLoginSuccess = reissueToken.await()
                 .onSuccess {
                     Timber.tag(AUTHORIZATION).d(AUTO_LOGIN_SUCCESS_MESSAGE)
-                    _sideEffect.send(NavigateToHome)
                 }
                 .onFailure { error ->
                     Timber.tag(AUTHORIZATION).e("$AUTO_LOGIN_FAILURE_MESSAGE $error")
-                    _sideEffect.send(NavigateToLogin)
                 }
+                .isSuccess
+
+            _sideEffect.send(NavigateToHome(isAutoLoginSuccess = isAutoLoginSuccess))
         }
     }
 
@@ -60,7 +70,7 @@ class SplashViewModel @Inject constructor(
     }
 
     companion object {
-        private const val SPLASH_DELAY = 2000L
+        private const val SPLASH_DELAY = 700L
         private const val AUTHORIZATION = "Authorization"
         private const val REISSUE_SUCCESS_MESSAGE = "토큰 재발급 성공"
         private const val REISSUE_FAILURE_MESSAGE = "토큰 재발급 실패"

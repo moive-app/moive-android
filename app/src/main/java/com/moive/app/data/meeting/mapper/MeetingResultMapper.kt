@@ -11,7 +11,7 @@ fun MeetingResultResponse.toModel(): MeetingResultModel =
     MeetingResultModel(
         place = place?.toModel(),
         meetingDate = meetingDate,
-        meetingTime = meetingTime,
+        meetingTime = meetingTime.take(5),
         participants = participants.mapIndexed { index, participant -> participant.toModel(id = index.toLong()) },
     )
 

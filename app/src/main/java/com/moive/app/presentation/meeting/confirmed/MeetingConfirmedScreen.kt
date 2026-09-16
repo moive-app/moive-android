@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +18,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -67,7 +65,9 @@ fun MeetingConfirmedRoute(
                 viewModel.onKakaoMapRouteOpened(opened)
             }
         },
-        onShareClick = { context.shareText("모임에 참여해보세요!\n${uiState.meetingLink}") },
+        onShareClick = {
+            context.shareText("새로운 모임에 초대되었어요!🎉 아래 링크에서 모임을 확인해보세요.\n${uiState.inviteUrl}")
+        },
         modifier = modifier,
     )
 }
@@ -127,17 +127,18 @@ private fun MeetingConfirmedScreen(
                     textAlign = TextAlign.Center,
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
                 Image(
-                    painter = painterResource(R.drawable.ic_launcher_background),
+                    painter = painterResource(
+                        if (uiState.isPlaceConfirmed) R.drawable.img_character_crop_congratulation
+                        else R.drawable.img_character_congratulation
+                    ),
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(
-                            if (uiState.isPlaceConfirmed) 320f / 167f else 320f / 247f
+                        .padding(
+                            top = if (uiState.isPlaceConfirmed) 12.dp else 36.dp
                         )
+                        .padding(horizontal = 20.dp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

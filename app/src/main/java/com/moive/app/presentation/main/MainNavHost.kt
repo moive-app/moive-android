@@ -39,9 +39,7 @@ fun MainNavHost(
         popEnterTransition = { fadeIn(animationSpec = tween(NAV_TRANSITION_DURATION_MS)) },
         popExitTransition = { fadeOut(animationSpec = tween(NAV_TRANSITION_DURATION_MS)) },
     ) {
-        splashGraph(
-            navController = navController,
-        )
+        splashGraph()
 
         loginGraph(
             navController = navController,
