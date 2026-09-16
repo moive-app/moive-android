@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
@@ -136,10 +135,6 @@ private fun MeetingConfirmedScreen(
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .size(
-                            width = 240.dp,
-                            height = if (uiState.isPlaceConfirmed) 167.dp else 240.dp
-                        )
                         .padding(
                             top = if (uiState.isPlaceConfirmed) 12.dp else 36.dp
                         )
