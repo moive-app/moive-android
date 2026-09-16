@@ -8,10 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import com.moive.app.core.designsystem.theme.MoiveTheme
+import com.moive.app.core.fcm.MoiveFirebaseMessagingService
 import com.moive.app.core.network.token.AuthManager
 import com.moive.app.data.meeting.repository.MeetingRepository
 import com.moive.app.presentation.login.navigation.navigateToLogin
 import com.moive.app.presentation.meeting.detail.navigation.navigateToMeetingDetail
+import com.moive.app.presentation.notification.NotificationPermissionManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
@@ -29,11 +31,16 @@ class MainActivity : ComponentActivity() {
 
     private val pendingInviteCode = mutableStateOf<String?>(null)
 
+    private val pendingMeetingId = mutableStateOf<Long?>(null)
+
+    private val notificationPermissionManager = NotificationPermissionManager(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         pendingInviteCode.value = intent.extractInviteCode()
-        setIntent(Intent())
+        pendingMeetingId.value = intent.extractMeetingId()
+        intent = Intent()
         setContent {
             MoiveTheme {
                 val appState = rememberMainAppState()
@@ -42,6 +49,11 @@ class MainActivity : ComponentActivity() {
                     authManager.authEvent.collect {
                         appState.navController.navigateToLogin()
                     }
+                }
+
+                LaunchedEffect(Unit) {
+                    appState.isSignedIn.first { it }
+                    notificationPermissionManager.askNotificationPermission()
                 }
 
                 LaunchedEffect(pendingInviteCode.value) {
@@ -60,6 +72,15 @@ class MainActivity : ComponentActivity() {
                     pendingInviteCode.value = null
                 }
 
+                LaunchedEffect(pendingMeetingId.value) {
+                    val meetingId = pendingMeetingId.value ?: return@LaunchedEffect
+
+                    appState.isSignedIn.first { it }
+
+                    appState.navController.navigateToMeetingDetail(meetingId)
+                    pendingMeetingId.value = null
+                }
+
                 MainScreen(
                     appState = appState,
                 )
@@ -70,6 +91,7 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         pendingInviteCode.value = intent.extractInviteCode()
+        pendingMeetingId.value = intent.extractMeetingId()
         setIntent(Intent())
     }
 
@@ -80,3 +102,9 @@ class MainActivity : ComponentActivity() {
 
 private fun Intent.extractInviteCode(): String? =
     takeIf { it.action == Intent.ACTION_VIEW }?.data?.lastPathSegment
+
+private fun Intent.extractMeetingId(): Long? {
+    val meetingId = getLongExtra(MoiveFirebaseMessagingService.MESSAGE_MEETING_ID, -1L)
+    if (meetingId != -1L) removeExtra(MoiveFirebaseMessagingService.MESSAGE_MEETING_ID)
+    return meetingId.takeIf { it != -1L }
+}
