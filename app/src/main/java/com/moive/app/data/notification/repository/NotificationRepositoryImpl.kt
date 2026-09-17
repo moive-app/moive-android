@@ -15,4 +15,9 @@ class NotificationRepositoryImpl @Inject constructor(
         suspendRunCatching {
             notificationRemoteDataSource.getNotificationList(cursor, size).checkData().toModel()
         }
+
+    override suspend fun getUnreadStatus(): Result<Boolean> =
+        suspendRunCatching {
+            notificationRemoteDataSource.getUnreadStatus().checkData().toModel()
+        }
 }
