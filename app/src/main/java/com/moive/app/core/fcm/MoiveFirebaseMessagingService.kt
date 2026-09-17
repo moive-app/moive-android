@@ -13,13 +13,25 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.moive.app.R
+import com.moive.app.data.notification.repository.NotificationRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicInteger
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MoiveFirebaseMessagingService: FirebaseMessagingService() {
+
+    @Inject
+    lateinit var notificationRepository: NotificationRepository
+
+    @Inject
+    lateinit var firebaseMessagingManager: FirebaseMessagingManager
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -27,7 +39,18 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         super.onNewToken(token)
 
         Timber.tag(TAG).d("token: $token")
-        //Todo: 서버 토큰 전달
+
+        serviceScope.launch {
+            val deviceId = firebaseMessagingManager.getInstallationId() ?: return@launch
+
+            notificationRepository.putDeviceToken(token, deviceId)
+                .onSuccess {
+                    Timber.tag(TAG).d(DEVICE_TOKEN_PUT_SUCCESS_MESSAGE)
+                }
+                .onFailure { error ->
+                    Timber.tag(TAG).e(error)
+                }
+        }
     }
 
     override fun onDestroy() {
@@ -41,11 +64,12 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         val title = remoteMessage.data[MESSAGE_TITLE] ?: return
         val body = remoteMessage.data[MESSAGE_BODY]
         val meetingId = remoteMessage.data[MESSAGE_MEETING_ID]?.toLongOrNull()
+        val notificationId = remoteMessage.data[MESSAGE_NOTIFICATION_ID]?.toLongOrNull()
 
-        showNotification(title, body, meetingId)
+        showNotification(title, body, meetingId, notificationId)
     }
 
-    private fun showNotification(title: String, body: String?, meetingId: Long?) {
+    private fun showNotification(title: String, body: String?, meetingId: Long?, notificationId: Long?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
@@ -63,15 +87,16 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         ) == PackageManager.PERMISSION_GRANTED
         if (!granted) return
 
-        val notificationId = System.currentTimeMillis().toInt()
+        val androidNotificationId = notificationIdGenerator.incrementAndGet()
 
         val contentIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             meetingId?.let { putExtra(MESSAGE_MEETING_ID, it) }
+            notificationId?.let { putExtra(MESSAGE_NOTIFICATION_ID, it) }
         } ?: return
         val pendingIntent = PendingIntent.getActivity(
             this,
-            notificationId,
+            androidNotificationId,
             contentIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
@@ -84,15 +109,18 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
             .build()
 
-        NotificationManagerCompat.from(this).notify(notificationId, notification)
+        NotificationManagerCompat.from(this).notify(androidNotificationId, notification)
     }
 
     companion object {
         private const val TAG = "FCM"
         const val MESSAGE_MEETING_ID = "meetingId"
+        const val MESSAGE_NOTIFICATION_ID = "notificationId"
         private const val MESSAGE_TITLE = "title"
         private const val MESSAGE_BODY = "body"
         private const val CHANNEL_ID = "moive_default_channel"
         private const val CHANNEL_NAME = "일반 알림"
+        private const val DEVICE_TOKEN_PUT_SUCCESS_MESSAGE = "디바이스 토큰 등록 성공"
+        private val notificationIdGenerator = AtomicInteger(0)
     }
 }

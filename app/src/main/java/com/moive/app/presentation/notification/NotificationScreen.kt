@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +33,7 @@ import com.moive.app.core.designsystem.component.topbar.MoiveSubTitleTopBar
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
+import com.moive.app.core.extensions.OnBottomReached
 import com.moive.app.core.extensions.isNotificationEnabled
 import com.moive.app.core.extensions.navigateToAppNotificationSettings
 import com.moive.app.data.notification.model.NotificationItemModel
@@ -60,11 +62,14 @@ fun NotificationRoute(
 
     NotificationScreen(
         innerPadding = innerPadding,
-        notifications = uiState.notifications,
+        notificationList = uiState.notifications,
+        isLoading = uiState.notificationUiState is NotificationUiState.Loading,
         isNotificationPermissionGranted = uiState.isNotificationPermissionGranted,
         onBackClick = navigateBack,
         onNotificationItemClick = navigateToMeetingDetail,
+        onNotificationRead = viewModel::patchNotificationReadStatus,
         onNotificationSettingClick = { context.navigateToAppNotificationSettings() },
+        onLoadMore = { viewModel.getNotificationList(loadMore = true) },
         modifier = modifier,
     )
 }
@@ -72,11 +77,14 @@ fun NotificationRoute(
 @Composable
 private fun NotificationScreen(
     innerPadding: PaddingValues,
-    notifications: ImmutableList<NotificationItemModel>,
+    notificationList: ImmutableList<NotificationItemModel>,
+    isLoading: Boolean,
     isNotificationPermissionGranted: Boolean,
     onBackClick: () -> Unit,
     onNotificationItemClick: (Long) -> Unit,
+    onNotificationRead: (Long) -> Unit,
     onNotificationSettingClick: () -> Unit,
+    onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -91,46 +99,70 @@ private fun NotificationScreen(
             backgroundColor = colors.background.default02,
         )
 
-        NotificationSettingButton(
-            isNotificationPermissionGranted = isNotificationPermissionGranted,
-            onSettingClick = onNotificationSettingClick,
-            modifier = Modifier.padding(bottom = 5.dp)
-        )
-
-        if (notifications.isEmpty()) {
-            Column(
+        if (notificationList.isEmpty()) {
+            NotificationSettingButton(
+                isNotificationPermissionGranted = isNotificationPermissionGranted,
+                onSettingClick = onNotificationSettingClick,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.img_character_empty_default),
-                    contentDescription = null,
-                    modifier = Modifier.size(80.dp)
-                )
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 24.dp, bottom = 5.dp)
+            )
 
-                Spacer(modifier = Modifier.height(16.dp))
+            if (!isLoading) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.img_character_empty_default),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
 
-                Text(
-                    text = "새로운 알림이 없어요.",
-                    color = colors.text.tertiary,
-                    style = typography.body.smNormalR,
-                )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "새로운 알림이 없어요.",
+                        color = colors.text.tertiary,
+                        style = typography.body.smNormalR,
+                    )
+                }
             }
         } else {
+            val listState = rememberLazyListState()
+
+            listState.OnBottomReached(
+                threshold = 3,
+                isLoading = isLoading,
+                onLoadMore = onLoadMore,
+            )
+
             LazyColumn(
+                state = listState,
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 23.dp, horizontal = 20.dp),
+                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 23.dp),
             ) {
+                item {
+                    NotificationSettingButton(
+                        isNotificationPermissionGranted = isNotificationPermissionGranted,
+                        onSettingClick = onNotificationSettingClick,
+                        modifier = Modifier.padding(top = 24.dp, bottom = 28.dp),
+                    )
+                }
+
                 items(
-                    items = notifications,
+                    items = notificationList,
                     key = { it.id },
                 ) { item ->
                     NotificationListItem(
                         item = item,
-                        onItemClick = { onNotificationItemClick(item.meetingId) },
+                        onItemClick = {
+                            onNotificationRead(item.id)
+                            item.meetingId?.let(onNotificationItemClick)
+                        },
                     )
 
                     Spacer(modifier.height(12.dp))
@@ -146,11 +178,33 @@ private fun NotificationScreenListPreview() {
     MoiveTheme {
         NotificationScreen(
             innerPadding = PaddingValues(),
-            notifications = NotificationContract.State().notifications,
+            notificationList = persistentListOf(
+                NotificationItemModel(
+                    id = 1L,
+                    type = "COND_INPUT",
+                    meetingId = 1L,
+                    title = "조건 입력을 완료해주세요",
+                    description = "'주말 맛집 모임'의 조건을 아직 입력하지 않았어요.",
+                    time = "10분 전",
+                    isRead = false,
+                ),
+                NotificationItemModel(
+                    id = 2L,
+                    type = "APP_UPDATE",
+                    meetingId = null,
+                    title = "업데이트",
+                    description = "새로운 업데이트가 있어요.",
+                    time = "1시간 전",
+                    isRead = true,
+                ),
+            ),
+            isLoading = false,
             isNotificationPermissionGranted = true,
             onBackClick = {},
             onNotificationItemClick = {},
+            onNotificationRead = {},
             onNotificationSettingClick = {},
+            onLoadMore = {},
         )
     }
 }

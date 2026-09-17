@@ -31,7 +31,6 @@ fun NotificationSettingButton(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
             .background(
                 color = colors.fill.default08,
                 shape = RoundedCornerShape(radius.xl),

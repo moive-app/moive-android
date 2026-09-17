@@ -9,7 +9,6 @@ import kotlin.coroutines.resume
 
 class FirebaseMessagingManager @Inject constructor() {
 
-    //서버 연결
     suspend fun getFcmToken(): String? = suspendCancellableCoroutine { continuation ->
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (continuation.isActive) {
@@ -26,7 +25,6 @@ class FirebaseMessagingManager @Inject constructor() {
         }
     }
 
-    //디바이스 ID
     suspend fun getInstallationId(): String? = suspendCancellableCoroutine { continuation ->
         FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
             if (continuation.isActive) {
