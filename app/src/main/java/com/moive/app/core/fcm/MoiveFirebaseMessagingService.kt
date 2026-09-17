@@ -13,13 +13,24 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.moive.app.R
+import com.moive.app.data.notification.repository.NotificationRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MoiveFirebaseMessagingService: FirebaseMessagingService() {
+
+    @Inject
+    lateinit var notificationRepository: NotificationRepository
+
+    @Inject
+    lateinit var firebaseMessagingManager: FirebaseMessagingManager
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -27,7 +38,15 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         super.onNewToken(token)
 
         Timber.tag(TAG).d("token: $token")
-        //Todo: 서버 토큰 전달
+
+        serviceScope.launch {
+            val deviceId = firebaseMessagingManager.getInstallationId() ?: return@launch
+
+            notificationRepository.putDeviceToken(token, deviceId)
+                .onFailure { error ->
+                    Timber.tag(TAG).e(error)
+                }
+        }
     }
 
     override fun onDestroy() {
