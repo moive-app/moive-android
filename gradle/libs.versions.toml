@@ -43,6 +43,10 @@ timber = "5.0.1"
 kakaoUser = "2.24.0"
 kakaoMap = "2.15.1"
 
+# Firebase
+googleServices = "4.5.0"
+firebaseBom = "34.19.0"
+
 # Test
 junit = "4.13.2"
 junitVersion = "1.3.0"
@@ -96,6 +100,11 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakaoUser" }
 kakao-map = { group = "com.kakao.maps.open", name = "android", version.ref = "kakaoMap" }
 
+# Firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -109,7 +118,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
-
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 
 [bundles]
 androidx-core = [

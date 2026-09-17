@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.google.services)
 }
 
 val properties = Properties().apply {
@@ -95,4 +96,9 @@ dependencies {
     // Kakao
     implementation(libs.kakao.user)
     implementation(libs.kakao.map)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
 }
