@@ -74,6 +74,8 @@ class MainAppState(
         )
 
     fun navigate(tab: MainTab) {
+        if (currentTab.value == tab) return
+
         val navOptions = navOptions {
             navController.currentDestination?.route?.let {
                 popUpTo(it) {
