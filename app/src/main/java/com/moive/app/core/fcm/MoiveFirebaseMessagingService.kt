@@ -21,6 +21,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -86,7 +87,7 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         ) == PackageManager.PERMISSION_GRANTED
         if (!granted) return
 
-        val androidNotificationId = System.currentTimeMillis().toInt()
+        val androidNotificationId = notificationIdGenerator.incrementAndGet()
 
         val contentIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -120,5 +121,6 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         private const val CHANNEL_ID = "moive_default_channel"
         private const val CHANNEL_NAME = "일반 알림"
         private const val DEVICE_TOKEN_PUT_SUCCESS_MESSAGE = "디바이스 토큰 등록 성공"
+        private val notificationIdGenerator = AtomicInteger(0)
     }
 }
