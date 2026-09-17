@@ -21,6 +21,7 @@ interface MeetingDetailContract {
         val inviteCode: String = "",
         val inviteUrl: String = "",
         val isLeaveMeetingDialogVisible: Boolean = false,
+        val isNotParticipantDialogVisible: Boolean = false,
         val participants: ImmutableList<ParticipantItemModel> = persistentListOf(),
         val toolTipMessage: String = "",
         val primaryActionLabel: String = "",

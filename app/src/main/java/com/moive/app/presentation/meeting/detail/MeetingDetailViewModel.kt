@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.moive.app.data.meeting.repository.MeetingRepository
+import com.moive.app.data.meeting.repository.NotMeetingParticipantException
 import com.moive.app.presentation.meeting.detail.MeetingDetailContract.SideEffect
 import com.moive.app.presentation.meeting.detail.navigation.MeetingDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -64,7 +65,10 @@ class MeetingDetailViewModel @Inject constructor(
                 .onFailure { error ->
                     Timber.tag(TAG).e(error)
                     _uiState.update {
-                        it.copy(meetingDetailUiState = MeetingDetailUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE))
+                        it.copy(
+                            meetingDetailUiState = MeetingDetailUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE),
+                            isNotParticipantDialogVisible = error is NotMeetingParticipantException,
+                        )
                     }
                 }
         }
