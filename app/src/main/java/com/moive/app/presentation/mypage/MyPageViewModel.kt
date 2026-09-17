@@ -3,6 +3,7 @@ package com.moive.app.presentation.mypage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moive.app.core.designsystem.component.toast.ToastType
+import com.moive.app.core.fcm.FirebaseMessagingManager
 import com.moive.app.data.auth.repository.AuthRepository
 import com.moive.app.data.notification.repository.NotificationRepository
 import com.moive.app.data.user.repository.UserRepository
@@ -23,6 +24,7 @@ class MyPageViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
     private val notificationRepository: NotificationRepository,
+    private val firebaseMessagingManager: FirebaseMessagingManager,
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(MyPageContract.State())
@@ -84,6 +86,16 @@ class MyPageViewModel @Inject constructor(
     }
 
     private fun postLogout() = viewModelScope.launch {
+        firebaseMessagingManager.getInstallationId()?.let { deviceId ->
+            notificationRepository.deleteDeviceToken(deviceId)
+                .onSuccess {
+                    Timber.tag(MY_PAGE_TAG).d(DEVICE_TOKEN_DELETE_SUCCESS_MESSAGE)
+                }
+                .onFailure { error ->
+                    Timber.tag(MY_PAGE_TAG).e(error)
+                }
+        }
+
         authRepository.postLogout()
             .onSuccess {
                 _sideEffect.send(NavigateToLogin)
@@ -97,6 +109,7 @@ class MyPageViewModel @Inject constructor(
         private const val MY_PAGE_TAG = "MyPage"
         private const val LOG_OUT_FAILURE_MESSAGE = "로그아웃하지 못했어요. 잠시 후 다시 시도해주세요."
         private const val MY_INFO_FAILURE_MESSAGE = "내 정보를 불러오지 못했어요. 잠시 후 다시 시도해주세요."
+        private const val DEVICE_TOKEN_DELETE_SUCCESS_MESSAGE = "디바이스 토큰 해제 성공"
         private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."
     }
 }
