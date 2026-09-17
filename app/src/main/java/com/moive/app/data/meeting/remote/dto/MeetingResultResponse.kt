@@ -15,6 +15,10 @@ data class MeetingResultResponse(
     val meetingTime: String,
     @SerialName("participants")
     val participants: List<MeetingResultParticipantResponse>,
+    @SerialName("inviteCode")
+    val inviteCode: String?,
+    @SerialName("inviteUrl")
+    val inviteUrl: String?,
 )
 
 @Serializable

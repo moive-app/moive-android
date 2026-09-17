@@ -49,12 +49,12 @@ class MeetingCompleteViewModel @Inject constructor(
                         longitude = result.place?.longitude ?: it.longitude,
                         meetingDate = result.meetingDate.parseDate(),
                         meetingTime = result.meetingTime.parseTime(),
-                        participants = result.participants.map {
+                        participants = result.participants.map { model ->
                             CompletedParticipantItemModel(
-                                id = it.id,
-                                name = it.name,
-                                profileImageUrl = it.profileImageUrl,
-                                address = it.address,
+                                id = model.id,
+                                name = model.name,
+                                profileImageUrl = model.profileImageUrl,
+                                address = model.address,
                             )
                         }.toImmutableList(),
                     )

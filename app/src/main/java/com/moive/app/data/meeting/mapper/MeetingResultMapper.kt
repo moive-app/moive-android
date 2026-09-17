@@ -13,6 +13,8 @@ fun MeetingResultResponse.toModel(): MeetingResultModel =
         meetingDate = meetingDate,
         meetingTime = meetingTime.take(5),
         participants = participants.mapIndexed { index, participant -> participant.toModel(id = index.toLong()) },
+        inviteCode = inviteCode,
+        inviteUrl = inviteUrl,
     )
 
 fun MeetingResultPlaceResponse.toModel(): MeetingResultPlaceModel =
