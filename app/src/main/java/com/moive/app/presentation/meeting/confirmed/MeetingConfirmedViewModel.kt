@@ -55,6 +55,7 @@ class MeetingConfirmedViewModel @Inject constructor(
                         meetingDate = result.meetingDate.parseDate(),
                         meetingTime = result.meetingTime.parseTime(),
                         participants = result.participants.toImmutableList(),
+                        inviteUrl = result.inviteUrl ?: it.inviteUrl,
                     )
                 }
             }

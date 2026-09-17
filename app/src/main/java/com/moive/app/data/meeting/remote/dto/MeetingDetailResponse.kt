@@ -20,15 +20,17 @@ data class MeetingDetailResponse(
     @SerialName("scheduledTime")
     val scheduledTime: String?,
     @SerialName("inviteCode")
-    val inviteCode: String,
+    val inviteCode: String?,
     @SerialName("inviteUrl")
-    val inviteUrl: String,
+    val inviteUrl: String?,
+    @SerialName("thumbnailType")
+    val thumbnailType: Int,
     @SerialName("participants")
     val participants: List<ParticipantResponse>,
     @SerialName("homeMessage")
-    val homeMessage: String,
+    val homeMessage: String?,
     @SerialName("primaryActionLabel")
-    val primaryActionLabel: String,
+    val primaryActionLabel: String?,
     @SerialName("primaryActionEnabled")
     val primaryActionEnabled: Boolean,
 )

@@ -1,6 +1,7 @@
 package com.moive.app.presentation.meeting.detail
 
 import androidx.compose.runtime.Immutable
+import com.moive.app.R
 import com.moive.app.data.meeting.mapper.MeetingStatus
 import com.moive.app.data.meeting.model.ParticipantItemModel
 import kotlinx.collections.immutable.ImmutableList
@@ -16,10 +17,11 @@ interface MeetingDetailContract {
         val scheduledTime: String? = null,
         val meetingName: String = "",
         val meetingPurpose: String = "",
-        val thumbnailUrl: String = "",
+        val thumbnailType: Int = 1,
         val inviteCode: String = "",
         val inviteUrl: String = "",
         val isLeaveMeetingDialogVisible: Boolean = false,
+        val isNotParticipantDialogVisible: Boolean = false,
         val participants: ImmutableList<ParticipantItemModel> = persistentListOf(),
         val toolTipMessage: String = "",
         val primaryActionLabel: String = "",
@@ -29,6 +31,14 @@ interface MeetingDetailContract {
     sealed class SideEffect {
         data object NavigateBack : SideEffect()
     }
+}
+
+fun Int.toMeetingThumbnailRes(): Int = when (this) {
+    1 -> R.drawable.img_meeting_thumbnail_1
+    2 -> R.drawable.img_meeting_thumbnail_2
+    3 -> R.drawable.img_meeting_thumbnail_3
+    4 -> R.drawable.img_meeting_thumbnail_4
+    else -> R.drawable.img_meeting_thumbnail_1
 }
 
 fun statusActionButtonText(status: MeetingStatus, isDone: Boolean): String = when (status) {

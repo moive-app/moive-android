@@ -8,6 +8,8 @@ data class MeetingResultModel(
     val meetingDate: String,
     val meetingTime: String,
     val participants: List<MeetingResultParticipantModel>,
+    val inviteCode: String?,
+    val inviteUrl: String?,
 )
 
 @Immutable

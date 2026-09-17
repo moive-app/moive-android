@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
 import com.moive.app.R
 import com.moive.app.core.extensions.addBitmapMarker
@@ -34,6 +35,7 @@ import com.moive.app.presentation.common.component.placedetail.util.RoutePinBitm
 import com.moive.app.presentation.voting.util.rememberMapViewWithLifecycle
 
 private const val END_PIN_ANCHOR_Y_FRACTION = 30f / 31f
+private const val MAP_ZOOM_LEVEL = 13
 
 @Composable
 fun rememberMeetingPlaceMapView(latitude: Double, longitude: Double, cornerRadius: Dp = 0.dp): View {
@@ -51,6 +53,8 @@ fun rememberMeetingPlaceMapView(latitude: Double, longitude: Double, cornerRadiu
     LaunchedEffect(kakaoMap, pinBitmap, latitude, longitude) {
         val map = kakaoMap ?: return@LaunchedEffect
         val bitmap = pinBitmap ?: return@LaunchedEffect
+
+        map.moveCamera(CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude), MAP_ZOOM_LEVEL))
 
         pinLabel?.remove()
         pinLabel = map.addBitmapMarker(

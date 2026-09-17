@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.moive.app.data.notification.repository.NotificationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -20,40 +21,41 @@ class NotificationViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(NotificationContract.State())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        getNotificationList()
-    }
+    private var getNotificationListJob: Job? = null
 
-    fun getNotificationList(loadMore: Boolean = false) = viewModelScope.launch {
-        val currentState = _uiState.value
-        if (loadMore && !currentState.hasNextNotifications) return@launch
+    fun getNotificationList(loadMore: Boolean = false) {
+        getNotificationListJob?.cancel()
+        getNotificationListJob = viewModelScope.launch {
+            val currentState = _uiState.value
+            if (loadMore && !currentState.hasNextNotifications) return@launch
 
-        val cursor = if (loadMore) currentState.nextCursor else null
+            val cursor = if (loadMore) currentState.nextCursor else null
 
-        _uiState.update { it.copy(notificationUiState = NotificationUiState.Loading) }
+            _uiState.update { it.copy(notificationUiState = NotificationUiState.Loading) }
 
-        notificationRepository.getNotificationList(
-            cursor = cursor,
-            size = DEFAULT_PAGE_SIZE,
-        )
-            .onSuccess { result ->
-                _uiState.update {
-                    val notifications =
-                        if (loadMore) it.notifications + result.notifications else result.notifications
-                    it.copy(
-                        notifications = notifications.toImmutableList(),
-                        notificationUiState = NotificationUiState.Success,
-                        nextCursor = result.nextCursor,
-                        hasNextNotifications = result.hasNext,
-                    )
+            notificationRepository.getNotificationList(
+                cursor = cursor,
+                size = DEFAULT_PAGE_SIZE,
+            )
+                .onSuccess { result ->
+                    _uiState.update {
+                        val notifications =
+                            if (loadMore) it.notifications + result.notifications else result.notifications
+                        it.copy(
+                            notifications = notifications.toImmutableList(),
+                            notificationUiState = NotificationUiState.Success,
+                            nextCursor = result.nextCursor,
+                            hasNextNotifications = result.hasNext,
+                        )
+                    }
                 }
-            }
-            .onFailure { error ->
-                Timber.tag(TAG).e(error)
-                _uiState.update {
-                    it.copy(notificationUiState = NotificationUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE))
+                .onFailure { error ->
+                    Timber.tag(TAG).e(error)
+                    _uiState.update {
+                        it.copy(notificationUiState = NotificationUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE))
+                    }
                 }
-            }
+        }
     }
 
     fun onNotificationPermissionChanged(isGranted: Boolean) {

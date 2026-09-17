@@ -44,6 +44,7 @@ fun MyPageRoute(
     innerPadding: PaddingValues,
     navigateToLogin: () -> Unit,
     navigateToWithDraw: () -> Unit,
+    navigateToNotification: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
@@ -66,7 +67,7 @@ fun MyPageRoute(
     MyPageScreen(
         innerPadding = innerPadding,
         uiState = uiState,
-        onAlarmClick = {},
+        onAlarmClick = navigateToNotification,
         onQuestionClick = { context.openUrl(QUESTION_URL) },
         onTermsClick = { context.openUrl(SERVICE_TERMS_URL) },
         onLogoutClick = viewModel::onLogoutClick,

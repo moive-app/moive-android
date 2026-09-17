@@ -106,13 +106,14 @@ fun PlaceDetailContent(
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.Top,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.ic_pin_fill_16),
                             contentDescription = null,
                             tint = colors.icon.secondary,
+                            modifier = Modifier.padding(top = 1.dp),
                         )
 
                         Text(
@@ -231,7 +232,7 @@ fun PlaceDetailContent(
                             )
 
                             Text(
-                                text = "${place.travelFare}원",
+                                text = place.travelFare?.let { "${it}원" } ?: "요금 정보 미제공",
                                 color = colors.text.tertiary,
                                 style = typography.label.smM,
                             )

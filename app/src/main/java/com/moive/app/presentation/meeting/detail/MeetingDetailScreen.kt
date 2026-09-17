@@ -48,6 +48,7 @@ import com.moive.app.data.meeting.model.ParticipantItemModel
 import com.moive.app.presentation.common.component.ShadowButton
 import com.moive.app.presentation.meeting.detail.component.LeaveMeetingDialog
 import com.moive.app.presentation.meeting.detail.component.MeetingInfoRow
+import com.moive.app.presentation.meeting.detail.component.NotParticipantDialog
 import com.moive.app.presentation.meeting.detail.component.ParticipantItem
 import kotlinx.collections.immutable.persistentListOf
 
@@ -113,6 +114,7 @@ fun MeetingDetailRoute(
             viewModel.dismissLeaveMeetingDialog()
             viewModel.deleteMeeting()
         },
+        onNotParticipantDialogClose = navigateBack,
         modifier = modifier,
     )
 }
@@ -128,6 +130,7 @@ private fun MeetingDetailScreen(
     onPrimaryActionClick: () -> Unit,
     onLeaveMeetingDialogDismiss: () -> Unit,
     onLeaveMeetingClick: () -> Unit,
+    onNotParticipantDialogClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -154,7 +157,7 @@ private fun MeetingDetailScreen(
         ) {
             item {
                 MeetingInfoRow(
-                    imageUrl = uiState.thumbnailUrl,
+                    thumbnailRes = uiState.thumbnailType.toMeetingThumbnailRes(),
                     meetingName = uiState.meetingName,
                     meetingPurpose = uiState.meetingPurpose,
                 )
@@ -230,6 +233,12 @@ private fun MeetingDetailScreen(
             onLeaveClick = onLeaveMeetingClick,
         )
     }
+
+    if (uiState.isNotParticipantDialogVisible) {
+        NotParticipantDialog(
+            onCloseClick = onNotParticipantDialogClose,
+        )
+    }
 }
 
 @Preview(showBackground = true,)
@@ -267,6 +276,7 @@ private fun MeetingDetailScreenPreview() {
             onInviteFriendClick = {},
             onActionButtonClick = {},
             onPrimaryActionClick = {},
+            onNotParticipantDialogClose = {},
             onLeaveMeetingDialogDismiss = {},
             onLeaveMeetingClick = {},
         )

@@ -1,5 +1,7 @@
 package com.moive.app.presentation.meeting.detail.component
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,15 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.moive.app.core.designsystem.component.image.UrlImage
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
 import com.moive.app.core.designsystem.theme.MoiveTheme.typography
 
 @Composable
 fun MeetingInfoRow(
-    imageUrl: String,
+    @DrawableRes thumbnailRes: Int,
     meetingName: String,
     meetingPurpose: String,
     modifier: Modifier = Modifier,
@@ -29,8 +32,10 @@ fun MeetingInfoRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        UrlImage(
-            url = imageUrl,
+        Image(
+            painter = painterResource(thumbnailRes),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(52.dp)
                 .clip(RoundedCornerShape(radius.md)),

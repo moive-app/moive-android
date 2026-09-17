@@ -6,6 +6,7 @@ import com.moive.app.data.home.mapper.toMeetingTab
 import com.moive.app.data.meeting.repository.MeetingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -21,40 +22,41 @@ class MeetingListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MeetingListContract.State())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        getMeetingList()
-    }
+    private var getMeetingListJob: Job? = null
 
-    fun getMeetingList(loadMore: Boolean = false) = viewModelScope.launch {
-        val currentState = _uiState.value
-        if (loadMore && !currentState.hasNextMeetingList) return@launch
+    fun getMeetingList(loadMore: Boolean = false) {
+        getMeetingListJob?.cancel()
+        getMeetingListJob = viewModelScope.launch {
+            val currentState = _uiState.value
+            if (loadMore && !currentState.hasNextMeetingList) return@launch
 
-        val cursor = if (loadMore) currentState.nextCursor else null
+            val cursor = if (loadMore) currentState.nextCursor else null
 
-        _uiState.update { it.copy(meetingListUiState = MeetingListUiState.Loading) }
+            _uiState.update { it.copy(meetingListUiState = MeetingListUiState.Loading) }
 
-        meetingRepository.getMeetingList(
-            filter = currentState.selectedTab.toMeetingTab().name,
-            cursor = cursor,
-            size = DEFAULT_PAGE_SIZE,
-        )
-            .onSuccess { result ->
-                _uiState.update {
-                    val meetings = if (loadMore) it.meetingList + result.meetings else result.meetings
-                    it.copy(
-                        meetingList = meetings.toImmutableList(),
-                        meetingListUiState = MeetingListUiState.Success,
-                        nextCursor = result.nextCursor,
-                        hasNextMeetingList = result.hasNext,
-                    )
+            meetingRepository.getMeetingList(
+                filter = currentState.selectedTab.toMeetingTab().name,
+                cursor = cursor,
+                size = DEFAULT_PAGE_SIZE,
+            )
+                .onSuccess { result ->
+                    _uiState.update {
+                        val meetings = if (loadMore) it.meetingList + result.meetings else result.meetings
+                        it.copy(
+                            meetingList = meetings.toImmutableList(),
+                            meetingListUiState = MeetingListUiState.Success,
+                            nextCursor = result.nextCursor,
+                            hasNextMeetingList = result.hasNext,
+                        )
+                    }
                 }
-            }
-            .onFailure { error ->
-                Timber.tag(TAG).e(error)
-                _uiState.update {
-                    it.copy(meetingListUiState = MeetingListUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE))
+                .onFailure { error ->
+                    Timber.tag(TAG).e(error)
+                    _uiState.update {
+                        it.copy(meetingListUiState = MeetingListUiState.Failure(error.message ?: UNKNOWN_ERROR_MESSAGE))
+                    }
                 }
-            }
+        }
     }
 
     fun postMeetingFilter(tab: String) {

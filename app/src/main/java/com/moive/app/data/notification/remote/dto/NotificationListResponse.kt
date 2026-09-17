@@ -29,4 +29,6 @@ data class NotificationItemResponse(
     val isRead: Boolean,
     @SerialName("createdAt")
     val createdAt: String,
+    @SerialName("isMeetingCompleted")
+    val isMeetingCompleted: Boolean,
 )
