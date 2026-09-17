@@ -2,6 +2,7 @@ package com.moive.app.data.notification.remote.datasource
 
 import com.moive.app.data.common.dto.BaseResponse
 import com.moive.app.data.notification.remote.dto.NotificationListResponse
+import com.moive.app.data.notification.remote.dto.NotificationUnreadStatusResponse
 import com.moive.app.data.notification.remote.service.NotificationService
 import javax.inject.Inject
 
@@ -11,4 +12,7 @@ class NotificationRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getNotificationList(cursor: Long?, size: Int): BaseResponse<NotificationListResponse> =
         notificationService.getNotificationList(cursor, size)
+
+    override suspend fun getUnreadStatus(): BaseResponse<NotificationUnreadStatusResponse> =
+        notificationService.getUnreadStatus()
 }
