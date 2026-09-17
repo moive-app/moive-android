@@ -61,16 +61,17 @@ class NotificationViewModel @Inject constructor(
     }
 
     fun patchNotificationReadStatus(notificationId: Long) {
-        _uiState.update { state ->
-            state.copy(
-                notifications = state.notifications
-                    .map { if (it.id == notificationId) it.copy(isRead = true) else it }
-                    .toImmutableList(),
-            )
-        }
-
         viewModelScope.launch {
             notificationRepository.patchNotificationRead(notificationId)
+                .onSuccess {
+                    _uiState.update { state ->
+                        state.copy(
+                            notifications = state.notifications
+                                .map { if (it.id == notificationId) it.copy(isRead = true) else it }
+                                .toImmutableList(),
+                        )
+                    }
+                }
                 .onFailure { error ->
                     Timber.tag(TAG).e(error)
                 }
