@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         pendingInviteCode.value = intent.extractInviteCode()
         pendingMeetingId.value = intent.extractMeetingId()
+            ?: savedInstanceState?.getLong(KEY_PENDING_MEETING_ID, -1L)?.takeIf { it != -1L }
         intent = Intent()
         setContent {
             MoiveTheme {
@@ -95,8 +96,14 @@ class MainActivity : ComponentActivity() {
         setIntent(Intent())
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        pendingMeetingId.value?.let { outState.putLong(KEY_PENDING_MEETING_ID, it) }
+    }
+
     companion object {
         private const val TAG = "Invite"
+        private const val KEY_PENDING_MEETING_ID = "pendingMeetingId"
     }
 }
 
