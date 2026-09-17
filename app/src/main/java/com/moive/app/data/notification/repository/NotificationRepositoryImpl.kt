@@ -34,4 +34,9 @@ class NotificationRepositoryImpl @Inject constructor(
                 DeviceTokenRequest(fcmToken = fcmToken, deviceId = deviceId),
             ).checkSuccess()
         }
+
+    override suspend fun deleteDeviceToken(deviceId: String): Result<Unit> =
+        suspendRunCatching {
+            notificationRemoteDataSource.deleteDeviceToken(deviceId).checkSuccess()
+        }
 }

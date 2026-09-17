@@ -10,4 +10,6 @@ interface NotificationRepository {
     suspend fun patchNotificationRead(notificationId: Long): Result<Unit>
 
     suspend fun putDeviceToken(fcmToken: String, deviceId: String): Result<Unit>
+
+    suspend fun deleteDeviceToken(deviceId: String): Result<Unit>
 }
