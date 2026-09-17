@@ -76,6 +76,9 @@ class MainActivity : ComponentActivity() {
 
                         if (fcmToken != null && deviceId != null) {
                             notificationRepository.putDeviceToken(fcmToken, deviceId)
+                                .onSuccess {
+                                    Timber.tag(TAG).d(DEVICE_TOKEN_PUT_SUCCESS_MESSAGE)
+                                }
                                 .onFailure { error ->
                                     Timber.tag(TAG).e(error)
                                 }
@@ -145,6 +148,7 @@ class MainActivity : ComponentActivity() {
         private const val TAG = "Invite"
         private const val KEY_PENDING_MEETING_ID = "pendingMeetingId"
         private const val KEY_PENDING_NOTIFICATION_ID = "pendingNotificationId"
+        private const val DEVICE_TOKEN_PUT_SUCCESS_MESSAGE = "디바이스 토큰 등록 성공"
     }
 }
 

@@ -43,6 +43,9 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
             val deviceId = firebaseMessagingManager.getInstallationId() ?: return@launch
 
             notificationRepository.putDeviceToken(token, deviceId)
+                .onSuccess {
+                    Timber.tag(TAG).d(DEVICE_TOKEN_PUT_SUCCESS_MESSAGE)
+                }
                 .onFailure { error ->
                     Timber.tag(TAG).e(error)
                 }
@@ -116,5 +119,6 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         private const val MESSAGE_BODY = "body"
         private const val CHANNEL_ID = "moive_default_channel"
         private const val CHANNEL_NAME = "일반 알림"
+        private const val DEVICE_TOKEN_PUT_SUCCESS_MESSAGE = "디바이스 토큰 등록 성공"
     }
 }
