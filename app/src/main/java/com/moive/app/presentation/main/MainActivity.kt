@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import com.moive.app.core.designsystem.theme.MoiveTheme
+import com.moive.app.core.fcm.FirebaseMessagingManager
 import com.moive.app.core.fcm.MoiveFirebaseMessagingService
 import com.moive.app.core.network.token.AuthManager
 import com.moive.app.data.meeting.repository.MeetingRepository
@@ -32,6 +33,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var notificationRepository: NotificationRepository
+
+    @Inject
+    lateinit var firebaseMessagingManager: FirebaseMessagingManager
 
     private val pendingInviteCode = mutableStateOf<String?>(null)
 
@@ -63,6 +67,20 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect(Unit) {
                     appState.isSignedIn.first { it }
                     notificationPermissionManager.askNotificationPermission()
+                }
+
+                LaunchedEffect(Unit) {
+                    appState.isSignedIn.filter { it }.collect {
+                        val fcmToken = firebaseMessagingManager.getFcmToken()
+                        val deviceId = firebaseMessagingManager.getInstallationId()
+
+                        if (fcmToken != null && deviceId != null) {
+                            notificationRepository.putDeviceToken(fcmToken, deviceId)
+                                .onFailure { error ->
+                                    Timber.tag(TAG).e(error)
+                                }
+                        }
+                    }
                 }
 
                 LaunchedEffect(pendingInviteCode.value) {
