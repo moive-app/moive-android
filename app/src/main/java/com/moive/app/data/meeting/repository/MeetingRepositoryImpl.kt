@@ -12,7 +12,10 @@ import com.moive.app.data.meeting.model.MeetingResultModel
 import com.moive.app.data.meeting.mapper.MeetingPurposeType
 import com.moive.app.data.meeting.remote.datasource.MeetingRemoteDataSource
 import com.moive.app.data.meeting.remote.dto.MeetingCreationRequest
+import retrofit2.HttpException
 import javax.inject.Inject
+
+private const val HTTP_FORBIDDEN = 403
 
 class MeetingRepositoryImpl @Inject constructor(
     private val meetingRemoteDataSource: MeetingRemoteDataSource,
@@ -44,7 +47,11 @@ class MeetingRepositoryImpl @Inject constructor(
 
     override suspend fun getMeetingDetail(meetingId: Long): Result<MeetingDetailModel> =
         suspendRunCatching {
-            meetingRemoteDataSource.getMeetingDetail(meetingId).checkData().toModel()
+            try {
+                meetingRemoteDataSource.getMeetingDetail(meetingId).checkData().toModel()
+            } catch (e: HttpException) {
+                throw if (e.code() == HTTP_FORBIDDEN) NotMeetingParticipantException(e) else e
+            }
         }
 
     override suspend fun getMeetingResult(meetingId: Long): Result<MeetingResultModel> =
