@@ -1,6 +1,7 @@
 package com.moive.app.data.notification.remote.datasource
 
 import com.moive.app.data.common.dto.BaseResponse
+import com.moive.app.data.notification.remote.dto.DeviceTokenRequest
 import com.moive.app.data.notification.remote.dto.NotificationListResponse
 import com.moive.app.data.notification.remote.dto.NotificationReadResponse
 import com.moive.app.data.notification.remote.dto.NotificationUnreadStatusResponse
@@ -19,4 +20,7 @@ class NotificationRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun patchNotificationRead(notificationId: Long): BaseResponse<NotificationReadResponse> =
         notificationService.patchNotificationRead(notificationId)
+
+    override suspend fun putDeviceToken(request: DeviceTokenRequest): BaseResponse<Unit> =
+        notificationService.putDeviceToken(request)
 }
