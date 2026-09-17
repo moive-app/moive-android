@@ -41,11 +41,12 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         val title = remoteMessage.data[MESSAGE_TITLE] ?: return
         val body = remoteMessage.data[MESSAGE_BODY]
         val meetingId = remoteMessage.data[MESSAGE_MEETING_ID]?.toLongOrNull()
+        val notificationId = remoteMessage.data[MESSAGE_NOTIFICATION_ID]?.toLongOrNull()
 
-        showNotification(title, body, meetingId)
+        showNotification(title, body, meetingId, notificationId)
     }
 
-    private fun showNotification(title: String, body: String?, meetingId: Long?) {
+    private fun showNotification(title: String, body: String?, meetingId: Long?, notificationId: Long?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
@@ -63,15 +64,16 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         ) == PackageManager.PERMISSION_GRANTED
         if (!granted) return
 
-        val notificationId = System.currentTimeMillis().toInt()
+        val androidNotificationId = System.currentTimeMillis().toInt()
 
         val contentIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             meetingId?.let { putExtra(MESSAGE_MEETING_ID, it) }
+            notificationId?.let { putExtra(MESSAGE_NOTIFICATION_ID, it) }
         } ?: return
         val pendingIntent = PendingIntent.getActivity(
             this,
-            notificationId,
+            androidNotificationId,
             contentIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
@@ -84,12 +86,13 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
             .build()
 
-        NotificationManagerCompat.from(this).notify(notificationId, notification)
+        NotificationManagerCompat.from(this).notify(androidNotificationId, notification)
     }
 
     companion object {
         private const val TAG = "FCM"
         const val MESSAGE_MEETING_ID = "meetingId"
+        const val MESSAGE_NOTIFICATION_ID = "notificationId"
         private const val MESSAGE_TITLE = "title"
         private const val MESSAGE_BODY = "body"
         private const val CHANNEL_ID = "moive_default_channel"
