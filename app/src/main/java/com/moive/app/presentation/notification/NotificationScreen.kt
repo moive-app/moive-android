@@ -47,6 +47,7 @@ fun NotificationRoute(
     innerPadding: PaddingValues,
     navigateBack: () -> Unit,
     navigateToMeetingDetail: (Long) -> Unit,
+    navigateToMeetingComplete: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NotificationViewModel = hiltViewModel(),
 ) {
@@ -68,6 +69,7 @@ fun NotificationRoute(
         isNotificationPermissionGranted = uiState.isNotificationPermissionGranted,
         onBackClick = navigateBack,
         onNotificationItemClick = navigateToMeetingDetail,
+        onNotificationCompletedItemClick = navigateToMeetingComplete,
         onNotificationRead = viewModel::patchNotificationReadStatus,
         onNotificationSettingClick = { context.navigateToAppNotificationSettings() },
         onLoadMore = { viewModel.getNotificationList(loadMore = true) },
@@ -83,6 +85,7 @@ private fun NotificationScreen(
     isNotificationPermissionGranted: Boolean,
     onBackClick: () -> Unit,
     onNotificationItemClick: (Long) -> Unit,
+    onNotificationCompletedItemClick: (Long) -> Unit,
     onNotificationRead: (Long) -> Unit,
     onNotificationSettingClick: () -> Unit,
     onLoadMore: () -> Unit,
@@ -162,7 +165,13 @@ private fun NotificationScreen(
                         item = item,
                         onItemClick = {
                             onNotificationRead(item.id)
-                            item.meetingId?.let(onNotificationItemClick)
+                            item.meetingId?.let { meetingId ->
+                                if (item.isMeetingCompleted) {
+                                    onNotificationCompletedItemClick(meetingId)
+                                } else {
+                                    onNotificationItemClick(meetingId)
+                                }
+                            }
                         },
                     )
 
@@ -188,6 +197,7 @@ private fun NotificationScreenListPreview() {
                     description = "'주말 맛집 모임'의 조건을 아직 입력하지 않았어요.",
                     time = "10분 전",
                     isRead = false,
+                    isMeetingCompleted = false,
                 ),
                 NotificationItemModel(
                     id = 2L,
@@ -197,12 +207,14 @@ private fun NotificationScreenListPreview() {
                     description = "새로운 업데이트가 있어요.",
                     time = "1시간 전",
                     isRead = true,
+                    isMeetingCompleted = false,
                 ),
             ),
             isLoading = false,
             isNotificationPermissionGranted = true,
             onBackClick = {},
             onNotificationItemClick = {},
+            onNotificationCompletedItemClick = {},
             onNotificationRead = {},
             onNotificationSettingClick = {},
             onLoadMore = {},
