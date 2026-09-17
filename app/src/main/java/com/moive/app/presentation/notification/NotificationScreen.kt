@@ -99,13 +99,15 @@ private fun NotificationScreen(
             backgroundColor = colors.background.default02,
         )
 
-        NotificationSettingButton(
-            isNotificationPermissionGranted = isNotificationPermissionGranted,
-            onSettingClick = onNotificationSettingClick,
-            modifier = Modifier.padding(bottom = 5.dp)
-        )
-
         if (notificationList.isEmpty()) {
+            NotificationSettingButton(
+                isNotificationPermissionGranted = isNotificationPermissionGranted,
+                onSettingClick = onNotificationSettingClick,
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 24.dp, bottom = 5.dp)
+            )
+
             if (!isLoading) {
                 Column(
                     modifier = Modifier
@@ -141,8 +143,16 @@ private fun NotificationScreen(
             LazyColumn(
                 state = listState,
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 23.dp, horizontal = 20.dp),
+                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 23.dp),
             ) {
+                item {
+                    NotificationSettingButton(
+                        isNotificationPermissionGranted = isNotificationPermissionGranted,
+                        onSettingClick = onNotificationSettingClick,
+                        modifier = Modifier.padding(top = 24.dp, bottom = 28.dp),
+                    )
+                }
+
                 items(
                     items = notificationList,
                     key = { it.id },
