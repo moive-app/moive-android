@@ -5,6 +5,7 @@ import com.moive.app.data.notification.model.NotificationItemModel
 import com.moive.app.data.notification.model.NotificationListModel
 import com.moive.app.data.notification.remote.dto.NotificationItemResponse
 import com.moive.app.data.notification.remote.dto.NotificationListResponse
+import com.moive.app.data.notification.remote.dto.NotificationUnreadStatusResponse
 import kotlinx.collections.immutable.toImmutableList
 
 fun NotificationListResponse.toModel(): NotificationListModel =
@@ -24,3 +25,5 @@ fun NotificationItemResponse.toModel(): NotificationItemModel =
         time = createdAt.toRelativeTime(),
         isRead = isRead,
     )
+
+fun NotificationUnreadStatusResponse.toModel(): Boolean = hasUnread
