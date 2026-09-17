@@ -8,4 +8,6 @@ interface NotificationRepository {
     suspend fun getUnreadStatus(): Result<Boolean>
 
     suspend fun patchNotificationRead(notificationId: Long): Result<Unit>
+
+    suspend fun putDeviceToken(fcmToken: String, deviceId: String): Result<Unit>
 }

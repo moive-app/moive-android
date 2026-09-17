@@ -6,6 +6,7 @@ import com.moive.app.data.common.dto.checkSuccess
 import com.moive.app.data.notification.mapper.toModel
 import com.moive.app.data.notification.model.NotificationListModel
 import com.moive.app.data.notification.remote.datasource.NotificationRemoteDataSource
+import com.moive.app.data.notification.remote.dto.DeviceTokenRequest
 import javax.inject.Inject
 
 class NotificationRepositoryImpl @Inject constructor(
@@ -25,5 +26,12 @@ class NotificationRepositoryImpl @Inject constructor(
     override suspend fun patchNotificationRead(notificationId: Long): Result<Unit> =
         suspendRunCatching {
             notificationRemoteDataSource.patchNotificationRead(notificationId).checkSuccess()
+        }
+
+    override suspend fun putDeviceToken(fcmToken: String, deviceId: String): Result<Unit> =
+        suspendRunCatching {
+            notificationRemoteDataSource.putDeviceToken(
+                DeviceTokenRequest(fcmToken = fcmToken, deviceId = deviceId),
+            ).checkSuccess()
         }
 }
