@@ -42,7 +42,7 @@
 
                 <data
                     android:scheme="https"
-                    android:host="moiveserver.store"
+                    android:host="moiveterms.site"
                     android:pathPrefix="/invite" />
             </intent-filter>
         </activity>
