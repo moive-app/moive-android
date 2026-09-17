@@ -6,6 +6,7 @@ import com.moive.app.data.notification.remote.dto.NotificationListResponse
 import com.moive.app.data.notification.remote.dto.NotificationReadResponse
 import com.moive.app.data.notification.remote.dto.NotificationUnreadStatusResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.PUT
@@ -31,5 +32,10 @@ interface NotificationService {
     @PUT("devices/token")
     suspend fun putDeviceToken(
         @Body request: DeviceTokenRequest,
+    ): BaseResponse<Unit>
+
+    @DELETE("devices/token")
+    suspend fun deleteDeviceToken(
+        @Query("deviceId") deviceId: String,
     ): BaseResponse<Unit>
 }

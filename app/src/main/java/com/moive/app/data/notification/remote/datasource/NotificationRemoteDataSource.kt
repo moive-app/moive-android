@@ -14,4 +14,6 @@ interface NotificationRemoteDataSource {
     suspend fun patchNotificationRead(notificationId: Long): BaseResponse<NotificationReadResponse>
 
     suspend fun putDeviceToken(request: DeviceTokenRequest): BaseResponse<Unit>
+
+    suspend fun deleteDeviceToken(deviceId: String): BaseResponse<Unit>
 }

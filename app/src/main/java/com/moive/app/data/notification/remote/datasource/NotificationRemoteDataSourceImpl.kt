@@ -23,4 +23,7 @@ class NotificationRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun putDeviceToken(request: DeviceTokenRequest): BaseResponse<Unit> =
         notificationService.putDeviceToken(request)
+
+    override suspend fun deleteDeviceToken(deviceId: String): BaseResponse<Unit> =
+        notificationService.deleteDeviceToken(deviceId)
 }
