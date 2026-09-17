@@ -21,7 +21,7 @@ data class PlaceDetailModel(
     val walkMinutes: Int,
     val busMinutes: Int,
     val subwayMinutes: Int,
-    val travelFare: Int,
+    val travelFare: Int?,
     val landingUrl: String = "",
 )
 

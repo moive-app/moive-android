@@ -232,7 +232,7 @@ fun PlaceDetailContent(
                             )
 
                             Text(
-                                text = "${place.travelFare}원",
+                                text = place.travelFare?.let { "${it}원" } ?: "요금 정보 미제공",
                                 color = colors.text.tertiary,
                                 style = typography.label.smM,
                             )

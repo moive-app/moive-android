@@ -20,7 +20,7 @@ data class RecommendedPlaceRouteResponse(
     @SerialName("subwayTime")
     val subwayTime: Int,
     @SerialName("fare")
-    val fare: Int,
+    val fare: Int?,
     @SerialName("landingUrl")
     val landingUrl: String? = null,
     @SerialName("pathPoints")
