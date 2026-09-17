@@ -60,6 +60,23 @@ class NotificationViewModel @Inject constructor(
         _uiState.update { it.copy(isNotificationPermissionGranted = isGranted) }
     }
 
+    fun patchNotificationReadStatus(notificationId: Long) {
+        _uiState.update { state ->
+            state.copy(
+                notifications = state.notifications
+                    .map { if (it.id == notificationId) it.copy(isRead = true) else it }
+                    .toImmutableList(),
+            )
+        }
+
+        viewModelScope.launch {
+            notificationRepository.patchNotificationRead(notificationId)
+                .onFailure { error ->
+                    Timber.tag(TAG).e(error)
+                }
+        }
+    }
+
     companion object {
         private const val TAG = "Notification"
         private const val UNKNOWN_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다."

@@ -67,6 +67,7 @@ fun NotificationRoute(
         isNotificationPermissionGranted = uiState.isNotificationPermissionGranted,
         onBackClick = navigateBack,
         onNotificationItemClick = navigateToMeetingDetail,
+        onNotificationRead = viewModel::patchNotificationReadStatus,
         onNotificationSettingClick = { context.navigateToAppNotificationSettings() },
         onLoadMore = { viewModel.getNotificationList(loadMore = true) },
         modifier = modifier,
@@ -81,6 +82,7 @@ private fun NotificationScreen(
     isNotificationPermissionGranted: Boolean,
     onBackClick: () -> Unit,
     onNotificationItemClick: (Long) -> Unit,
+    onNotificationRead: (Long) -> Unit,
     onNotificationSettingClick: () -> Unit,
     onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
@@ -147,7 +149,10 @@ private fun NotificationScreen(
                 ) { item ->
                     NotificationListItem(
                         item = item,
-                        onItemClick = { item.meetingId?.let(onNotificationItemClick) },
+                        onItemClick = {
+                            onNotificationRead(item.id)
+                            item.meetingId?.let(onNotificationItemClick)
+                        },
                     )
 
                     Spacer(modifier.height(12.dp))
@@ -187,6 +192,7 @@ private fun NotificationScreenListPreview() {
             isNotificationPermissionGranted = true,
             onBackClick = {},
             onNotificationItemClick = {},
+            onNotificationRead = {},
             onNotificationSettingClick = {},
             onLoadMore = {},
         )
