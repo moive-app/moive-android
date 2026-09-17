@@ -20,9 +20,9 @@ data class MeetingDetailResponse(
     @SerialName("scheduledTime")
     val scheduledTime: String?,
     @SerialName("inviteCode")
-    val inviteCode: String,
+    val inviteCode: String?,
     @SerialName("inviteUrl")
-    val inviteUrl: String,
+    val inviteUrl: String?,
     @SerialName("thumbnailType")
     val thumbnailType: Int,
     @SerialName("participants")
