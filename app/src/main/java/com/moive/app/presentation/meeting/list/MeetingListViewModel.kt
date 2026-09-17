@@ -21,10 +21,6 @@ class MeetingListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MeetingListContract.State())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        getMeetingList()
-    }
-
     fun getMeetingList(loadMore: Boolean = false) = viewModelScope.launch {
         val currentState = _uiState.value
         if (loadMore && !currentState.hasNextMeetingList) return@launch

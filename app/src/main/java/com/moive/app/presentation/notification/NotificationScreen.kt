@@ -57,6 +57,7 @@ fun NotificationRoute(
     LaunchedEffect(lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
             viewModel.onNotificationPermissionChanged(context.isNotificationEnabled())
+            viewModel.getNotificationList()
         }
     }
 

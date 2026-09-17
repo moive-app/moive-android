@@ -20,10 +20,6 @@ class NotificationViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(NotificationContract.State())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        getNotificationList()
-    }
-
     fun getNotificationList(loadMore: Boolean = false) = viewModelScope.launch {
         val currentState = _uiState.value
         if (loadMore && !currentState.hasNextNotifications) return@launch
