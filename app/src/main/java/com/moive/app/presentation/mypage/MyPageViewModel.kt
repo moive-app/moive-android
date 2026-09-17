@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.data.auth.repository.AuthRepository
+import com.moive.app.data.notification.repository.NotificationRepository
 import com.moive.app.data.user.repository.UserRepository
 import com.moive.app.presentation.mypage.MyPageContract.SideEffect.NavigateToLogin
 import com.moive.app.presentation.mypage.MyPageContract.SideEffect.OnShowToast
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class MyPageViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
+    private val notificationRepository: NotificationRepository,
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(MyPageContract.State())
@@ -31,6 +33,17 @@ class MyPageViewModel @Inject constructor(
 
     init {
         getMyInfo()
+        getUnreadStatus()
+    }
+
+    private fun getUnreadStatus() = viewModelScope.launch {
+        notificationRepository.getUnreadStatus()
+            .onSuccess { hasUnread ->
+                _uiState.update { it.copy(hasUnReadAlarm = hasUnread) }
+            }
+            .onFailure { error ->
+                Timber.tag(MY_PAGE_TAG).e(error)
+            }
     }
 
     private fun getMyInfo() = viewModelScope.launch {

@@ -62,6 +62,7 @@ fun HomeRoute(
     LaunchedEffect(lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
             viewModel.getHome(uiState.selectedTab)
+            viewModel.getUnreadStatus()
         }
     }
 
@@ -78,7 +79,6 @@ fun HomeRoute(
                 navigateToMeetingDetail(meetingId)
             }
         },
-        onAddMeetingClick = navigateToMeetingCreation,
         onNotificationClick = navigateToNotification,
         modifier = modifier,
     )
@@ -92,7 +92,6 @@ private fun HomeScreen(
     onShowListClick: () -> Unit,
     onMeetingClick: (Long) -> Unit,
     onMyMeetingClick: (Long, LabelType) -> Unit,
-    onAddMeetingClick: () -> Unit,
     onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -267,7 +266,6 @@ private fun HomeScreenPreview() {
             onShowListClick = {},
             onMeetingClick = {},
             onMyMeetingClick = { _, _ -> },
-            onAddMeetingClick = {},
             onNotificationClick = {},
         )
     }
@@ -287,7 +285,6 @@ private fun HomeScreenEmptyPreview() {
             onShowListClick = {},
             onMeetingClick = {},
             onMyMeetingClick = { _, _ -> },
-            onAddMeetingClick = {},
             onNotificationClick = {},
         )
     }

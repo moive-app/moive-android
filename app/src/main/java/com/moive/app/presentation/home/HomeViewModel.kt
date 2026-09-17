@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moive.app.data.home.mapper.toMeetingTab
 import com.moive.app.data.home.repository.HomeRepository
+import com.moive.app.data.notification.repository.NotificationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository,
+    private val notificationRepository: NotificationRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeContract.State())
@@ -53,6 +55,16 @@ class HomeViewModel @Inject constructor(
     fun postMeetingFilter(tab: String) {
         _uiState.update { it.copy(selectedTab = tab) }
         getHome(tab)
+    }
+
+    fun getUnreadStatus() = viewModelScope.launch {
+        notificationRepository.getUnreadStatus()
+            .onSuccess { hasUnread ->
+                _uiState.update { it.copy(isAlarmUnRead = hasUnread) }
+            }
+            .onFailure { error ->
+                Timber.tag(TAG).e(error)
+            }
     }
 
     companion object {
