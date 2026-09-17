@@ -2,6 +2,7 @@ package com.moive.app.data.notification.repository
 
 import com.moive.app.core.utils.suspendRunCatching
 import com.moive.app.data.common.dto.checkData
+import com.moive.app.data.common.dto.checkSuccess
 import com.moive.app.data.notification.mapper.toModel
 import com.moive.app.data.notification.model.NotificationListModel
 import com.moive.app.data.notification.remote.datasource.NotificationRemoteDataSource
@@ -19,5 +20,10 @@ class NotificationRepositoryImpl @Inject constructor(
     override suspend fun getUnreadStatus(): Result<Boolean> =
         suspendRunCatching {
             notificationRemoteDataSource.getUnreadStatus().checkData().toModel()
+        }
+
+    override suspend fun patchNotificationRead(notificationId: Long): Result<Unit> =
+        suspendRunCatching {
+            notificationRemoteDataSource.patchNotificationRead(notificationId).checkSuccess()
         }
 }
