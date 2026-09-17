@@ -7,11 +7,16 @@ import com.moive.app.data.notification.mapper.toModel
 import com.moive.app.data.notification.model.NotificationListModel
 import com.moive.app.data.notification.remote.datasource.NotificationRemoteDataSource
 import com.moive.app.data.notification.remote.dto.DeviceTokenRequest
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 class NotificationRepositoryImpl @Inject constructor(
     private val notificationRemoteDataSource: NotificationRemoteDataSource,
 ) : NotificationRepository {
+
+    private val deviceTokenMutex = Mutex()
+    private var lastRegisteredDeviceToken: Pair<String, String>? = null
 
     override suspend fun getNotificationList(cursor: Long?, size: Int): Result<NotificationListModel> =
         suspendRunCatching {
@@ -29,14 +34,25 @@ class NotificationRepositoryImpl @Inject constructor(
         }
 
     override suspend fun putDeviceToken(fcmToken: String, deviceId: String): Result<Unit> =
-        suspendRunCatching {
-            notificationRemoteDataSource.putDeviceToken(
-                DeviceTokenRequest(fcmToken = fcmToken, deviceId = deviceId),
-            ).checkSuccess()
+        deviceTokenMutex.withLock {
+            val current = fcmToken to deviceId
+            if (lastRegisteredDeviceToken == current) return@withLock Result.success(Unit)
+
+            suspendRunCatching {
+                notificationRemoteDataSource.putDeviceToken(
+                    DeviceTokenRequest(fcmToken = fcmToken, deviceId = deviceId),
+                ).checkSuccess()
+            }.onSuccess {
+                lastRegisteredDeviceToken = current
+            }
         }
 
     override suspend fun deleteDeviceToken(deviceId: String): Result<Unit> =
-        suspendRunCatching {
-            notificationRemoteDataSource.deleteDeviceToken(deviceId).checkSuccess()
+        deviceTokenMutex.withLock {
+            suspendRunCatching {
+                notificationRemoteDataSource.deleteDeviceToken(deviceId).checkSuccess()
+            }.onSuccess {
+                if (lastRegisteredDeviceToken?.second == deviceId) lastRegisteredDeviceToken = null
+            }
         }
 }
