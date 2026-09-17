@@ -154,7 +154,7 @@ private fun MeetingDetailScreen(
         ) {
             item {
                 MeetingInfoRow(
-                    imageUrl = uiState.thumbnailUrl,
+                    thumbnailRes = uiState.thumbnailType.toMeetingThumbnailRes(),
                     meetingName = uiState.meetingName,
                     meetingPurpose = uiState.meetingPurpose,
                 )
