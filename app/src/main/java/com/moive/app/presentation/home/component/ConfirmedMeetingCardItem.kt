@@ -94,6 +94,7 @@ fun ConfirmedMeetingCardItem(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_pin_fill_16),
                 contentDescription = null,
                 tint = colors.icon.onBgSub,
+                modifier = Modifier.padding(top = 2.dp)
             )
 
             Text(
