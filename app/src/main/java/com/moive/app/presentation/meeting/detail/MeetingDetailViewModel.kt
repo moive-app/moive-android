@@ -56,8 +56,8 @@ class MeetingDetailViewModel @Inject constructor(
                             inviteCode = detail.inviteCode ?: "",
                             inviteUrl = detail.inviteUrl ?: "",
                             participants = detail.participants,
-                            toolTipMessage = detail.homeMessage,
-                            primaryActionLabel = detail.primaryActionLabel,
+                            toolTipMessage = detail.homeMessage ?: "",
+                            primaryActionLabel = detail.primaryActionLabel ?: "",
                             primaryActionEnabled = detail.primaryActionEnabled,
                         )
                     }

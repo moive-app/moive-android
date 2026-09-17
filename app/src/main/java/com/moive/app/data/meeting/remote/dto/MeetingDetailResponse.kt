@@ -28,9 +28,9 @@ data class MeetingDetailResponse(
     @SerialName("participants")
     val participants: List<ParticipantResponse>,
     @SerialName("homeMessage")
-    val homeMessage: String,
+    val homeMessage: String?,
     @SerialName("primaryActionLabel")
-    val primaryActionLabel: String,
+    val primaryActionLabel: String?,
     @SerialName("primaryActionEnabled")
     val primaryActionEnabled: Boolean,
 )

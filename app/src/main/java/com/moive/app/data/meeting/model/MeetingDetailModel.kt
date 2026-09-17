@@ -18,8 +18,8 @@ data class MeetingDetailModel(
     val inviteUrl: String?,
     val thumbnailType: Int,
     val participants: ImmutableList<ParticipantItemModel>,
-    val homeMessage: String,
-    val primaryActionLabel: String,
+    val homeMessage: String?,
+    val primaryActionLabel: String?,
     val primaryActionEnabled: Boolean,
 )
 
