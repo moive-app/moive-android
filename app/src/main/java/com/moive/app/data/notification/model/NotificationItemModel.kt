@@ -11,4 +11,5 @@ data class NotificationItemModel(
     val description: String,
     val time: String,
     val isRead: Boolean,
+    val isMeetingCompleted: Boolean,
 )

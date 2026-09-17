@@ -24,6 +24,7 @@ fun NotificationItemResponse.toModel(): NotificationItemModel =
         description = content,
         time = createdAt.toRelativeTime(),
         isRead = isRead,
+        isMeetingCompleted = isMeetingCompleted,
     )
 
 fun NotificationUnreadStatusResponse.toModel(): Boolean = hasUnread
