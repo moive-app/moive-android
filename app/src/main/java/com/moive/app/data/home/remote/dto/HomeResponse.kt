@@ -20,7 +20,7 @@ data class ConfirmedMeetingResponse(
     @SerialName("name")
     val name: String,
     @SerialName("confirmedPlaceName")
-    val confirmedPlaceName: String,
+    val confirmedPlaceName: String?,
     @SerialName("confirmedDate")
     val confirmedDate: String,
     @SerialName("confirmedTime")
