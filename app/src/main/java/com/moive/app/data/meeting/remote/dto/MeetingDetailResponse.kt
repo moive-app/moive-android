@@ -23,6 +23,8 @@ data class MeetingDetailResponse(
     val inviteCode: String,
     @SerialName("inviteUrl")
     val inviteUrl: String,
+    @SerialName("thumbnailType")
+    val thumbnailType: Int,
     @SerialName("participants")
     val participants: List<ParticipantResponse>,
     @SerialName("homeMessage")

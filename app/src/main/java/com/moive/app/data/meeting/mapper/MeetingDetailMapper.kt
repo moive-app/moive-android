@@ -17,6 +17,7 @@ fun MeetingDetailResponse.toModel(): MeetingDetailModel =
         scheduledTime = scheduledTime,
         inviteCode = inviteCode,
         inviteUrl = inviteUrl,
+        thumbnailType = thumbnailType,
         participants = participants.map { it.toModel() }.toImmutableList(),
         homeMessage = homeMessage,
         primaryActionLabel = primaryActionLabel,

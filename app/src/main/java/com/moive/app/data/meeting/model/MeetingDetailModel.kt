@@ -16,6 +16,7 @@ data class MeetingDetailModel(
     val scheduledTime: String?,
     val inviteCode: String,
     val inviteUrl: String,
+    val thumbnailType: Int,
     val participants: ImmutableList<ParticipantItemModel>,
     val homeMessage: String,
     val primaryActionLabel: String,

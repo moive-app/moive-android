@@ -51,6 +51,7 @@ class MeetingDetailViewModel @Inject constructor(
                             scheduledTime = detail.scheduledTime,
                             meetingName = detail.name,
                             meetingPurpose = detail.purposeType.label,
+                            thumbnailType = detail.thumbnailType,
                             inviteCode = detail.inviteCode,
                             inviteUrl = detail.inviteUrl,
                             participants = detail.participants,
