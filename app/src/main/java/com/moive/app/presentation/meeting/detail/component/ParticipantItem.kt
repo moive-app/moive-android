@@ -1,5 +1,6 @@
 package com.moive.app.presentation.meeting.detail.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,10 @@ fun ParticipantItem(
             .border(
                 width = 1.dp,
                 color = if (participant.isMe) colors.stroke.default03 else colors.stroke.default04,
+                shape = RoundedCornerShape(radius.md),
+            )
+            .background(
+                color = if (participant.isMe) colors.fill.default03 else colors.fill.default04,
                 shape = RoundedCornerShape(radius.md),
             )
             .padding(12.dp),
