@@ -137,6 +137,7 @@ fun MeetingCreationContent(
                         onKeyboardAction = {
                             focusManager.clearFocus()
                         },
+                        isError = uiState.isMeetingScheduleFormatInvalid,
                     )
 
                     if (uiState.isMeetingScheduleFormatInvalid) {
