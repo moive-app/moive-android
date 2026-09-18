@@ -17,8 +17,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +38,7 @@ import com.moive.app.core.designsystem.component.bottomsheet.MoiveBottomSheet
 import com.moive.app.core.designsystem.component.button.MoiveButton
 import com.moive.app.core.designsystem.component.button.MoiveButtonSize
 import com.moive.app.core.designsystem.component.button.MoiveButtonType
+import com.moive.app.core.designsystem.component.toast.LocalSnackbarHostState
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.core.designsystem.theme.MoiveTheme.radius
@@ -137,7 +140,7 @@ private fun AllAgreementButton(
                 shape = RoundedCornerShape(radius.md),
             )
             .background(
-                color = if (isPressed) colors.fill.default06 else colors.fill.default07,
+                color = if (isPressed || isChecked) colors.fill.default06 else colors.fill.default07,
                 shape = RoundedCornerShape(radius.md),
             )
             .noRippleClickable(onClick = { onAllAgreementClick(!isChecked) })
@@ -216,31 +219,34 @@ private fun AgreementBottomSheetPreview() {
         var isServiceAgreed by remember { mutableStateOf(false) }
         var isPrivacyAgreed by remember { mutableStateOf(false) }
         var isMarketingAgreed by remember { mutableStateOf(false) }
+        val snackbarHostState = remember { SnackbarHostState() }
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            MoiveButton(
-                text = "약관동의 바텀시트 열기",
-                type = MoiveButtonType.PRIMARY,
-                size = MoiveButtonSize.LARGE,
-                onClick = { showBottomSheet = true },
-            )
-        }
+        CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                MoiveButton(
+                    text = "약관동의 바텀시트 열기",
+                    type = MoiveButtonType.PRIMARY,
+                    size = MoiveButtonSize.LARGE,
+                    onClick = { showBottomSheet = true },
+                )
+            }
 
-        if (showBottomSheet) {
-            AgreementBottomSheet(
-                isServiceAgreed = isServiceAgreed,
-                isPrivacyAgreed = isPrivacyAgreed,
-                isMarketingAgreed = isMarketingAgreed,
-                isConfirmEnabled = isServiceAgreed && isPrivacyAgreed,
-                onServiceClick = { isServiceAgreed = it },
-                onPrivacyClick = { isPrivacyAgreed = it },
-                onMarketingClick = { isMarketingAgreed = it },
-                onConfirmClick = {},
-                onDismissRequest = { showBottomSheet = false },
-            )
+            if (showBottomSheet) {
+                AgreementBottomSheet(
+                    isServiceAgreed = isServiceAgreed,
+                    isPrivacyAgreed = isPrivacyAgreed,
+                    isMarketingAgreed = isMarketingAgreed,
+                    isConfirmEnabled = isServiceAgreed && isPrivacyAgreed,
+                    onServiceClick = { isServiceAgreed = it },
+                    onPrivacyClick = { isPrivacyAgreed = it },
+                    onMarketingClick = { isMarketingAgreed = it },
+                    onConfirmClick = {},
+                    onDismissRequest = { showBottomSheet = false },
+                )
+            }
         }
     }
 }
