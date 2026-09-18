@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.moive.app.core.designsystem.component.button.MoiveButton
 import com.moive.app.core.designsystem.component.button.MoiveButtonSize
@@ -52,6 +53,7 @@ fun ParticipantItem(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(radius.circular)),
+                contentScale = ContentScale.Crop,
             )
 
             Column(
