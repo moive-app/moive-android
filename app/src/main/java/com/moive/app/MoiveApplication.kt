@@ -3,6 +3,7 @@ package com.moive.app
 import android.app.Application
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.vectormap.KakaoMapSdk
+import com.moive.app.core.fcm.NotificationChannels
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -12,6 +13,7 @@ class MoiveApplication : Application() {
         super.onCreate()
 
         initTimber()
+        NotificationChannels.createDefaultChannel(this)
         initKakaoSdk()
         initKakaoMapSdk()
     }
