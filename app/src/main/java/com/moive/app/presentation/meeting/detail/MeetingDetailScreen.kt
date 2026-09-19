@@ -2,13 +2,13 @@ package com.moive.app.presentation.meeting.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,15 +19,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -97,6 +100,7 @@ fun MeetingDetailRoute(
                     uiState.scheduledDate,
                     uiState.scheduledTime,
                 )
+
                 else -> Unit
             }
         },
@@ -137,6 +141,11 @@ private fun MeetingDetailScreen(
     val isContentScrollable by remember {
         derivedStateOf { lazyListState.canScrollForward || lazyListState.canScrollBackward }
     }
+    val density = LocalDensity.current
+    var toolTipHeight by remember { mutableStateOf(0.dp) }
+    val isToolTipVisible = uiState.toolTipMessage.isNotEmpty()
+    val toolTipReservedHeight =
+        if (isToolTipVisible) toolTipHeight + 4.dp else 0.dp
 
     Column(
         modifier = modifier
@@ -150,72 +159,81 @@ private fun MeetingDetailScreen(
             onTrailingIconClick = onMoreClick,
         )
 
-        LazyColumn(
-            state = lazyListState,
+        Box(
             modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 20.dp),
         ) {
-            item {
-                MeetingInfoRow(
-                    thumbnailRes = uiState.thumbnailType.toMeetingThumbnailRes(),
-                    meetingName = uiState.meetingName,
-                    meetingPurpose = uiState.meetingPurpose,
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                MoiveButton(
-                    text = "친구 초대",
-                    icon = ImageVector.vectorResource(R.drawable.ic_mail_fill_20),
-                    type = MoiveButtonType.TERTIARY,
-                    size = MoiveButtonSize.MEDIUM,
-                    onClick = onInviteFriendClick,
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_user_16),
-                        contentDescription = null,
-                        tint = colors.icon.tertiary,
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 20.dp,
+                    top = 20.dp,
+                    end = 20.dp,
+                    bottom = 20.dp + toolTipReservedHeight,
+                ),
+            ) {
+                item {
+                    MeetingInfoRow(
+                        thumbnailRes = uiState.thumbnailType.toMeetingThumbnailRes(),
+                        meetingName = uiState.meetingName,
+                        meetingPurpose = uiState.meetingPurpose,
                     )
 
-                    Text(
-                        text = "참여자 ${uiState.participants.size}명",
-                        color = colors.text.tertiary,
-                        style = typography.label.xsR,
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    MoiveButton(
+                        text = "친구 초대",
+                        icon = ImageVector.vectorResource(R.drawable.ic_mail_fill_20),
+                        type = MoiveButtonType.TERTIARY,
+                        size = MoiveButtonSize.MEDIUM,
+                        onClick = onInviteFriendClick,
                     )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_user_16),
+                            contentDescription = null,
+                            tint = colors.icon.tertiary,
+                        )
+
+                        Text(
+                            text = "참여자 ${uiState.participants.size}명",
+                            color = colors.text.tertiary,
+                            style = typography.label.xsR,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                items(
+                    items = uiState.participants,
+                    key = { it.id }
+                ) { participant ->
+                    ParticipantItem(
+                        participant = participant,
+                        status = uiState.status,
+                        onActionButtonClick = onActionButtonClick,
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
 
-            items(
-                items = uiState.participants,
-                key = { it.id }
-            ) { participant ->
-                ParticipantItem(
-                    participant = participant,
-                    status = uiState.status,
-                    onActionButtonClick = onActionButtonClick,
+            if (isToolTipVisible) {
+                MoiveToolTip(
+                    text = uiState.toolTipMessage,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 4.dp)
+                        .onSizeChanged { toolTipHeight = with(density) { it.height.toDp() } },
                 )
-
-                Spacer(modifier = Modifier.height(12.dp))
             }
-        }
-
-        if (uiState.toolTipMessage.isNotEmpty()) {
-            MoiveToolTip(
-                text = uiState.toolTipMessage,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .zIndex(1f)
-                    .offset(y = 8.dp),
-            )
         }
 
         ShadowButton(
@@ -241,7 +259,7 @@ private fun MeetingDetailScreen(
     }
 }
 
-@Preview(showBackground = true,)
+@Preview(showBackground = true)
 @Composable
 private fun MeetingDetailScreenPreview() {
     MoiveTheme {
