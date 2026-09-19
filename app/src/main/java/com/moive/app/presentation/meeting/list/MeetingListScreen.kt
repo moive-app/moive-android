@@ -118,7 +118,7 @@ private fun MeetingListScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "아직 참여 중인 모임이 없어요.",
+                        text = uiState.emptyMeetingMessage,
                         color = colors.text.subtle,
                         style = typography.body.smNormalR,
                     )

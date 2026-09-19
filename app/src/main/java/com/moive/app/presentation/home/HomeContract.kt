@@ -2,6 +2,7 @@ package com.moive.app.presentation.home
 
 import androidx.compose.runtime.Immutable
 import com.moive.app.data.home.mapper.MeetingTab
+import com.moive.app.data.home.mapper.toMeetingTab
 import com.moive.app.data.home.model.MyMeetingCardItemModel
 import com.moive.app.data.home.model.ConfirmedMeetingItemModel
 import kotlinx.collections.immutable.ImmutableList
@@ -26,6 +27,13 @@ interface HomeContract {
 
         val displayedMyMeetingList: ImmutableList<MyMeetingCardItemModel>
             get() = myMeetingList.take(MY_MEETING_LIST_MAX_SIZE).toImmutableList()
+
+        val emptyMyMeetingMessage: String
+            get() = when (selectedTab.toMeetingTab()) {
+                MeetingTab.ALL -> "아직 참여 중인 모임이 없어요."
+                MeetingTab.UPCOMING -> "예정된 모임이 없어요."
+                MeetingTab.PAST -> "지난 모임이 없어요."
+            }
 
         companion object {
             private const val MY_MEETING_LIST_MAX_SIZE = 5
