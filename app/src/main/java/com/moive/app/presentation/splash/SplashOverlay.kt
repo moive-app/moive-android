@@ -22,9 +22,11 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.moive.app.R
+import com.moive.app.core.designsystem.component.toast.LocalToastTrigger
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.designsystem.theme.MoiveTheme.colors
 import com.moive.app.presentation.splash.SplashContract.SideEffect.NavigateToHome
+import com.moive.app.presentation.splash.SplashContract.SideEffect.OnShowToast
 
 @Composable
 fun SplashOverlay(
@@ -34,6 +36,7 @@ fun SplashOverlay(
     viewModel: SplashViewModel = hiltViewModel(),
 ) {
     val lifeCycleOwner = LocalLifecycleOwner.current
+    val showToast = LocalToastTrigger.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var isAnimationEnded by remember { mutableStateOf(false) }
 
@@ -56,6 +59,8 @@ fun SplashOverlay(
                         if (sideEffect.isAutoLoginSuccess) navigateToHome() else navigateToLogin()
                         viewModel.onReady()
                     }
+
+                    is OnShowToast -> showToast(sideEffect.msg, sideEffect.type)
                 }
             }
         }
