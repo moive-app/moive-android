@@ -43,7 +43,7 @@ fun ParticipantItem(
                 shape = RoundedCornerShape(radius.md),
             )
             .background(
-                color = if (participant.isMe) colors.fill.default03 else colors.fill.default04,
+                color = if (participant.isMe) colors.fill.default08 else colors.fill.default07,
                 shape = RoundedCornerShape(radius.md),
             )
             .padding(12.dp),
