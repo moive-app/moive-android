@@ -278,6 +278,7 @@ private fun MeetingDetailScreenPreview() {
                         statusLabel = "조건 입력 전",
                         isMe = true,
                         isDone = false,
+                        isVoteDone = false,
                     ),
                     ParticipantItemModel(
                         id = 2L,
@@ -286,6 +287,7 @@ private fun MeetingDetailScreenPreview() {
                         statusLabel = "조건 입력 완료",
                         isMe = false,
                         isDone = true,
+                        isVoteDone = false,
                     ),
                 ),
             ),

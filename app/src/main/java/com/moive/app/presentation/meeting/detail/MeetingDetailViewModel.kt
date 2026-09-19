@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.moive.app.data.meeting.mapper.MeetingStatus
 import com.moive.app.data.meeting.repository.MeetingRepository
 import com.moive.app.data.meeting.repository.NotMeetingParticipantException
 import com.moive.app.presentation.meeting.detail.MeetingDetailContract.SideEffect
@@ -43,6 +44,7 @@ class MeetingDetailViewModel @Inject constructor(
 
             meetingRepository.getMeetingDetail(meetingId)
                 .onSuccess { detail ->
+                    val isMyVoteDone = detail.participants.any { it.isMe && it.isVoteDone }
                     _uiState.update {
                         it.copy(
                             meetingDetailUiState = MeetingDetailUiState.Success,
@@ -58,7 +60,8 @@ class MeetingDetailViewModel @Inject constructor(
                             participants = detail.participants,
                             toolTipMessage = detail.homeMessage ?: "",
                             primaryActionLabel = detail.primaryActionLabel ?: "",
-                            primaryActionEnabled = detail.primaryActionEnabled,
+                            primaryActionEnabled = detail.primaryActionEnabled &&
+                                !(detail.status == MeetingStatus.VOTING && isMyVoteDone),
                         )
                     }
                 }
