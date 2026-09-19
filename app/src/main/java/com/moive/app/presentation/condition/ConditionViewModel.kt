@@ -133,7 +133,7 @@ class ConditionViewModel @Inject constructor(
         }
     }
 
-    fun onDateNextClick() {
+    fun onDateSaveClick() {
         val state = _uiState.value
         val pending = state.pendingDateTime
         val isNewDate = pending != null && state.confirmedDateTimes.none {
@@ -156,7 +156,7 @@ class ConditionViewModel @Inject constructor(
         }
     }
 
-    fun onDateSaveClick() {
+    fun onDateNextClick() {
         _uiState.update {
             it.copy(
                 isDateBottomSheetVisible = false,

@@ -90,6 +90,7 @@ fun DateBottomSheet(
                     text = "저장",
                     type = MoiveButtonType.TERTIARY,
                     size = MoiveButtonSize.LARGE,
+                    enabled = state.pendingDateTime != null,
                     onClick = onSaveDateClick,
                     modifier = Modifier.weight(1f),
                 )
@@ -97,7 +98,6 @@ fun DateBottomSheet(
                     text = "다음",
                     type = MoiveButtonType.PRIMARY,
                     size = MoiveButtonSize.LARGE,
-                    enabled = state.pendingDateTime != null,
                     onClick = onNextDateClick,
                     modifier = Modifier.weight(1f),
                 )
