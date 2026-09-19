@@ -1,6 +1,7 @@
 package com.moive.app.presentation.splash
 
 import androidx.compose.runtime.Immutable
+import com.moive.app.core.designsystem.component.toast.ToastType
 
 interface SplashContract {
 
@@ -11,6 +12,7 @@ interface SplashContract {
 
     sealed interface SideEffect {
         data class NavigateToHome(val isAutoLoginSuccess: Boolean) : SideEffect
+        data class OnShowToast(val msg: String, val type: ToastType) : SideEffect
     }
 
 }

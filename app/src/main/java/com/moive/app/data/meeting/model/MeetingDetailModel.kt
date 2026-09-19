@@ -31,4 +31,5 @@ data class ParticipantItemModel(
     val statusLabel: String,
     val isMe: Boolean,
     val isDone: Boolean,
+    val isVoteDone: Boolean,
 )

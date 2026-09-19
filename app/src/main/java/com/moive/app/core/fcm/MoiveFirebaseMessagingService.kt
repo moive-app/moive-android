@@ -1,12 +1,9 @@
 package com.moive.app.core.fcm
 
 import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -21,7 +18,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -61,8 +57,8 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        val title = remoteMessage.data[MESSAGE_TITLE] ?: return
-        val body = remoteMessage.data[MESSAGE_BODY]
+        val title = remoteMessage.notification?.title ?: remoteMessage.data[MESSAGE_TITLE] ?: return
+        val body = remoteMessage.notification?.body ?: remoteMessage.data[MESSAGE_BODY]
         val meetingId = remoteMessage.data[MESSAGE_MEETING_ID]?.toLongOrNull()
         val notificationId = remoteMessage.data[MESSAGE_NOTIFICATION_ID]?.toLongOrNull()
 
@@ -70,16 +66,7 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
     }
 
     private fun showNotification(title: String, body: String?, meetingId: Long?, notificationId: Long?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_HIGH,
-            ).apply {
-                enableVibration(true)
-            }
-            getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
-        }
+        NotificationChannels.createDefaultChannel(this)
 
         val granted = ContextCompat.checkSelfPermission(
             this,
@@ -87,7 +74,7 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         ) == PackageManager.PERMISSION_GRANTED
         if (!granted) return
 
-        val androidNotificationId = notificationIdGenerator.incrementAndGet()
+        val androidNotificationId = (notificationId ?: System.currentTimeMillis()).toInt()
 
         val contentIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -101,7 +88,7 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        val notification = NotificationCompat.Builder(this, NotificationChannels.defaultChannelId(this))
             .setSmallIcon(R.drawable.img_logo_white_bg)
             .setContentTitle(title)
             .setContentText(body)
@@ -118,9 +105,6 @@ class MoiveFirebaseMessagingService: FirebaseMessagingService() {
         const val MESSAGE_NOTIFICATION_ID = "notificationId"
         private const val MESSAGE_TITLE = "title"
         private const val MESSAGE_BODY = "body"
-        private const val CHANNEL_ID = "moive_default_channel"
-        private const val CHANNEL_NAME = "일반 알림"
         private const val DEVICE_TOKEN_PUT_SUCCESS_MESSAGE = "디바이스 토큰 등록 성공"
-        private val notificationIdGenerator = AtomicInteger(0)
     }
 }

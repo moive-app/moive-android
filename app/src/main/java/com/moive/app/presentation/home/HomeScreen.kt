@@ -223,7 +223,7 @@ private fun HomeScreen(
                             )
 
                             Text(
-                                text = "아직 참여 중인 모임이 없어요.",
+                                text = uiState.emptyMyMeetingMessage,
                                 color = colors.text.subtle,
                                 style = typography.body.smNormalR,
                             )

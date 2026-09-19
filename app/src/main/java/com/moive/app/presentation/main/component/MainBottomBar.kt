@@ -122,8 +122,8 @@ private fun MeetingFloatingButton(
             .customShadow(
                 shape = RoundedCornerShape(radius.circular),
                 color = colors.shadow20,
-                blur = 10.dp,
-                offsetY = 4.dp,
+                blur = 5.dp,
+                offsetY = 2.dp,
             )
             .background(
                 color = colors.fill.default00,

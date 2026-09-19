@@ -155,14 +155,15 @@ class MainActivity : ComponentActivity() {
 private fun Intent.extractInviteCode(): String? =
     takeIf { it.action == Intent.ACTION_VIEW }?.data?.lastPathSegment
 
-private fun Intent.extractMeetingId(): Long? {
-    val meetingId = getLongExtra(MoiveFirebaseMessagingService.MESSAGE_MEETING_ID, -1L)
-    if (meetingId != -1L) removeExtra(MoiveFirebaseMessagingService.MESSAGE_MEETING_ID)
-    return meetingId.takeIf { it != -1L }
-}
+private fun Intent.extractMeetingId(): Long? =
+    extractLongExtra(MoiveFirebaseMessagingService.MESSAGE_MEETING_ID)
 
-private fun Intent.extractNotificationId(): Long? {
-    val notificationId = getLongExtra(MoiveFirebaseMessagingService.MESSAGE_NOTIFICATION_ID, -1L)
-    if (notificationId != -1L) removeExtra(MoiveFirebaseMessagingService.MESSAGE_NOTIFICATION_ID)
-    return notificationId.takeIf { it != -1L }
+private fun Intent.extractNotificationId(): Long? =
+    extractLongExtra(MoiveFirebaseMessagingService.MESSAGE_NOTIFICATION_ID)
+
+private fun Intent.extractLongExtra(key: String): Long? {
+    val value = getLongExtra(key, -1L).takeIf { it != -1L }
+        ?: getStringExtra(key)?.toLongOrNull()
+    removeExtra(key)
+    return value
 }

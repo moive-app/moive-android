@@ -2,6 +2,7 @@ package com.moive.app.presentation.meeting.list
 
 import androidx.compose.runtime.Immutable
 import com.moive.app.data.home.mapper.MeetingTab
+import com.moive.app.data.home.mapper.toMeetingTab
 import com.moive.app.data.meeting.model.MeetingListCardItemModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -20,6 +21,13 @@ interface MeetingListContract {
             MeetingTab.UPCOMING.label,
             MeetingTab.PAST.label,
         )
+
+        val emptyMeetingMessage: String
+            get() = when (selectedTab.toMeetingTab()) {
+                MeetingTab.ALL -> "아직 참여 중인 모임이 없어요."
+                MeetingTab.UPCOMING -> "예정된 모임이 없어요."
+                MeetingTab.PAST -> "지난 모임이 없어요."
+            }
     }
 }
 

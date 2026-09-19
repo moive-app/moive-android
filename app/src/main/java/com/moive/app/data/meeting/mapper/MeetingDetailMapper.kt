@@ -32,4 +32,7 @@ fun ParticipantResponse.toModel(): ParticipantItemModel =
         statusLabel = participantStateLabel,
         isMe = isMe,
         isDone = participantState.endsWith("_DONE"),
+        isVoteDone = participantState == VOTE_DONE_STATE,
     )
+
+private const val VOTE_DONE_STATE = "VOTE_DONE"

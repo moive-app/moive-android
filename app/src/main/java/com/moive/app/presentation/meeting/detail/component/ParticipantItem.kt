@@ -1,5 +1,6 @@
 package com.moive.app.presentation.meeting.detail.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.moive.app.core.designsystem.component.button.MoiveButton
 import com.moive.app.core.designsystem.component.button.MoiveButtonSize
@@ -40,6 +42,10 @@ fun ParticipantItem(
                 color = if (participant.isMe) colors.stroke.default03 else colors.stroke.default04,
                 shape = RoundedCornerShape(radius.md),
             )
+            .background(
+                color = if (participant.isMe) colors.fill.default08 else colors.fill.default07,
+                shape = RoundedCornerShape(radius.md),
+            )
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
@@ -52,6 +58,7 @@ fun ParticipantItem(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(radius.circular)),
+                contentScale = ContentScale.Crop,
             )
 
             Column(
