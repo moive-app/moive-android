@@ -50,7 +50,7 @@ fun PlaceVoteSection(
         Spacer(modifier = Modifier.height(10.dp))
 
         VoterCountCaption(
-            voterCount = topVoterCount,
+            voterCount = totalVoterCount,
             suffix = "이 투표했어요",
         )
     }
