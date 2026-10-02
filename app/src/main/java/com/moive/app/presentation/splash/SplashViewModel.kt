@@ -3,6 +3,7 @@ package com.moive.app.presentation.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moive.app.core.designsystem.component.toast.ToastType
+import com.moive.app.core.network.token.TokenReissueLock
 import com.moive.app.core.utils.suspendRunCatching
 import com.moive.app.data.auth.repository.AuthRepository
 import com.moive.app.presentation.splash.SplashContract.SideEffect.NavigateToHome
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
@@ -24,6 +26,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val tokenReissueLock: TokenReissueLock,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SplashContract.State())
@@ -64,7 +67,7 @@ class SplashViewModel @Inject constructor(
 
 
     private suspend fun postReissue() {
-        authRepository.postReissue()
+        tokenReissueLock.mutex.withLock { authRepository.postReissue() }
             .onSuccess {
                 Timber.tag(AUTHORIZATION).d(REISSUE_SUCCESS_MESSAGE)
             }
