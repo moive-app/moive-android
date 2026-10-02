@@ -1,10 +1,10 @@
 package com.moive.app.core.network
 
 import com.moive.app.core.network.token.AuthManager
+import com.moive.app.core.network.token.TokenReissueLock
 import com.moive.app.data.auth.repository.AuthRepository
 import com.moive.app.data.local.token.LocalTokenDataSource
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -18,9 +18,8 @@ class TokenAuthenticator @Inject constructor(
     private val authRepository: AuthRepository,
     private val tokenDataStore: LocalTokenDataSource,
     private val authManager: AuthManager,
+    private val tokenReissueLock: TokenReissueLock,
 ) : Authenticator {
-
-    private val mutex = Mutex()
 
     override fun authenticate(route: Route?, response: Response): Request? {
         if (responseCount(response) >= MAX_RESPONSE_COUNT) return null
@@ -30,7 +29,7 @@ class TokenAuthenticator @Inject constructor(
         }
     }
 
-    private suspend fun updateToken(response: Response): Request? = mutex.withLock {
+    private suspend fun updateToken(response: Response): Request? = tokenReissueLock.mutex.withLock {
         val accessToken = tokenDataStore.getAccessToken()
         val oldAccessToken =
             response.request.header(AUTHORIZATION)?.replace("$BEARER_SUFFIX ", "")
