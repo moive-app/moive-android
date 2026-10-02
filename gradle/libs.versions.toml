@@ -46,6 +46,7 @@ kakaoMap = "2.15.1"
 # Firebase
 googleServices = "4.5.0"
 firebaseBom = "34.19.0"
+firebaseCrashlytics = "3.0.7"
 
 # Test
 junit = "4.13.2"
@@ -104,6 +105,7 @@ kakao-map = { group = "com.kakao.maps.open", name = "android", version.ref = "ka
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -119,6 +121,7 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
 
 [bundles]
 androidx-core = [
