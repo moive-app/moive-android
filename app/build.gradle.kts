@@ -48,9 +48,11 @@ android {
     buildTypes {
         debug {
             manifestPlaceholders["crashlyticsCollectionEnabled"] = false
+            buildConfigField("String", "AMPLITUDE_API_KEY", properties.getProperty("amplitude.api.key.dev"))
         }
         release {
             manifestPlaceholders["crashlyticsCollectionEnabled"] = true
+            buildConfigField("String", "AMPLITUDE_API_KEY", properties.getProperty("amplitude.api.key.prod"))
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -117,4 +119,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.crashlytics)
+
+    // Amplitude
+    implementation(libs.amplitude.analytics)
 }
