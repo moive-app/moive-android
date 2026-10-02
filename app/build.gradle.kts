@@ -24,7 +24,7 @@ android {
         applicationId = "com.moive.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -35,6 +35,15 @@ android {
         manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = properties.getProperty("kakao.native.app.key").trim('"')
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = project.rootProject.file(properties.getProperty("release.storeFile"))
+            storePassword = properties.getProperty("release.storePassword")
+            keyAlias = properties.getProperty("release.keyAlias")
+            keyPassword = properties.getProperty("release.keyPassword")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -42,6 +51,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
