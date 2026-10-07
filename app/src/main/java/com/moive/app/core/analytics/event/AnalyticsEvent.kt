@@ -70,4 +70,17 @@ sealed interface AnalyticsEvent {
         override val properties: Map<String, Any?>
             get() = mapOf(AnalyticsPropertyKey.MEETING_ID to meetingId)
     }
+
+    // 조건 입력
+    data class ConditionStepViewed(
+        val meetingId: Long,
+        val step: String,
+    ) : AnalyticsEvent {
+        override val name = "Condition Step Viewed"
+        override val properties: Map<String, Any?>
+            get() = mapOf(
+                AnalyticsPropertyKey.MEETING_ID to meetingId,
+                AnalyticsPropertyKey.STEP to step,
+            )
+    }
 }
