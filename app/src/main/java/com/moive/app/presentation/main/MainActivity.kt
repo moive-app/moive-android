@@ -7,6 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
+import com.moive.app.core.analytics.AnalyticsTracker
+import com.moive.app.core.analytics.event.AnalyticsEvent
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.fcm.FirebaseMessagingManager
 import com.moive.app.core.fcm.MoiveFirebaseMessagingService
@@ -37,6 +39,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var firebaseMessagingManager: FirebaseMessagingManager
 
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
+
     private val pendingInviteCode = mutableStateOf<String?>(null)
 
     private val pendingMeetingId = mutableStateOf<Long?>(null)
@@ -49,17 +54,26 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         pendingInviteCode.value = intent.extractInviteCode()
-        pendingMeetingId.value = intent.extractMeetingId()
+        val pushMeetingId = intent.extractMeetingId()
+        val pushNotificationId = intent.extractNotificationId()
+        trackPushNotificationOpened(pushNotificationId, pushMeetingId)
+        pendingMeetingId.value = pushMeetingId
             ?: savedInstanceState?.getLong(KEY_PENDING_MEETING_ID, -1L)?.takeIf { it != -1L }
-        pendingNotificationId.value = intent.extractNotificationId()
+        pendingNotificationId.value = pushNotificationId
             ?: savedInstanceState?.getLong(KEY_PENDING_NOTIFICATION_ID, -1L)?.takeIf { it != -1L }
         intent = Intent()
         setContent {
             MoiveTheme {
                 val appState = rememberMainAppState()
 
+                TrackScreenViews(
+                    navController = appState.navController,
+                    analyticsTracker = analyticsTracker,
+                )
+
                 LaunchedEffect(Unit) {
                     authManager.authEvent.collect {
+                        analyticsTracker.reset()
                         appState.navController.navigateToLogin()
                     }
                 }
@@ -93,6 +107,9 @@ class MainActivity : ComponentActivity() {
 
                     meetingRepository.postMeetingJoin(inviteCode)
                         .onSuccess { join ->
+                            if (!join.alreadyParticipant) {
+                                analyticsTracker.track(AnalyticsEvent.MeetingJoined(join.meetingId))
+                            }
                             appState.navController.navigateToMeetingDetail(join.meetingId)
                         }
                         .onFailure { error ->
@@ -135,7 +152,19 @@ class MainActivity : ComponentActivity() {
         pendingInviteCode.value = intent.extractInviteCode()
         pendingMeetingId.value = intent.extractMeetingId()
         pendingNotificationId.value = intent.extractNotificationId()
+        trackPushNotificationOpened(pendingNotificationId.value, pendingMeetingId.value)
         setIntent(Intent())
+    }
+
+    // 푸시 알림의 extra로 들어온 경우에만 기록 (savedInstanceState 복원은 제외)
+    private fun trackPushNotificationOpened(notificationId: Long?, meetingId: Long?) {
+        if (notificationId == null && meetingId == null) return
+        analyticsTracker.track(
+            AnalyticsEvent.PushNotificationOpened(
+                notificationId = notificationId,
+                meetingId = meetingId,
+            ),
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

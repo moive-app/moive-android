@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.moive.app.core.analytics.AnalyticsTracker
+import com.moive.app.core.analytics.event.AnalyticsEvent
 import com.moive.app.core.extensions.parseDate
 import com.moive.app.core.extensions.parseTime
 import com.moive.app.data.meeting.repository.MeetingRepository
@@ -25,6 +27,7 @@ class MeetingConfirmedViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val meetingRepository: MeetingRepository,
     private val votingRepository: VotingRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val meetingId: Long = savedStateHandle.toRoute<MeetingConfirmed>().meetingId
@@ -138,6 +141,15 @@ class MeetingConfirmedViewModel @Inject constructor(
                     )
                 }
             }
+    }
+
+    fun onInviteLinkShareClick() {
+        analyticsTracker.track(
+            AnalyticsEvent.InviteLinkShareClicked(
+                meetingId = meetingId,
+                source = AnalyticsEvent.InviteLinkShareClicked.Source.CONFIRMED,
+            ),
+        )
     }
 
     fun backToMain() {

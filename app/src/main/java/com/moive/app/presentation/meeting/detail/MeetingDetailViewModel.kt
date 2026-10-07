@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.moive.app.core.analytics.AnalyticsTracker
+import com.moive.app.core.analytics.event.AnalyticsEvent
 import com.moive.app.data.meeting.mapper.MeetingStatus
 import com.moive.app.data.meeting.repository.MeetingRepository
 import com.moive.app.data.meeting.repository.NotMeetingParticipantException
@@ -24,6 +26,7 @@ import javax.inject.Inject
 class MeetingDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val meetingRepository: MeetingRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val meetingId: Long = savedStateHandle.toRoute<MeetingDetail>().meetingId
@@ -36,6 +39,15 @@ class MeetingDetailViewModel @Inject constructor(
 
     private var getMeetingDetailJob: Job? = null
     private var deleteMeetingJob: Job? = null
+
+    fun onInviteLinkShareClick() {
+        analyticsTracker.track(
+            AnalyticsEvent.InviteLinkShareClicked(
+                meetingId = meetingId,
+                source = AnalyticsEvent.InviteLinkShareClicked.Source.DETAIL,
+            ),
+        )
+    }
 
     fun getMeetingDetail() {
         getMeetingDetailJob?.cancel()

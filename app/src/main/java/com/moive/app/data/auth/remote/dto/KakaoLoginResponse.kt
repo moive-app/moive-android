@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 data class KakaoLoginResponse(
     @SerialName("registered")
     val registered: Boolean,
+    @SerialName("userId")
+    val userId: Long?,
     @SerialName("nickname")
     val nickname: String,
     @SerialName("profileImageUrl")

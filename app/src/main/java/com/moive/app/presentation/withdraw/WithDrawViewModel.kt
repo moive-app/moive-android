@@ -2,6 +2,7 @@ package com.moive.app.presentation.withdraw
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moive.app.core.analytics.AnalyticsTracker
 import com.moive.app.data.user.repository.UserRepository
 import com.moive.app.presentation.withdraw.WithDrawContract.SideEffect
 import com.moive.app.presentation.withdraw.WithDrawContract.SideEffect.NavigateToLogin
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WithDrawViewModel @Inject constructor(
     private val userRepository: UserRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WithDrawContract.State())
@@ -53,6 +55,7 @@ class WithDrawViewModel @Inject constructor(
 
             userRepository.deleteWithdraw()
                 .onSuccess {
+                    analyticsTracker.reset()
                     _uiState.update { it.copy(withDrawUiState = WithDrawUiState.Success) }
                     _sideEffect.send(NavigateToLogin)
                 }

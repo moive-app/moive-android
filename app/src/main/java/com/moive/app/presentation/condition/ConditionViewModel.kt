@@ -5,6 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.moive.app.core.analytics.AnalyticsTracker
+import com.moive.app.core.analytics.event.AnalyticsEvent
 import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.data.condition.model.AvailableScheduleModel
 import com.moive.app.data.condition.repository.ConditionRepository
@@ -36,6 +38,7 @@ class ConditionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val placeRepository: PlaceRepository,
     private val conditionRepository: ConditionRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val condition: Condition = savedStateHandle.toRoute<Condition>()
@@ -169,6 +172,7 @@ class ConditionViewModel @Inject constructor(
 
     fun onPlaceSearchBoxClick() {
         _uiState.update { it.copy(step = Step.SEARCH) }
+        trackStepViewed(Step.SEARCH)
     }
 
     @OptIn(FlowPreview::class)
@@ -208,6 +212,7 @@ class ConditionViewModel @Inject constructor(
                 selectedPlaceId = placeId,
             )
         }
+        trackStepViewed(Step.INPUT)
     }
 
     fun onTravelTimeClick(travelTime: String) {
@@ -229,10 +234,21 @@ class ConditionViewModel @Inject constructor(
 
     fun onNextButtonClick() {
         _uiState.update { it.copy(step = Step.CONFIRM) }
+        trackStepViewed(Step.CONFIRM)
     }
 
     fun backToInputStep() {
         _uiState.update { it.copy(step = Step.INPUT) }
+        trackStepViewed(Step.INPUT)
+    }
+
+    private fun trackStepViewed(step: Step) {
+        analyticsTracker.track(
+            AnalyticsEvent.ConditionStepViewed(
+                meetingId = meetingId,
+                step = step.name.lowercase(),
+            ),
+        )
     }
 
     fun postCondition() {
@@ -268,6 +284,7 @@ class ConditionViewModel @Inject constructor(
                 activityTypes = activityTypes,
             )
                 .onSuccess {
+                    analyticsTracker.track(AnalyticsEvent.ConditionSubmitted(meetingId))
                     _uiState.update { it.copy(conditionUiState = ConditionUiState.Success) }
                     _sideEffect.send(SideEffect.NavigateToMeetingDetail)
                 }

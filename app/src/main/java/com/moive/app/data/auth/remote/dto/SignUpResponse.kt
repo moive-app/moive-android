@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignUpResponse(
+    @SerialName("userId")
+    val userId: Long,
     @SerialName("accessToken")
     val accessToken: String,
     @SerialName("refreshToken")

@@ -48,6 +48,9 @@ googleServices = "4.5.0"
 firebaseBom = "34.19.0"
 firebaseCrashlytics = "3.0.7"
 
+# Amplitude
+amplitude = "1.33.0"
+
 # Test
 junit = "4.13.2"
 junitVersion = "1.3.0"
@@ -106,6 +109,9 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+
+# Amplitude
+amplitude-analytics = { group = "com.amplitude", name = "analytics-android", version.ref = "amplitude" }
 
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }

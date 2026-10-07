@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.moive.app.core.analytics.AnalyticsTracker
+import com.moive.app.core.analytics.event.AnalyticsEvent
 import com.moive.app.data.voting.model.RegionPinModel
 import com.moive.app.data.voting.repository.VotingRepository
 import com.moive.app.presentation.voting.VotingContract.Step
@@ -27,6 +29,7 @@ import javax.inject.Inject
 class VotingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val votingRepository: VotingRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val meetingId: Long = savedStateHandle.toRoute<Voting>().meetingId
@@ -79,6 +82,7 @@ class VotingViewModel @Inject constructor(
             )
         }
         recommendedPlacesJob = getRecommendedPlaces(region.id)
+        analyticsTracker.track(AnalyticsEvent.RecommendedAreaSelected(meetingId))
     }
 
     private fun getRecommendedPlaces(recommendedAreaId: Long) = viewModelScope.launch {
@@ -151,6 +155,7 @@ class VotingViewModel @Inject constructor(
             fetchRecommendedPlaceDetail(placeId)
             fetchRecommendedPlaceRoute(placeId)
         }
+        analyticsTracker.track(AnalyticsEvent.PlaceDetailViewed(meetingId = meetingId, placeId = placeId))
     }
 
     private suspend fun fetchRecommendedPlaceDetail(placeId: Long) {
@@ -239,7 +244,12 @@ class VotingViewModel @Inject constructor(
     }
 
     fun onKakaoMapRouteOpened(opened: Boolean) {
-        if (opened) return
+        if (opened) {
+            _uiState.value.currentPlaceId?.let { placeId ->
+                analyticsTracker.track(AnalyticsEvent.PlaceRouteOpened(meetingId = meetingId, placeId = placeId))
+            }
+            return
+        }
         Timber.tag(TAG).e(KAKAO_MAP_ERROR)
     }
 
@@ -254,6 +264,12 @@ class VotingViewModel @Inject constructor(
 
             votingRepository.postPlaceVotes(meetingId, recommendedPlaceIds)
                 .onSuccess {
+                    analyticsTracker.track(
+                        AnalyticsEvent.PlaceVoteSubmitted(
+                            meetingId = meetingId,
+                            selectedCount = recommendedPlaceIds.size,
+                        ),
+                    )
                     _uiState.update { it.copy(placeVoteUiState = PlaceVoteUiState.Success) }
                     _sideEffect.send(VotingContract.SideEffect.NavigateToVoteStatus(meetingId))
                 }

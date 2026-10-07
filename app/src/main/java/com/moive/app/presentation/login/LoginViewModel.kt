@@ -2,6 +2,8 @@ package com.moive.app.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moive.app.core.analytics.AnalyticsTracker
+import com.moive.app.core.analytics.event.AnalyticsEvent
 import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.data.auth.repository.AuthRepository
 import com.moive.app.presentation.login.LoginContract.SideEffect
@@ -17,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginContract.State())
@@ -37,6 +40,7 @@ class LoginViewModel @Inject constructor(
                 }
 
                 if (result.registered) {
+                    result.userId?.let(analyticsTracker::setUserId)
                     kakaoAccessToken = null
                     _sideEffect.send(SideEffect.NavigateToHome)
                 }
@@ -77,7 +81,9 @@ class LoginViewModel @Inject constructor(
                 isPrivacyAgreed = currentState.isPrivacyAgreed,
                 isMarketingAgreed = currentState.isMarketingAgreed,
             )
-                .onSuccess {
+                .onSuccess { userId ->
+                    analyticsTracker.setUserId(userId)
+                    analyticsTracker.track(AnalyticsEvent.SignUpCompleted)
                     kakaoAccessToken = null
                     onAgreementSheetDismiss()
                     _sideEffect.send(SideEffect.NavigateToSignUpComplete)
