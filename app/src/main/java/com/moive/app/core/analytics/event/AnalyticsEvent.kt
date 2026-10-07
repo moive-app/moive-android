@@ -83,4 +83,12 @@ sealed interface AnalyticsEvent {
                 AnalyticsPropertyKey.STEP to step,
             )
     }
+
+    data class ConditionSubmitted(
+        val meetingId: Long,
+    ) : AnalyticsEvent {
+        override val name = "Condition Submitted"
+        override val properties: Map<String, Any?>
+            get() = mapOf(AnalyticsPropertyKey.MEETING_ID to meetingId)
+    }
 }

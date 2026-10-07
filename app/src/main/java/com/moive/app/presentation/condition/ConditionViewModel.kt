@@ -284,6 +284,7 @@ class ConditionViewModel @Inject constructor(
                 activityTypes = activityTypes,
             )
                 .onSuccess {
+                    analyticsTracker.track(AnalyticsEvent.ConditionSubmitted(meetingId))
                     _uiState.update { it.copy(conditionUiState = ConditionUiState.Success) }
                     _sideEffect.send(SideEffect.NavigateToMeetingDetail)
                 }
