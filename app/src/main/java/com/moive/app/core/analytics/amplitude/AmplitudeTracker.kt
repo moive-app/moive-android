@@ -12,4 +12,8 @@ class AmplitudeTracker @Inject constructor(
     override fun track(event: AnalyticsEvent) {
         amplitude.track(event.name, event.properties)
     }
+
+    override fun setUserId(userId: Long) {
+        amplitude.setUserId(userId.toString())
+    }
 }
