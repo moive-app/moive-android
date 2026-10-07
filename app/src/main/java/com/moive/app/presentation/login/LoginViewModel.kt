@@ -81,9 +81,9 @@ class LoginViewModel @Inject constructor(
                 isPrivacyAgreed = currentState.isPrivacyAgreed,
                 isMarketingAgreed = currentState.isMarketingAgreed,
             )
-                .onSuccess {
                 .onSuccess { userId ->
                     analyticsTracker.setUserId(userId)
+                    analyticsTracker.track(AnalyticsEvent.SignUpCompleted)
                     kakaoAccessToken = null
                     onAgreementSheetDismiss()
                     _sideEffect.send(SideEffect.NavigateToSignUpComplete)

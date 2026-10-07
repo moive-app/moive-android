@@ -16,4 +16,10 @@ sealed interface AnalyticsEvent {
                 meetingId?.let { put(AnalyticsPropertyKey.MEETING_ID, it) }
             }
     }
+
+    // 가입
+    data object SignUpCompleted : AnalyticsEvent {
+        override val name = "Sign Up Completed"
+    }
+
 }
