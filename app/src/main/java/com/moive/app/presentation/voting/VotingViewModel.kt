@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.moive.app.core.analytics.AnalyticsTracker
+import com.moive.app.core.analytics.event.AnalyticsEvent
 import com.moive.app.data.voting.model.RegionPinModel
 import com.moive.app.data.voting.repository.VotingRepository
 import com.moive.app.presentation.voting.VotingContract.Step
@@ -27,6 +29,7 @@ import javax.inject.Inject
 class VotingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val votingRepository: VotingRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val meetingId: Long = savedStateHandle.toRoute<Voting>().meetingId
@@ -79,6 +82,7 @@ class VotingViewModel @Inject constructor(
             )
         }
         recommendedPlacesJob = getRecommendedPlaces(region.id)
+        analyticsTracker.track(AnalyticsEvent.RecommendedAreaSelected(meetingId))
     }
 
     private fun getRecommendedPlaces(recommendedAreaId: Long) = viewModelScope.launch {

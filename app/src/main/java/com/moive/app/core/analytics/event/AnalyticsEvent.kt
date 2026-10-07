@@ -91,4 +91,13 @@ sealed interface AnalyticsEvent {
         override val properties: Map<String, Any?>
             get() = mapOf(AnalyticsPropertyKey.MEETING_ID to meetingId)
     }
+
+    // 장소 투표
+    data class RecommendedAreaSelected(
+        val meetingId: Long,
+    ) : AnalyticsEvent {
+        override val name = "Recommended Area Selected"
+        override val properties: Map<String, Any?>
+            get() = mapOf(AnalyticsPropertyKey.MEETING_ID to meetingId)
+    }
 }
