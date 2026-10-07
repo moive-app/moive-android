@@ -8,6 +8,10 @@ object AnalyticsPropertyKey {
     // 모임 생성
     const val PURPOSE = "purpose"
     const val HAS_SCHEDULE = "has_schedule"
+
+    // 초대
+    const val SOURCE = "source"
+
     // 단계
     const val STEP = "step"
 }

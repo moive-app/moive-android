@@ -44,4 +44,22 @@ sealed interface AnalyticsEvent {
                 AnalyticsPropertyKey.HAS_SCHEDULE to hasSchedule,
             )
     }
+
+    // 초대
+    data class InviteLinkShared(
+        val meetingId: Long,
+        val source: Source,
+    ) : AnalyticsEvent {
+        override val name = "Invite Link Shared"
+        override val properties: Map<String, Any?>
+            get() = mapOf(
+                AnalyticsPropertyKey.MEETING_ID to meetingId,
+                AnalyticsPropertyKey.SOURCE to source.value,
+            )
+
+        enum class Source(val value: String) {
+            DETAIL("detail"),
+            CONFIRMED("confirmed"),
+        }
+    }
 }
