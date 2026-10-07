@@ -18,4 +18,7 @@ object AnalyticsPropertyKey {
     // 장소 / 투표
     const val PLACE_ID = "place_id"
     const val SELECTED_COUNT = "selected_count"
+
+    // 알림
+    const val NOTIFICATION_ID = "notification_id"
 }

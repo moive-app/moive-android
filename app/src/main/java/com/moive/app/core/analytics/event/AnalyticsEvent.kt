@@ -124,6 +124,20 @@ sealed interface AnalyticsEvent {
                 AnalyticsPropertyKey.PLACE_ID to placeId,
             )
     }
+
+    // 알림
+    data class PushNotificationOpened(
+        val notificationId: Long?,
+        val meetingId: Long?,
+    ) : AnalyticsEvent {
+        override val name = "Push Notification Opened"
+        override val properties: Map<String, Any?>
+            get() = buildMap {
+                notificationId?.let { put(AnalyticsPropertyKey.NOTIFICATION_ID, it) }
+                meetingId?.let { put(AnalyticsPropertyKey.MEETING_ID, it) }
+            }
+    }
+
     data class PlaceVoteSubmitted(
         val meetingId: Long,
         val selectedCount: Int,

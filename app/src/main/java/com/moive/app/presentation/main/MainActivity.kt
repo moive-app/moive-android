@@ -54,9 +54,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         pendingInviteCode.value = intent.extractInviteCode()
-        pendingMeetingId.value = intent.extractMeetingId()
+        val pushMeetingId = intent.extractMeetingId()
+        val pushNotificationId = intent.extractNotificationId()
+        trackPushNotificationOpened(pushNotificationId, pushMeetingId)
+        pendingMeetingId.value = pushMeetingId
             ?: savedInstanceState?.getLong(KEY_PENDING_MEETING_ID, -1L)?.takeIf { it != -1L }
-        pendingNotificationId.value = intent.extractNotificationId()
+        pendingNotificationId.value = pushNotificationId
             ?: savedInstanceState?.getLong(KEY_PENDING_NOTIFICATION_ID, -1L)?.takeIf { it != -1L }
         intent = Intent()
         setContent {
