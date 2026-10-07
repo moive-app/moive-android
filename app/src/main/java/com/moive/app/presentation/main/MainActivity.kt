@@ -104,6 +104,9 @@ class MainActivity : ComponentActivity() {
 
                     meetingRepository.postMeetingJoin(inviteCode)
                         .onSuccess { join ->
+                            if (!join.alreadyParticipant) {
+                                analyticsTracker.track(AnalyticsEvent.MeetingJoined(join.meetingId))
+                            }
                             appState.navController.navigateToMeetingDetail(join.meetingId)
                         }
                         .onFailure { error ->

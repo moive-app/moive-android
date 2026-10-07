@@ -62,4 +62,12 @@ sealed interface AnalyticsEvent {
             CONFIRMED("confirmed"),
         }
     }
+
+    data class MeetingJoined(
+        val meetingId: Long,
+    ) : AnalyticsEvent {
+        override val name = "Meeting Joined"
+        override val properties: Map<String, Any?>
+            get() = mapOf(AnalyticsPropertyKey.MEETING_ID to meetingId)
+    }
 }
