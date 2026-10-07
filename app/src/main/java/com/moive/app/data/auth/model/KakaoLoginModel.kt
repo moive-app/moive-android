@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 @Immutable
 data class KakaoLoginModel(
     val registered: Boolean,
+    val userId: Long?,
     val nickname: String,
     val profileImageUrl: String,
     val email: String,

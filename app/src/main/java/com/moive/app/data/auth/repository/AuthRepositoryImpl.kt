@@ -32,17 +32,19 @@ class AuthRepositoryImpl @Inject constructor(
         isServiceAgreed: Boolean,
         isPrivacyAgreed: Boolean,
         isMarketingAgreed: Boolean,
-    ): Result<Unit> =
+    ): Result<Long> =
         suspendRunCatching {
-            val token = authRemoteDataSource.postSignUp(
+            val data = authRemoteDataSource.postSignUp(
                 accessToken = accessToken,
                 isServiceAgreed = isServiceAgreed,
                 isPrivacyAgreed = isPrivacyAgreed,
                 isMarketingAgreed = isMarketingAgreed,
             ).checkData()
 
-            localTokenDatasource.setAccessToken(token.accessToken)
-            localTokenDatasource.setRefreshToken(token.refreshToken)
+            localTokenDatasource.setAccessToken(data.accessToken)
+            localTokenDatasource.setRefreshToken(data.refreshToken)
+
+            data.userId
         }
 
     override suspend fun postLogout(): Result<Unit> =

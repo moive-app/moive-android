@@ -6,6 +6,7 @@ import com.moive.app.data.auth.remote.dto.KakaoLoginResponse
 fun KakaoLoginResponse.toModel(): KakaoLoginModel =
     KakaoLoginModel(
         registered = registered,
+        userId = userId,
         nickname = nickname,
         profileImageUrl = profileImageUrl,
         email = email,

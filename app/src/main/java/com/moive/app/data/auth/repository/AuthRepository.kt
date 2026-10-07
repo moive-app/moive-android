@@ -11,7 +11,7 @@ interface AuthRepository {
         isServiceAgreed: Boolean,
         isPrivacyAgreed: Boolean,
         isMarketingAgreed: Boolean,
-    ): Result<Unit>
+    ): Result<Long>
 
     suspend fun postLogout(): Result<Unit>
 
