@@ -124,4 +124,15 @@ sealed interface AnalyticsEvent {
                 AnalyticsPropertyKey.PLACE_ID to placeId,
             )
     }
+    data class PlaceVoteSubmitted(
+        val meetingId: Long,
+        val selectedCount: Int,
+    ) : AnalyticsEvent {
+        override val name = "Place Vote Submitted"
+        override val properties: Map<String, Any?>
+            get() = mapOf(
+                AnalyticsPropertyKey.MEETING_ID to meetingId,
+                AnalyticsPropertyKey.SELECTED_COUNT to selectedCount,
+            )
+    }
 }

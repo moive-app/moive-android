@@ -264,6 +264,12 @@ class VotingViewModel @Inject constructor(
 
             votingRepository.postPlaceVotes(meetingId, recommendedPlaceIds)
                 .onSuccess {
+                    analyticsTracker.track(
+                        AnalyticsEvent.PlaceVoteSubmitted(
+                            meetingId = meetingId,
+                            selectedCount = recommendedPlaceIds.size,
+                        ),
+                    )
                     _uiState.update { it.copy(placeVoteUiState = PlaceVoteUiState.Success) }
                     _sideEffect.send(VotingContract.SideEffect.NavigateToVoteStatus(meetingId))
                 }
