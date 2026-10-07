@@ -1,9 +1,7 @@
-package com.moive.app.core.analytics
+package com.moive.app.core.analytics.amplitude
 
 import android.content.Context
 import com.amplitude.android.Amplitude
-import com.amplitude.android.AutocaptureOption.APP_LIFECYCLES
-import com.amplitude.android.AutocaptureOption.SESSIONS
 import com.amplitude.android.autocaptureOptions
 import com.moive.app.BuildConfig
 import dagger.Module
@@ -25,6 +23,7 @@ object AmplitudeModule {
         apiKey = BuildConfig.AMPLITUDE_API_KEY,
         context = context
     ) {
+        minIdLength = 1
         autocapture = autocaptureOptions {
             +sessions
             +appLifecycles
