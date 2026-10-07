@@ -100,4 +100,28 @@ sealed interface AnalyticsEvent {
         override val properties: Map<String, Any?>
             get() = mapOf(AnalyticsPropertyKey.MEETING_ID to meetingId)
     }
+
+    data class PlaceDetailViewed(
+        val meetingId: Long,
+        val placeId: Long,
+    ) : AnalyticsEvent {
+        override val name = "Place Detail Viewed"
+        override val properties: Map<String, Any?>
+            get() = mapOf(
+                AnalyticsPropertyKey.MEETING_ID to meetingId,
+                AnalyticsPropertyKey.PLACE_ID to placeId,
+            )
+    }
+
+    data class PlaceRouteOpened(
+        val meetingId: Long,
+        val placeId: Long,
+    ) : AnalyticsEvent {
+        override val name = "Place Route Opened"
+        override val properties: Map<String, Any?>
+            get() = mapOf(
+                AnalyticsPropertyKey.MEETING_ID to meetingId,
+                AnalyticsPropertyKey.PLACE_ID to placeId,
+            )
+    }
 }

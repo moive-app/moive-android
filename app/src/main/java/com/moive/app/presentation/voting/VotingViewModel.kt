@@ -155,6 +155,7 @@ class VotingViewModel @Inject constructor(
             fetchRecommendedPlaceDetail(placeId)
             fetchRecommendedPlaceRoute(placeId)
         }
+        analyticsTracker.track(AnalyticsEvent.PlaceDetailViewed(meetingId = meetingId, placeId = placeId))
     }
 
     private suspend fun fetchRecommendedPlaceDetail(placeId: Long) {
@@ -243,7 +244,12 @@ class VotingViewModel @Inject constructor(
     }
 
     fun onKakaoMapRouteOpened(opened: Boolean) {
-        if (opened) return
+        if (opened) {
+            _uiState.value.currentPlaceId?.let { placeId ->
+                analyticsTracker.track(AnalyticsEvent.PlaceRouteOpened(meetingId = meetingId, placeId = placeId))
+            }
+            return
+        }
         Timber.tag(TAG).e(KAKAO_MAP_ERROR)
     }
 

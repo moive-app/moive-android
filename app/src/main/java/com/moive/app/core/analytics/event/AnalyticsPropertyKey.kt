@@ -14,4 +14,7 @@ object AnalyticsPropertyKey {
 
     // 단계
     const val STEP = "step"
+
+    // 장소 / 투표
+    const val PLACE_ID = "place_id"
 }
