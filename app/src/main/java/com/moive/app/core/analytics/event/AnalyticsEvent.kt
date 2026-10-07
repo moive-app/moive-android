@@ -46,11 +46,12 @@ sealed interface AnalyticsEvent {
     }
 
     // 초대
-    data class InviteLinkShared(
+    // 공유 선택창 실행 시점 (실제 공유 완료 여부는 알 수 없음)
+    data class InviteLinkShareClicked(
         val meetingId: Long,
         val source: Source,
     ) : AnalyticsEvent {
-        override val name = "Invite Link Shared"
+        override val name = "Invite Link Share Clicked"
         override val properties: Map<String, Any?>
             get() = mapOf(
                 AnalyticsPropertyKey.MEETING_ID to meetingId,

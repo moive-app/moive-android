@@ -40,11 +40,11 @@ class MeetingDetailViewModel @Inject constructor(
     private var getMeetingDetailJob: Job? = null
     private var deleteMeetingJob: Job? = null
 
-    fun onInviteLinkShared() {
+    fun onInviteLinkShareClick() {
         analyticsTracker.track(
-            AnalyticsEvent.InviteLinkShared(
+            AnalyticsEvent.InviteLinkShareClicked(
                 meetingId = meetingId,
-                source = AnalyticsEvent.InviteLinkShared.Source.DETAIL,
+                source = AnalyticsEvent.InviteLinkShareClicked.Source.DETAIL,
             ),
         )
     }

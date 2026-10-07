@@ -143,11 +143,11 @@ class MeetingConfirmedViewModel @Inject constructor(
             }
     }
 
-    fun onInviteLinkShared() {
+    fun onInviteLinkShareClick() {
         analyticsTracker.track(
-            AnalyticsEvent.InviteLinkShared(
+            AnalyticsEvent.InviteLinkShareClicked(
                 meetingId = meetingId,
-                source = AnalyticsEvent.InviteLinkShared.Source.CONFIRMED,
+                source = AnalyticsEvent.InviteLinkShareClicked.Source.CONFIRMED,
             ),
         )
     }

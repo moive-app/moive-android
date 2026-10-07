@@ -91,7 +91,7 @@ fun MeetingDetailRoute(
         uiState = uiState,
         onBackClick = navigateBack,
         onInviteFriendClick = {
-            viewModel.onInviteLinkShared()
+            viewModel.onInviteLinkShareClick()
             context.shareText("새로운 모임에 초대되었어요!🎉 아래 링크에서 모임을 확인해보세요.\n${uiState.inviteUrl}")
         },
         onActionButtonClick = {
