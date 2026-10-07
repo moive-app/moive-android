@@ -95,6 +95,13 @@ class MeetingCreationViewModel @Inject constructor(
                 purposeType = currentState.selectedMeetingPurpose.toMeetingPurposeType() ?: MeetingPurposeType.ETC,
             )
                 .onSuccess { meeting ->
+                    analyticsTracker.track(
+                        AnalyticsEvent.MeetingCreated(
+                            meetingId = meeting.meetingId,
+                            purpose = meeting.purposeType.name.lowercase(),
+                            hasSchedule = meeting.hasSchedule,
+                        ),
+                    )
                     _uiState.update {
                         it.copy(meetingCreationUiState = MeetingCreationUiState.Success)
                     }

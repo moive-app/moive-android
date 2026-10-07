@@ -30,4 +30,18 @@ sealed interface AnalyticsEvent {
         override val properties: Map<String, Any?>
             get() = mapOf(AnalyticsPropertyKey.STEP to step)
     }
+
+    data class MeetingCreated(
+        val meetingId: Long,
+        val purpose: String,
+        val hasSchedule: Boolean,
+    ) : AnalyticsEvent {
+        override val name = "Meeting Created"
+        override val properties: Map<String, Any?>
+            get() = mapOf(
+                AnalyticsPropertyKey.MEETING_ID to meetingId,
+                AnalyticsPropertyKey.PURPOSE to purpose,
+                AnalyticsPropertyKey.HAS_SCHEDULE to hasSchedule,
+            )
+    }
 }
