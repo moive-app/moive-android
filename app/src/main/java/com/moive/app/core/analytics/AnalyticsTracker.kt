@@ -7,4 +7,5 @@ interface AnalyticsTracker {
 
     fun setUserId(userId: Long)
 
+    fun reset()
 }

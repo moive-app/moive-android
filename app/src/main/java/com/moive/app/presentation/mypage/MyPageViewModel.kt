@@ -2,6 +2,7 @@ package com.moive.app.presentation.mypage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moive.app.core.analytics.AnalyticsTracker
 import com.moive.app.core.designsystem.component.toast.ToastType
 import com.moive.app.core.fcm.FirebaseMessagingManager
 import com.moive.app.data.auth.repository.AuthRepository
@@ -25,6 +26,7 @@ class MyPageViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val notificationRepository: NotificationRepository,
     private val firebaseMessagingManager: FirebaseMessagingManager,
+    private val analyticsTracker: AnalyticsTracker,
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(MyPageContract.State())
@@ -98,6 +100,7 @@ class MyPageViewModel @Inject constructor(
 
         authRepository.postLogout()
             .onSuccess {
+                analyticsTracker.reset()
                 _sideEffect.send(NavigateToLogin)
             }
             .onFailure {

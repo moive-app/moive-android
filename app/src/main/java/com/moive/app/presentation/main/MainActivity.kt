@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(Unit) {
                     authManager.authEvent.collect {
+                        analyticsTracker.reset()
                         appState.navController.navigateToLogin()
                     }
                 }
