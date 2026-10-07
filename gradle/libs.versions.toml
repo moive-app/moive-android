@@ -1,4 +1,8 @@
 [versions]
+# App
+versionName = "1.1.0"
+versionCode = "10100"
+
 # Build Tools
 agp = "9.2.1"
 

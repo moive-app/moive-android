@@ -25,8 +25,8 @@ android {
         applicationId = "com.moive.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.0"
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties.getProperty("base.url"))
