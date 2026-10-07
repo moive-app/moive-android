@@ -22,4 +22,12 @@ sealed interface AnalyticsEvent {
         override val name = "Sign Up Completed"
     }
 
+    // 모임 생성
+    data class MeetingCreationStepViewed(
+        val step: String,
+    ) : AnalyticsEvent {
+        override val name = "Meeting Creation Step Viewed"
+        override val properties: Map<String, Any?>
+            get() = mapOf(AnalyticsPropertyKey.STEP to step)
+    }
 }

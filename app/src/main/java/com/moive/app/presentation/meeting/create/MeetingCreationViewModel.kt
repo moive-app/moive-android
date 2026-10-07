@@ -3,6 +3,8 @@ package com.moive.app.presentation.meeting.create
 import androidx.compose.foundation.text.input.clearText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moive.app.core.analytics.AnalyticsTracker
+import com.moive.app.core.analytics.event.AnalyticsEvent
 import com.moive.app.core.extensions.trim
 import com.moive.app.data.meeting.mapper.MeetingPurposeType
 import com.moive.app.data.meeting.repository.MeetingRepository
@@ -21,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MeetingCreationViewModel @Inject constructor(
     private val meetingRepository: MeetingRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MeetingCreationContract.State())
@@ -52,10 +55,16 @@ class MeetingCreationViewModel @Inject constructor(
 
     fun moveToConfirmStep() {
         _uiState.update { it.copy(step = MeetingCreationContract.Step.CONFIRM) }
+        trackStepViewed(MeetingCreationContract.Step.CONFIRM)
     }
 
     fun backToCreateStep() {
         _uiState.update { it.copy(step = MeetingCreationContract.Step.CREATE) }
+        trackStepViewed(MeetingCreationContract.Step.CREATE)
+    }
+
+    private fun trackStepViewed(step: MeetingCreationContract.Step) {
+        analyticsTracker.track(AnalyticsEvent.MeetingCreationStepViewed(step = step.name.lowercase()))
     }
 
     fun postMeetingCreation() {
