@@ -7,6 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
+import com.moive.app.core.analytics.AnalyticsTracker
+import com.moive.app.core.analytics.event.AnalyticsEvent
 import com.moive.app.core.designsystem.theme.MoiveTheme
 import com.moive.app.core.fcm.FirebaseMessagingManager
 import com.moive.app.core.fcm.MoiveFirebaseMessagingService
@@ -37,6 +39,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var firebaseMessagingManager: FirebaseMessagingManager
 
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
+
     private val pendingInviteCode = mutableStateOf<String?>(null)
 
     private val pendingMeetingId = mutableStateOf<Long?>(null)
@@ -57,6 +62,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             MoiveTheme {
                 val appState = rememberMainAppState()
+
+                TrackScreenViews(
+                    navController = appState.navController,
+                    analyticsTracker = analyticsTracker,
+                )
 
                 LaunchedEffect(Unit) {
                     authManager.authEvent.collect {
@@ -135,7 +145,19 @@ class MainActivity : ComponentActivity() {
         pendingInviteCode.value = intent.extractInviteCode()
         pendingMeetingId.value = intent.extractMeetingId()
         pendingNotificationId.value = intent.extractNotificationId()
+        trackPushNotificationOpened(pendingNotificationId.value, pendingMeetingId.value)
         setIntent(Intent())
+    }
+
+    // 푸시 알림의 extra로 들어온 경우에만 기록 (savedInstanceState 복원은 제외)
+    private fun trackPushNotificationOpened(notificationId: Long?, meetingId: Long?) {
+        if (notificationId == null && meetingId == null) return
+        analyticsTracker.track(
+            AnalyticsEvent.PushNotificationOpened(
+                notificationId = notificationId,
+                meetingId = meetingId,
+            ),
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
